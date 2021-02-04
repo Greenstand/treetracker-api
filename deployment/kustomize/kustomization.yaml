@@ -1,0 +1,4 @@
+resources:
+- microservice-deployment.yaml
+- microservice-mapping.yaml
+- microservice-service.yaml
