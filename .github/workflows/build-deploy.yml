@@ -68,7 +68,7 @@ jobs:
         context: ./
         file: ./Dockerfile
         push: true
-        tags: greenstand/treetracker-microservice-name:latest
+        tags: greenstand/treetracker-api:TAG
     - shell: bash
       run: |
         echo '${{ steps.package-version.outputs.current-version }}' > image-tag

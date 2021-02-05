@@ -1,8 +1,8 @@
 apiVersion: getambassador.io/v2
 kind: Mapping
 metadata:
-  name: #treetracker-microservice-name#
+  name: treetracker-api
 spec:
   prefix: /wallet/
-  service: #treetracker-microservice-name#
+  service: treetracker-api
   rewrite: /
