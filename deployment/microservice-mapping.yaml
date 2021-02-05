@@ -3,6 +3,6 @@ kind: Mapping
 metadata:
   name: treetracker-api
 spec:
-  prefix: /wallet/
+  prefix: /treetracker/
   service: treetracker-api
   rewrite: /
