@@ -1,0 +1,195 @@
+openapi: 3.0.0
+info:
+  title: treetracker
+  version: '1.0'
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  /captures:
+    parameters: []
+    get:
+      summary: captures
+      tags: []
+      responses:
+        '200':
+          description: List of captures
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  captures:
+                    type: array
+                    uniqueItems: true
+                    minItems: 1
+                    items:
+                      type: object
+                      properties:
+                        capture_id:
+                          type: string
+                          minLength: 1
+                        image_url:
+                          type: string
+                          minLength: 1
+                        user_photo_url:
+                          type: string
+                          minLength: 1
+                        created_at:
+                          type: string
+                          minLength: 1
+                        latitude:
+                          type: number
+                        longitude:
+                          type: number
+                        tree_associated:
+                          type: boolean
+                        active:
+                          type: boolean
+                        verified:
+                          type: boolean
+                      required:
+                        - capture_id
+                        - image_url
+                        - user_photo_url
+                        - created_at
+                        - latitude
+                        - longitude
+                        - tree_associated
+                        - active
+                        - verified
+                required:
+                  - captures
+              examples:
+                example:
+                  value:
+                    captures:
+                      - captureId: string
+                        imageUrl: string
+                        userPhotoUrl: string
+                        createdAt: string
+                        latitude: 0
+                        longitude: 0
+                        tree_associated: true
+                        active: true
+                        verified: true
+      operationId: ''
+      description: 'Return a list of captures, dependent on query parameters.'
+      parameters:
+        - schema:
+            type: integer
+          in: query
+          name: offset
+          description: query offset
+        - schema:
+            type: string
+          in: query
+          name: limit
+          description: number of records to return
+        - schema:
+            type: boolean
+          in: query
+          name: tree_associated
+          description: filter by weather or not returned captures have been associated with a tree
+          allowEmptyValue: true
+  '/captures/{capture_id}/potential_matching_trees/':
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: List of trees
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  trees:
+                    type: array
+                    uniqueItems: true
+                    minItems: 1
+                    items:
+                      type: object
+                      properties:
+                        tree_id:
+                          type: string
+                          minLength: 1
+                        captures:
+                          type: array
+                          uniqueItems: true
+                          minItems: 1
+                          items:
+                            type: object
+                            properties:
+                              capture_id:
+                                type: string
+                                minLength: 1
+                              image_url:
+                                type: string
+                                minLength: 1
+                              user_photo_url:
+                                type: string
+                                minLength: 1
+                              created_at:
+                                type: string
+                                minLength: 1
+                              latitude:
+                                type: number
+                              longitude:
+                                type: number
+                              tree_associated:
+                                type: boolean
+                              active:
+                                type: boolean
+                              verified:
+                                type: boolean
+                            required:
+                              - capture_id
+                              - image_url
+                              - user_photo_url
+                              - created_at
+                              - latitude
+                              - longitude
+                              - tree_associated
+                              - active
+                              - verified
+                      required:
+                        - tree_id
+                required:
+                  - trees
+      operationId: get-trees-potential_matches
+    parameters:
+      - schema:
+          type: string
+        name: capture_id
+        in: path
+        required: true
+  '/captures/{capture_id}':
+    parameters:
+      - schema:
+          type: string
+        name: capture_id
+        in: path
+        required: true
+    patch:
+      summary: ''
+      operationId: patch-captures-capture_id
+      responses:
+        '200':
+          description: OK
+      description: Update capture with tree id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              properties:
+                tree_id:
+                  type: string
+                  minLength: 1
+              required:
+                - tree_id
+components:
+  schemas: {}

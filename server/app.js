@@ -5,14 +5,14 @@ const asyncHandler = require('express-async-handler');
 const { check, validationResult } = require('express-validator');
 const { body } = require('express-validator');
 const HttpError = require("./utils/HttpError");
-//const walletRouter = require("./routes/entityRouter"); // create your router
 const {errorHandler} = require("./routes/utils");
 const log = require("loglevel");
 const helper = require("./routes/utils");
+const captureRouter = require("./routes/captureRouter");
 
 const app = express();
 
-Sentry.init({ dsn: config.sentry_dsn });
+//Sentry.init({ dsn: config.sentry_dsn });
 
 /*
  * Check request
@@ -29,13 +29,7 @@ app.use(helper.handlerWrapper(async (req, _res, next) => {
 app.use(bodyParser.urlencoded({ extended: false })); // parse application/x-www-form-urlencoded
 app.use(bodyParser.json()); // parse application/json
 
-//routers
-//app.use('/entity', entityRouter);
-
-//paths
-//app.get('/entity', asyncHandler(async (req, res, next) => {
-//
-//}));
+app.use('/captures', captureRouter);
 
 // Global error handler
 app.use(errorHandler);
