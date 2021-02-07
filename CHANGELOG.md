@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/Greenstand/treetracker-api/compare/v1.1.0...v1.1.1) (2021-02-07)
+
+
+### Bug Fixes
+
+* add cors allow to deployment ([9b7b7fc](https://github.com/Greenstand/treetracker-api/commit/9b7b7fc52f65aa7b2125543c954a3b3abd7be550))
+
 # [1.1.0](https://github.com/Greenstand/treetracker-api/compare/v1.0.1...v1.1.0) (2021-02-05)
 
 
