@@ -7,6 +7,5 @@ spec:
   service: treetracker-api
   rewrite: /
   cors:
-    origins:
-    - *
+    origins: "*"
     methods: GET
