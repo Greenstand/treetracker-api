@@ -6,3 +6,7 @@ spec:
   prefix: /treetracker/
   service: treetracker-api
   rewrite: /
+  cors:
+    origins:
+    - *
+    methods: GET
