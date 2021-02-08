@@ -9,3 +9,4 @@ spec:
   cors:
     origins: "*"
     methods: GET
+    headers: Content-Type
