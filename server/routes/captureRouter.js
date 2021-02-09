@@ -130,7 +130,7 @@ captureRouter.get("/:capture/potential_trees",
 
 
 
-captureRouter.post('/:capture_id',
+captureRouter.patch('/:capture_id',
   helper.handlerWrapper(async (req, res) => {
 
     res.status(200);
