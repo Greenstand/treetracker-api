@@ -8,5 +8,5 @@ spec:
   rewrite: /
   cors:
     origins: "*"
-    methods: GET, POST, OPTIONS
+    methods: GET, POST, PATCH, OPTIONS
     headers: Content-Type
