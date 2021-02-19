@@ -19,24 +19,43 @@ npm install
 
 ### Database Setup
 
-// TODO - add generic database setup instructions
-
+To run a local db, please install postgres. 
 Here are some resources to get started on local database set up and migration:
 * https://postgresapp.com
 * pgAdmin and DBeaver are great GUI options to use for navigating your local db 
 * https://www.postgresql.org/docs/9.1/app-pgdump.html
 
+We need a user to connect to the database. We can either use the default postgres user, or create a new user. We then need to create a database associated with that user.
 
-TODO: detailed description of database migration
+To create a new user (role):
+
+CREATE ROLE "treetracker" WITH LOGIN CREATEDB CREATEROLE INHERIT NOREPLICATION CONNECTION LIMIT -1;
+
+To set the password:
+
+ALTER USER treetracker WITH PASSWORD '<password>';
+
+To create a new database:
+
+CREATE DATABASE treetracker_db WITH OWNER = treetracker ENCODING = 'UTF8';
+
+create schema treetracker;
+
+Create a `.env` file under the project folder and assign the value for
+```
+DATABASE_URL="postgresql://username:pwd@db_host:port/treetracker_db?false"
+```
+
+To create the necessary tables for your application, run db-migrate below.
 
 ```
-db-migrate --env dev up
+db-migrate up --env dev --sql-file --migrations-dir=database/migrations --config=database/database.json
 ```
 
 If you have not installed db-migrate globally, you can run:
 
 ```
-../node_modules/db-migrate/bin/db-migrate --env dev up
+../node_modules/db-migrate/bin/db-migrate --env dev up --sql-file --migrations-dir=database/migrations --config=database/database.json
 ```
 
 See here to learn more about db-migrate: https://db-migrate.readthedocs.io/en/latest/

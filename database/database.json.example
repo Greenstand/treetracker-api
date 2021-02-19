@@ -6,7 +6,9 @@
     "database" : "",
     "host" : "",
     "port" : "",
-    "ssl" : "",
+    "ssl" : "{
+      "rejectUnauthorized": false
+    }",
     "schema" : ""
   }
 }
