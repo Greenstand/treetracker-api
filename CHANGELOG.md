@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/Greenstand/treetracker-api/compare/v1.1.2...v1.2.0) (2021-02-24)
+
+
+### Features
+
+* add backing schema/tables for treetracker-api ([c78c9c4](https://github.com/Greenstand/treetracker-api/commit/c78c9c46b581b14a12d07ca6111b9a006fe50706))
+
 ## [1.1.2](https://github.com/Greenstand/treetracker-api/compare/v1.1.1...v1.1.2) (2021-02-24)
 
 
