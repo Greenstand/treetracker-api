@@ -1,3 +1,11 @@
+## [1.1.2](https://github.com/Greenstand/treetracker-api/compare/v1.1.1...v1.1.2) (2021-02-24)
+
+
+### Bug Fixes
+
+* added example env ([1b25dec](https://github.com/Greenstand/treetracker-api/commit/1b25decf4ce9dc3424f134fdfbbe7a0092c3c7ef))
+* remove incorrect expect ([48e86a9](https://github.com/Greenstand/treetracker-api/commit/48e86a9fc02d1d9e974d9a40db61b4d7508501d6))
+
 ## [1.1.1](https://github.com/Greenstand/treetracker-api/compare/v1.1.0...v1.1.1) (2021-02-07)
 
 
