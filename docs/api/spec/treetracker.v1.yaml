@@ -190,7 +190,7 @@ paths:
       responses:
         '200':
           description: OK
-      description: Update capture with tree id
+      description: Update capture with tree id associating this specific capture with a known unique tree.
       requestBody:
         content:
           application/json:
@@ -277,15 +277,56 @@ paths:
     get:
       summary: Your GET endpoint
       tags: []
-      responses: {}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  trees:
+                    type: array
+                    items: {}
+              examples:
+                example:
+                  value:
+                    trees:
+                      - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        latest_capture_id: 1e5fbe21-6c4f-4591-9b61-068335323eab
+                        image_url: string
+                        lat: 0
+                        lon: 0
+                        species_id: string
+                        morphology: string
+                        age: 0
+                        status: string
+                        created_at: string
+                        updated_at: string
       operationId: get-trees
-      description: ''
+      description: Return all trees with some filtering criteria. The filtering criteria will be added as more information about the use case is determined.
+      parameters:
+        - schema:
+            type: number
+            default: 100
+            format: int
+            example: 100
+          in: query
+          name: limit
+          description: The number of results to return on a invocation
+        - schema:
+            type: string
+            default: '0'
+            example: '10'
+          in: query
+          name: offset
+          description: The number of trees objects to skip and return the rest for pagination
     post:
       summary: ''
       operationId: post-trees
       responses:
-        '200':
-          description: OK
+        '201':
+          description: Created
       requestBody:
         content:
           application/json:
@@ -318,6 +359,7 @@ paths:
                 - image_url
                 - lat
                 - lon
+      description: 'Create a new unique tree in greenstand platform. '
 components:
   schemas:
     capture:
@@ -431,6 +473,18 @@ components:
         example-1:
           id: string
           latest_capture_id: string
+          image_url: string
+          lat: 0
+          lon: 0
+          species_id: string
+          morphology: string
+          age: 0
+          status: string
+          created_at: string
+          updated_at: string
+        example-2:
+          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+          latest_capture_id: 1e5fbe21-6c4f-4591-9b61-068335323eab
           image_url: string
           lat: 0
           lon: 0
