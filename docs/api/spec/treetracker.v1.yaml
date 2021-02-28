@@ -49,8 +49,6 @@ paths:
                           type: boolean
                         status:
                           type: boolean
-                        verified:
-                          type: boolean
                       required:
                         - id
                         - image_url
@@ -60,7 +58,6 @@ paths:
                         - longitude
                         - tree_associated
                         - status
-                        - verified
                 required:
                   - captures
               examples:
@@ -218,53 +215,74 @@ paths:
           content:
             application/json:
               schema:
-                type: array
                 description: ''
-                minItems: 1
-                uniqueItems: true
-                items:
-                  type: object
-                  required:
-                    - id
-                    - latest_capture_id
-                    - image_url
-                    - lat
-                    - lon
-                    - species_id
-                    - morphology
-                    - age
-                    - status
-                    - created_at
-                    - updated_at
-                  properties:
-                    id:
-                      type: string
-                      minLength: 1
-                    latest_capture_id:
-                      type: string
-                      minLength: 1
-                    image_url:
-                      type: string
-                      minLength: 1
-                    lat:
-                      type: number
-                    lon:
-                      type: number
-                    species_id:
-                      type: string
-                    morphology:
-                      type: string
-                    age:
-                      type: number
-                    status:
-                      type: string
-                      minLength: 1
-                    created_at:
-                      type: string
-                      minLength: 1
-                    updated_at:
-                      type: string
-                      minLength: 1
+                type: object
+                properties:
+                  matches:
+                    type: array
+                    uniqueItems: true
+                    minItems: 1
+                    items:
+                      required:
+                        - id
+                        - latest_capture_id
+                        - image_url
+                        - lat
+                        - lon
+                        - species_id
+                        - morphology
+                        - age
+                        - status
+                        - created_at
+                        - updated_at
+                      properties:
+                        id:
+                          type: string
+                          minLength: 1
+                        latest_capture_id:
+                          type: string
+                          minLength: 1
+                        image_url:
+                          type: string
+                          minLength: 1
+                        lat:
+                          type: number
+                        lon:
+                          type: number
+                        species_id:
+                          type: string
+                          minLength: 1
+                        morphology:
+                          type: string
+                          minLength: 1
+                        age:
+                          type: number
+                        status:
+                          type: string
+                          minLength: 1
+                        created_at:
+                          type: string
+                          minLength: 1
+                        updated_at:
+                          type: string
+                          minLength: 1
+                required:
+                  - matches
+              examples:
+                example:
+                  value:
+                    matches:
+                      - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        latest_capture_id: 1e5fbe21-6c4f-4591-9b61-068335323eab
+                        image_url: string
+                        lat: 0
+                        lon: 0
+                        species_id: string
+                        morphology: string
+                        age: 0
+                        status: string
+                        created_at: string
+                        updated_at: string
       operationId: get-trees
       parameters:
         - schema:
