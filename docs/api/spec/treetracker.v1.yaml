@@ -26,12 +26,15 @@ paths:
                     items:
                       type: object
                       properties:
-                        capture_id:
+                        id:
                           type: string
                           minLength: 1
+                          format: uuid
+                          example: daebb6d6-b7cc-4e15-8783-fb56739cf14e
                         image_url:
                           type: string
                           minLength: 1
+                          format: uuid
                         user_photo_url:
                           type: string
                           minLength: 1
@@ -44,19 +47,19 @@ paths:
                           type: number
                         tree_associated:
                           type: boolean
-                        active:
+                        status:
                           type: boolean
                         verified:
                           type: boolean
                       required:
-                        - capture_id
+                        - id
                         - image_url
                         - user_photo_url
                         - created_at
                         - latitude
                         - longitude
                         - tree_associated
-                        - active
+                        - status
                         - verified
                 required:
                   - captures
@@ -64,15 +67,19 @@ paths:
                 example:
                   value:
                     captures:
-                      - captureId: string
-                        imageUrl: string
-                        userPhotoUrl: string
-                        createdAt: string
+                      - id: daebb6d6-b7cc-4e15-8783-fb56739cf14e
+                        image_url: string
+                        user_photo_url: string
+                        created_at: string
                         latitude: 0
                         longitude: 0
                         tree_associated: true
-                        active: true
-                        verified: true
+            application/xml:
+              schema:
+                type: object
+                properties:
+                  '':
+                    type: string
       operationId: ''
       description: 'Return a list of captures, dependent on query parameters.'
       parameters:
@@ -92,6 +99,84 @@ paths:
           name: tree_associated
           description: filter by weather or not returned captures have been associated with a tree
           allowEmptyValue: true
+    post:
+      summary: ''
+      operationId: post-captures
+      responses:
+        '201':
+          description: Created
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              properties:
+                id:
+                  type: string
+                  minLength: 1
+                reference_id:
+                  type: number
+                tree_id:
+                  type: number
+                image_url:
+                  type: string
+                  minLength: 1
+                lat:
+                  type: number
+                lon:
+                  type: number
+                user_id:
+                  type: number
+                user_photo_url:
+                  type: string
+                  minLength: 1
+                username:
+                  type: string
+                  minLength: 1
+                planting_organization_id:
+                  type: number
+                species_id:
+                  type: number
+                morphology:
+                  type: string
+                  minLength: 1
+                age:
+                  type: number
+                note:
+                  type: string
+                  minLength: 1
+                attributes:
+                  type: object
+                  required:
+                    - entries
+                  properties:
+                    entries:
+                      type: array
+                      uniqueItems: true
+                      minItems: 1
+                      items:
+                        type: object
+                        properties:
+                          key:
+                            type: string
+                            minLength: 1
+                          value:
+                            type: string
+                            minLength: 1
+                        required:
+                          - key
+                          - value
+              required:
+                - id
+                - reference_id
+                - image_url
+                - lat
+                - lon
+                - user_id
+                - user_photo_url
+                - username
+      description: Create a verified capture
   '/captures/{capture_id}/potential_matching_trees/':
     get:
       summary: Your GET endpoint
@@ -192,4 +277,108 @@ paths:
               required:
                 - tree_id
 components:
-  schemas: {}
+  schemas:
+    capture:
+      description: A capture represents a verified snapshot (photo) of a tree at a point in time.
+      type: object
+      x-examples:
+        example-1:
+          id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+          reference_id: 0
+          tree_id: 0
+          image_url: string
+          lat: 0
+          lon: 0
+          user_id: 0
+          user_photo_url: string
+          username: string
+          planting_organization_id: 0
+          species_id: 0
+          morphology: string
+          age: 0
+          note: string
+          attributes:
+            entries:
+              - key: string
+                value: string
+          domain_specific_data: {}
+          status: string
+          created_at: string
+          updated_at: string
+      properties:
+        id:
+          type: string
+          minLength: 1
+          format: uuid
+        reference_id:
+          type: number
+        tree_id:
+          type: number
+        image_url:
+          type: string
+          minLength: 1
+        lat:
+          type: number
+        lon:
+          type: number
+        user_id:
+          type: number
+        user_photo_url:
+          type: string
+          minLength: 1
+        username:
+          type: string
+          minLength: 1
+        planting_organization_id:
+          type: number
+        species_id:
+          type: number
+        morphology:
+          type: string
+        age:
+          type: number
+        note:
+          type: string
+        attributes:
+          type: object
+          required:
+            - entries
+          properties:
+            entries:
+              type: array
+              uniqueItems: true
+              minItems: 1
+              items:
+                type: object
+                properties:
+                  key:
+                    type: string
+                    minLength: 1
+                  value:
+                    type: string
+                required:
+                  - key
+                  - value
+        domain_specific_data:
+          type: object
+        status:
+          type: string
+          minLength: 1
+        created_at:
+          type: string
+          minLength: 1
+        updated_at:
+          type: string
+          minLength: 1
+      required:
+        - id
+        - reference_id
+        - image_url
+        - lat
+        - lon
+        - user_id
+        - user_photo_url
+        - username
+        - status
+        - created_at
+        - updated_at
