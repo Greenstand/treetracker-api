@@ -4,11 +4,12 @@ const bodyParser = require('body-parser');
 const asyncHandler = require('express-async-handler');
 const { check, validationResult } = require('express-validator');
 const { body } = require('express-validator');
-const HttpError = require("./utils/HttpError");
-const {errorHandler} = require("./routes/utils");
-const log = require("loglevel");
-const helper = require("./routes/utils");
-const captureRouter = require("./routes/captureRouter");
+const HttpError = require('./utils/HttpError');
+const { errorHandler } = require('./routes/utils');
+const log = require('loglevel');
+const helper = require('./routes/utils');
+const captureRouter = require('./routes/captureRouter');
+const treeRouter = require('./routes/treeRouter');
 
 const app = express();
 
@@ -17,27 +18,36 @@ const app = express();
 /*
  * Check request
  */
-app.use(helper.handlerWrapper(async (req, _res, next) => {
-  if(req.method === "POST" || req.method === "PATCH"  || req.method === "PUT" ){
-    if(req.headers['content-type'] !== "application/json"){
-    throw new HttpError(415, "Invalid content type. API only supports application/json");
+app.use(
+  helper.handlerWrapper(async (req, _res, next) => {
+    if (
+      req.method === 'POST' ||
+      req.method === 'PATCH' ||
+      req.method === 'PUT'
+    ) {
+      if (req.headers['content-type'] !== 'application/json') {
+        throw new HttpError(
+          415,
+          'Invalid content type. API only supports application/json',
+        );
+      }
     }
-  }
-  next();
-}));
+    next();
+  }),
+);
 
 app.use(bodyParser.urlencoded({ extended: false })); // parse application/x-www-form-urlencoded
 app.use(bodyParser.json()); // parse application/json
 
 app.use('/captures', captureRouter);
+app.use('/trees', treeRouter);
 
 // Global error handler
 app.use(errorHandler);
 
-const version = require('../package.json').version
-app.get('*',function (req, res) {
-  res.status(200).send(version)
+const version = require('../package.json').version;
+app.get('*', function (req, res) {
+  res.status(200).send(version);
 });
 
-
-module.exports = app; 
+module.exports = app;
