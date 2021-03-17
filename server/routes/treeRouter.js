@@ -10,7 +10,7 @@ treeRouter.get(
     //maximum distance in meters between possible matches and tree in query
     const distance = 6;
     const query =
-      'SELECT id, image_url as "imageUrl", lat, lon, species_id as "speciesId", morphology, age, status, time_created as "createdAt", time_updated as "updatedAt" FROM trees WHERE ST_DWithin(estimated_geometric_location::geography, (SELECT estimated_geometric_location FROM trees WHERE id=$1)::geography, $2)';
+      'SELECT id, image_url as "imageUrl", latest_capture_id as "latestCaptureId", lat, lon, species_id as "speciesId", morphology, age, status, created_at as "createdAt", updated_at as "updatedAt" FROM treetracker.tree WHERE ST_DWithin(estimated_geographic_location, (SELECT estimated_geographic_location FROM treetracker.capture WHERE id=$1), $2)';
     const result = await db.query(query, [id, distance]);
     const data = result.filter((item) => item.id != id);
 
