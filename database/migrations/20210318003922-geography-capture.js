@@ -14,16 +14,16 @@ exports.setup = function (options, seedLink) {
   seed = seedLink;
 };
 
-exports.up = function (db, callback) {
+exports.up = function (db) {
   db.runSql(
-    'ALTER TABLE treetracker.tree ADD COLUMN estimated_geographic_location GEOGRAPHY(Point, 4326)',
+    'ALTER TABLE treetracker.capture ADD COLUMN estimated_geographic_location GEOGRAPHY(Point, 4326)',
     callback,
   );
 };
 
 exports.down = function (db) {
   db.runSql(
-    'ALTER TABLE treetracker.tree DROP COLUMN estimated_geographic_location',
+    'ALTER TABLE treetracker.capture DROP COLUMN estimated_geographic_location',
     callback,
   );
 };
