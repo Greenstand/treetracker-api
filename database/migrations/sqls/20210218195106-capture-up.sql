@@ -17,7 +17,7 @@ CREATE TABLE capture
     morphology varchar NULL,
     age smallint NULL,
     note varchar NULL,
-    attributes jsonb NULL, 
+    attributes jsonb NULL,
     domain_specific_data jsonb NULL,
     status varchar NOT NULL,
     created_at timestamptz NOT NULL,
@@ -25,7 +25,7 @@ CREATE TABLE capture
 );
 
 CREATE INDEX capture_est_gmtric_loc_idx_gist ON capture USING gist (estimated_geometric_location);
-CREATE INDEX capture_tree_idx ON CAPTURE(tree_id);
+CREATE INDEX capture_tree_idx ON capture(tree_id);
 CREATE INDEX capture_status_idx ON capture(status);
 CREATE INDEX capture_planter_idx ON capture(planter_id);
 CREATE INDEX capture_planter_usrnm_idx ON capture(planter_username);
