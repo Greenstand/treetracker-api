@@ -1,7 +1,7 @@
 const express = require('express');
 const captureRouter = express.Router();
 const helper = require('./utils');
-const captureService = require('./captureService');
+const captureService = require('../models/captureService');
 
 captureRouter
   .route('/')

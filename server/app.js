@@ -8,6 +8,8 @@ const { errorHandler } = require('./routes/utils');
 const log = require('loglevel');
 const helper = require('./routes/utils');
 const captureRouter = require('./routes/captureRouter');
+const rawCaptureRouter = require('./routes/rawCaptureRouter');
+const registerEventHandlers = require('./services/EventHandlers');
 
 const app = express();
 
@@ -38,6 +40,7 @@ app.use(express.urlencoded({ extended: false })); // parse application/x-www-for
 app.use(express.json()); // parse application/json
 
 app.use('/captures', captureRouter);
+app.use('/raw-captures', rawCaptureRouter);
 
 // Global error handler
 app.use(errorHandler);
@@ -46,5 +49,7 @@ const version = require('../package.json').version;
 app.get('*', function (req, res) {
   res.status(200).send(version);
 });
+
+registerEventHandlers();
 
 module.exports = app;
