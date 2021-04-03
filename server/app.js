@@ -1,14 +1,11 @@
 const express = require('express');
-const Sentry = require('@sentry/node');
-const asyncHandler = require('express-async-handler');
-const { check, validationResult } = require('express-validator');
-const { body } = require('express-validator');
+// const Sentry = require('@sentry/node');
+// const asyncHandler = require('express-async-handler');
+// const { body, check, validationResult } = require('express-validator');
 const HttpError = require('./utils/HttpError');
 const { errorHandler } = require('./routes/utils');
-const log = require('loglevel');
 const helper = require('./routes/utils');
 const captureRouter = require('./routes/captureRouter');
-const rawCaptureRouter = require('./routes/rawCaptureRouter');
 const registerEventHandlers = require('./services/EventHandlers');
 
 const app = express();
@@ -36,11 +33,10 @@ app.use(
   }),
 );
 
-app.use(express.urlencoded({ extended: false })); // parse application/x-www-form-urlencoded
-app.use(express.json()); // parse application/json
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 app.use('/captures', captureRouter);
-app.use('/raw-captures', rawCaptureRouter);
 
 // Global error handler
 app.use(errorHandler);

@@ -31,17 +31,19 @@
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "@sentry/node": "^5.1.0",
+    "amqplib": "^0.7.1",
     "body-parser": "^1.18.2",
     "dotenv": "^8.2.0",
     "expect": "^26.4.2",
     "express": "^4.16.2",
     "express-async-handler": "^1.1.4",
     "express-validator": "^6.4.0",
+    "joi": "^17.2.1",
     "knex": "^0.21.5",
     "loglevel": "^1.6.8",
     "pg": "^7.4.0",
-    "uuid": "^8.2.0",
-    "joi": "^17.2.1"
+    "rascal": "^13.0.0",
+    "uuid": "^8.2.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",

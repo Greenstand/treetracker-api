@@ -1,29 +1,97 @@
 const express = require('express');
 const captureRouter = express.Router();
-const helper = require('./utils');
-const captureService = require('../models/captureService');
+const { v4: uuidv4 } = require('uuid');
 
-captureRouter
-  .route('/')
-  .get(helper.handlerWrapper(captureService.getCaptures))
-  .post(helper.handlerWrapper(captureService.postCapture));
+const {
+  createCapture,
+  captureFromRequest,
+  getCaptures,
+} = require('../models/Capture');
+const { dispatch } = require('../models/DomainEvent');
 
-captureRouter
-  .route('/:capture/potential_trees')
-  .get(helper.handlerWrapper(captureService.getMockPotentialTrees));
+const Session = require('../infra/database/Session');
+const { publishMessage } = require('../infra/messaging/RabbitMQMessaging');
 
-captureRouter
-  .route('/:capture_id')
-  .get(helper.handlerWrapper(captureService.getCaptureById))
-  .patch(
-    helper.handlerWrapper(async (req, res) => {
-      res.status(200);
-    }),
-  )
-  .delete(
-    helper.handlerWrapper(async (req, res) => {
-      res.status(204);
-    }),
-  );
+const {
+  CaptureRepository,
+  EventRepository,
+} = require('../infra/database/PgRepositories');
+
+captureRouter.get('/', async function (req, res) {
+  console.log('CAPTURE ROUTER get', req.query);
+  const session = new Session(false);
+  const captureRepo = new CaptureRepository(session);
+  const executeGetCaptures = getCaptures(captureRepo);
+  const result = await executeGetCaptures(req.query);
+  console.log('CAPTURE ROUTER get result', result);
+  res.send(result);
+  res.end();
+});
+
+captureRouter.post('/', async function (req, res) {
+  const session = new Session();
+  const captureRepo = new CaptureRepository(session);
+  const eventRepository = new EventRepository(session);
+  const executeCreateCapture = createCapture(captureRepo, eventRepository);
+
+  const eventDispatch = dispatch(eventRepository, publishMessage);
+
+  // destructure from req.body and set defaults
+  const {
+    id,
+    reference_id,
+    image_url = '',
+    estimated_geometric_location,
+    lon,
+    lat,
+    planter_id,
+    planter_photo_url = '',
+    planter_username,
+    device_identifier,
+    note = '',
+    timestamp,
+    attributes = [],
+  } = req.body;
+
+  // create tree data including unique id and setting date/time to today
+  const capture = {
+    id: id,
+    reference_id,
+    image_url,
+    estimated_geometric_location,
+    lat,
+    lon,
+    planter_id,
+    planter_photo_url,
+    planter_username,
+    device_identifier,
+    note,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    attributes,
+  };
+
+  try {
+    console.log('CAPTURE ROUTER post', req.body, capture);
+    const newCapture = captureFromRequest({ ...capture });
+    await session.beginTransaction();
+    const { entity, raisedEvents } = await executeCreateCapture(newCapture);
+    console.log('CAPTURE ROUTER execute create capture', entity, raisedEvents);
+    await session.commitTransaction();
+    raisedEvents.forEach((domainEvent) =>
+      eventDispatch('capture-created', domainEvent),
+    );
+    res.status(201).json({
+      ...entity,
+    });
+  } catch (e) {
+    console.log(e);
+    if (session.isTransactionInProgress()) {
+      await session.rollbackTransaction();
+    }
+    let result = e;
+    res.status(422).json({ ...result });
+  }
+});
 
 module.exports = captureRouter;

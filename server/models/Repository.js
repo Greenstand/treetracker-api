@@ -5,12 +5,12 @@ class Repository {
   }
 
   async add(data) {
-    console.log('REPOSITORY MODEL add', this.repoImpl, data);
+    console.log('REPOSITORY MODEL add', typeof this.repoImpl, data);
     return await this.repoImpl.add(data);
   }
 
   async update(data) {
-    console.log('REPOSITORY MODEL update', this.repoImpl, data);
+    console.log('REPOSITORY MODEL update', this.repoImpl);
     return await this.repoImpl.update(data);
   }
 

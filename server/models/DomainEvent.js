@@ -20,9 +20,10 @@ const receiveEvent = (eventRepositoryImpl) => async (domainEvent) => {
 };
 
 const dispatch = (eventRepositoryImpl, publishToTopic) => async (
+  publicationName,
   domainEvent,
 ) => {
-  publishToTopic(domainEvent.payload, () => {
+  publishToTopic(publicationName, domainEvent.payload, () => {
     eventRepositoryImpl.update({
       ...domainEvent,
       status: 'sent',

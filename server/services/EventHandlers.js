@@ -1,12 +1,12 @@
-const Session = require('../database/Session');
+const Session = require('../infra/database/Session');
 // const { subscribe } = require('../messaging/RabbitMQMessaging');
 
 const {
   CaptureRepository,
   EventRepository,
-} = require('../database/PgRepositories');
+} = require('../infra/database/PgRepositories');
 const { DomainEvent, receiveEvent } = require('../models/DomainEvent');
-const { applyVerification } = require('../models/RawCapture');
+const { applyVerification } = require('../models/Capture');
 
 const handleVerifyCaptureProcessed = async (message) => {
   const session = new Session(false);
