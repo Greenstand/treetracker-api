@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/Greenstand/treetracker-api/compare/v1.2.0...v1.3.0) (2021-04-11)
+
+
+### Features
+
+* api endpoints w/ connection to database ([403fb7c](https://github.com/Greenstand/treetracker-api/commit/403fb7c1251badc889f2a0052ccdd39405021fe3))
+
 # [1.2.0](https://github.com/Greenstand/treetracker-api/compare/v1.1.2...v1.2.0) (2021-02-24)
 
 
