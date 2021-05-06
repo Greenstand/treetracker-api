@@ -3,9 +3,9 @@ const express = require('express');
 // const asyncHandler = require('express-async-handler');
 // const { body, check, validationResult } = require('express-validator');
 const HttpError = require('./utils/HttpError');
-const { errorHandler } = require('./routes/utils');
-const helper = require('./routes/utils');
-const captureRouter = require('./routes/captureRouter');
+const { errorHandler } = require('./handlers/utils');
+const helper = require('./handlers/utils');
+const router = require('./routes.js');
 const registerEventHandlers = require('./services/EventHandlers');
 
 const app = express();
@@ -36,8 +36,7 @@ app.use(
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-app.use('/captures', captureRouter);
-
+app.use('/', router);
 // Global error handler
 app.use(errorHandler);
 
