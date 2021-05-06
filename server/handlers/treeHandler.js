@@ -34,8 +34,7 @@ const treeSchema = Joi.object({
 
 const treeHandlerPost = async function (req, res) {
     
-    const value = treeSchema.validateAsync(req.body);
-    console.log(`${error} and value is ${JSON.stringify(value)}`);
+    const value = await treeSchema.validateAsync(req.body, { abortEarly: false });
 
     const session = new Session();
     const captureRepo = new TreeRepository(session);
