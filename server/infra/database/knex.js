@@ -1,5 +1,3 @@
-const expect = require('expect-runtime');
-
 const connection = process.env.DATABASE_URL;
 const log = require('loglevel');
 log.debug('db', connection);
