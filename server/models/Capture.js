@@ -175,9 +175,14 @@ const applyVerification = (captureRepositoryImpl) => async (
   }
 };
 
+const updateCapture = (captureRepositoryImpl) => async (update_object) => {
+  await captureRepositoryImpl.update(update_object);
+};
+
 module.exports = {
   captureFromRequest,
   createCapture,
   getCaptures,
   applyVerification,
+  updateCapture,
 };

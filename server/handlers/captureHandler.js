@@ -6,6 +6,7 @@ const {
   createCapture,
   captureFromRequest,
   getCaptures,
+  updateCapture,
 } = require('../models/Capture');
 const { dispatch } = require('../models/DomainEvent');
 
@@ -94,7 +95,28 @@ const captureHandlerPost = async function (req, res) {
   }
 };
 
+const captureHandlerPatch = async function (req, res) {
+  const { capture_id } = req.params;
+  const session = new Session();
+  const captureRepo = new CaptureRepository(session);
+  const executeUpdateCapture = updateCapture(captureRepo);
+  try {
+    const result = await executeUpdateCapture({ id: capture_id, ...req.body });
+    console.log('CAPTURE ROUTER update result', result);
+    res.send(result);
+    res.end();
+  } catch (e) {
+    console.log(e);
+    if (session.isTransactionInProgress()) {
+      await session.rollbackTransaction();
+    }
+    let result = e;
+    res.status(422).json({ ...result });
+  }
+};
+
 module.exports = {
   captureHandlerPost,
-  captureHandlerGet
-}
+  captureHandlerGet,
+  captureHandlerPatch,
+};
