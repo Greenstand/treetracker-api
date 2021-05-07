@@ -1,7 +1,6 @@
 const expect = require('expect-runtime');
-const connection = require('../../../config/config').connectionString;
 
-expect(connection).to.match(/^postgresql:\//);
+const connection = process.env.DATABASE_URL;
 const log = require('loglevel');
 log.debug('db', connection);
 
