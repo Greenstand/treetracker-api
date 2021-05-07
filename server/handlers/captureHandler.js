@@ -17,7 +17,7 @@ const {
   EventRepository,
 } = require('../infra/database/PgRepositories');
 
-captureRouter.get('/', async function (req, res) {
+const captureHandlerGet = async function (req, res) {
   console.log('CAPTURE ROUTER get', req.query);
   const session = new Session(false);
   const captureRepo = new CaptureRepository(session);
@@ -26,9 +26,9 @@ captureRouter.get('/', async function (req, res) {
   console.log('CAPTURE ROUTER get result', result);
   res.send(result);
   res.end();
-});
+};
 
-captureRouter.post('/', async function (req, res) {
+const captureHandlerPost = async function (req, res) {
   const session = new Session();
   const captureRepo = new CaptureRepository(session);
   const eventRepository = new EventRepository(session);
@@ -92,6 +92,9 @@ captureRouter.post('/', async function (req, res) {
     let result = e;
     res.status(422).json({ ...result });
   }
-});
+};
 
-module.exports = captureRouter;
+module.exports = {
+  captureHandlerPost,
+  captureHandlerGet
+}

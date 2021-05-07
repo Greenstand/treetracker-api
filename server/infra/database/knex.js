@@ -12,7 +12,7 @@ let knexConfig = {
 log.debug(process.env.DATABASE_SCHEMA);
 if (process.env.DATABASE_SCHEMA) {
   log.info('setting a schema');
-  knexConfig.searchPath = [process.env.DATABASE_SCHEMA];
+  knexConfig.searchPath = [process.env.DATABASE_SCHEMA, 'public'];
 }
 log.debug(knexConfig.searchPath);
 
