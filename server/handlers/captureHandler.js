@@ -1,6 +1,7 @@
 const express = require('express');
 const captureRouter = express.Router();
 const { v4: uuidv4 } = require('uuid');
+const Joi = require('joi');
 
 const {
   createCapture,
@@ -100,7 +101,17 @@ const captureHandlerPatch = async function (req, res) {
   const session = new Session();
   const captureRepo = new CaptureRepository(session);
   const executeUpdateCapture = updateCapture(captureRepo);
+  const updateSchema = Joi.object({
+    id: Joi.any().forbidden(),
+    lat: Joi.any().forbidden(),
+    lon: Joi.any().forbidden(),
+    location: Joi.any().forbidden(),
+    created_at: Joi.any().forbidden(),
+  });
   try {
+    const value = await updateSchema.unknown(true).validateAsync(req.body, {
+      abortEarly: false,
+    });
     const result = await executeUpdateCapture({ id: capture_id, ...req.body });
     console.log('CAPTURE ROUTER update result', result);
     res.send(result);
