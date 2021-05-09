@@ -96,12 +96,12 @@ const captureHandlerPost = async function (req, res) {
   }
 };
 
-const captureHandlerPatch = async function (req, res) {
+const captureHandlerPatch = async function (req, res, next) {
   const { capture_id } = req.params;
   const session = new Session();
   const captureRepo = new CaptureRepository(session);
   const executeUpdateCapture = updateCapture(captureRepo);
-  const updateSchema = Joi.object({
+  const updateCaptureSchema = Joi.object({
     id: Joi.any().forbidden(),
     lat: Joi.any().forbidden(),
     lon: Joi.any().forbidden(),
@@ -109,20 +109,20 @@ const captureHandlerPatch = async function (req, res) {
     created_at: Joi.any().forbidden(),
   });
   try {
-    const value = await updateSchema.unknown(true).validateAsync(req.body, {
-      abortEarly: false,
-    });
+    const value = await updateCaptureSchema
+      .unknown(true)
+      .validateAsync(req.body, {
+        abortEarly: false,
+      });
     const result = await executeUpdateCapture({ id: capture_id, ...req.body });
     console.log('CAPTURE ROUTER update result', result);
     res.send(result);
     res.end();
   } catch (e) {
-    console.log(e);
     if (session.isTransactionInProgress()) {
       await session.rollbackTransaction();
     }
-    let result = e;
-    res.status(422).json({ ...result });
+    next(e);
   }
 };
 
