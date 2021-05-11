@@ -1,11 +1,13 @@
 const express = require('express');
 const captureRouter = express.Router();
 const { v4: uuidv4 } = require('uuid');
+const Joi = require('joi');
 
 const {
   createCapture,
   captureFromRequest,
   getCaptures,
+  updateCapture,
 } = require('../models/Capture');
 const { dispatch } = require('../models/DomainEvent');
 
@@ -94,7 +96,38 @@ const captureHandlerPost = async function (req, res) {
   }
 };
 
+const captureHandlerPatch = async function (req, res, next) {
+  const { capture_id } = req.params;
+  const session = new Session();
+  const captureRepo = new CaptureRepository(session);
+  const executeUpdateCapture = updateCapture(captureRepo);
+  const updateCaptureSchema = Joi.object({
+    id: Joi.any().forbidden(),
+    lat: Joi.any().forbidden(),
+    lon: Joi.any().forbidden(),
+    location: Joi.any().forbidden(),
+    created_at: Joi.any().forbidden(),
+  });
+  try {
+    const value = await updateCaptureSchema
+      .unknown(true)
+      .validateAsync(req.body, {
+        abortEarly: false,
+      });
+    const result = await executeUpdateCapture({ id: capture_id, ...req.body });
+    console.log('CAPTURE ROUTER update result', result);
+    res.send(result);
+    res.end();
+  } catch (e) {
+    if (session.isTransactionInProgress()) {
+      await session.rollbackTransaction();
+    }
+    next(e);
+  }
+};
+
 module.exports = {
   captureHandlerPost,
-  captureHandlerGet
-}
+  captureHandlerGet,
+  captureHandlerPatch,
+};
