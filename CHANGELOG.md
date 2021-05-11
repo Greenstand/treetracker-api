@@ -1,3 +1,16 @@
+# [1.4.0](https://github.com/Greenstand/treetracker-api/compare/v1.3.0...v1.4.0) (2021-05-11)
+
+
+### Bug Fixes
+
+* add patch request validation ([5818c94](https://github.com/Greenstand/treetracker-api/commit/5818c94f3e1c4284caec84028d7ed7427b8292ce))
+* error handling ([e15fee3](https://github.com/Greenstand/treetracker-api/commit/e15fee3c1643b754821ee3de36156f851c20f312))
+
+
+### Features
+
+* patch endpoint for resource capture ([c1e3e22](https://github.com/Greenstand/treetracker-api/commit/c1e3e226fe70e1d4aa6b37131eea659cd0fb07db))
+
 # [1.3.0](https://github.com/Greenstand/treetracker-api/compare/v1.2.0...v1.3.0) (2021-04-11)
 
 
