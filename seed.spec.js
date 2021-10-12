@@ -1,8 +1,8 @@
-const seed = require('./seed');
-const pool = require('../server/infra/database/database');
 const { expect } = require('chai');
 const Crypto = require('crypto');
 const log = require('loglevel');
+const pool = require('../server/infra/database/database');
+const seed = require('./seed');
 const knex = require('../server/infra/database/knex');
 
 // Run the seed, and check that it's working

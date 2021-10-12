@@ -10,7 +10,7 @@ const registerEventHandlers = require('./services/EventHandlers');
 
 const app = express();
 
-//Sentry.init({ dsn: config.sentry_dsn });
+// Sentry.init({ dsn: config.sentry_dsn });
 
 /*
  * Check request
@@ -40,7 +40,8 @@ app.use('/', router);
 // Global error handler
 app.use(errorHandler);
 
-const version = require('../package.json').version;
+const {version} = require('../package.json');
+
 app.get('*', function (req, res) {
   res.status(200).send(version);
 });

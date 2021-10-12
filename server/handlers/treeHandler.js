@@ -1,4 +1,5 @@
 const express = require('express');
+
 const treeRouter = express.Router();
 const Joi = require('joi');
 
@@ -47,12 +48,12 @@ const treeHandlerPost = async function (req, res, next) {
       abortEarly: false,
     });
     await session.beginTransaction();
-    //const { entity, raisedEvents } = await executeCreateTree(tree);
+    // const { entity, raisedEvents } = await executeCreateTree(tree);
     const treeEntity = await executeCreateTree(tree);
     await session.commitTransaction();
-    /*raisedEvents.forEach((domainEvent) =>
+    /* raisedEvents.forEach((domainEvent) =>
           eventDispatch('capture-created', domainEvent),
-        );*/
+        ); */
     res.status(201).json({
       ...treeEntity,
     });

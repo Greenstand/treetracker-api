@@ -1,5 +1,5 @@
-const Session = require('./Session');
 const expect = require('expect-runtime');
+const Session = require('./Session');
 const HttpError = require('../../utils/HttpError');
 
 class BaseRepository {
@@ -32,11 +32,11 @@ class BaseRepository {
     console.log('BASE REPOSITORY getByFilter', filter, options);
     const whereBuilder = function (object, builder) {
       let result = builder;
-      if (object['and']) {
+      if (object.and) {
         expect(Object.keys(object)).lengthOf(1);
-        expect(object['and']).a(expect.any(Array));
-        for (let one of object['and']) {
-          if (one['or']) {
+        expect(object.and).a(expect.any(Array));
+        for (const one of object.and) {
+          if (one.or) {
             result = result.andWhere((subBuilder) =>
               whereBuilder(one, subBuilder),
             );
@@ -48,11 +48,11 @@ class BaseRepository {
             );
           }
         }
-      } else if (object['or']) {
+      } else if (object.or) {
         expect(Object.keys(object)).lengthOf(1);
-        expect(object['or']).a(expect.any(Array));
-        for (let one of object['or']) {
-          if (one['and']) {
+        expect(object.or).a(expect.any(Array));
+        for (const one of object.or) {
+          if (one.and) {
             result = result.orWhere((subBuilder) =>
               whereBuilder(one, subBuilder),
             );

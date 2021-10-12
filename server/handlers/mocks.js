@@ -59,7 +59,7 @@ const userImages = [
   'https://treetracker-production-images.s3.eu-central-1.amazonaws.com/2020.06.03.12.00.14_aa51eaa5-1de1-4ccb-9ebd-1456eafca407_IMG_20200603_103610_3156419657562304470.jpg',
   'https://treetracker-production.nyc3.digitaloceanspaces.com/Planter%201856.jpg',
   'https://treetracker-production.nyc3.digitaloceanspaces.com/Planter1837.jpg',
-  //Tree images with people in, used as planters for sample data
+  // Tree images with people in, used as planters for sample data
   'https://treetracker-production-images.s3.eu-central-1.amazonaws.com/2020.10.15.13.30.48_21.43142947_76.85455327_05c2efdd-93d4-4b6f-9f15-c0fc772ab0da_IMG_20201015_111622_3951043965199807415.jpg',
   'https://treetracker-production-images.s3.eu-central-1.amazonaws.com/2020.10.15.13.30.46_21.43200023_76.85613954_220066bb-e48d-4ef8-bb36-5155bc7a51d3_IMG_20201015_110505_3480860966873546925.jpg',
   'https://treetracker-production-images.s3.eu-central-1.amazonaws.com/2020.10.15.13.30.45_21.43199638_76.85644338_4baf7bc9-45e6-41e4-bee2-14205bc482c3_IMG_20201015_110130_4419017238703850529.jpg',
@@ -78,7 +78,7 @@ const userImages = [
 
 async function getMockCaptures(req, res) {
   // mock: return a random array of capture objects
-  let responseBody = {
+  const responseBody = {
     captures: [],
   };
   for (let step = 0; step < 20; step++) {
@@ -100,11 +100,11 @@ async function getMockCaptures(req, res) {
 async function getMockPotentialTrees(req, res) {
   // mock: return a random array of capture objects
 
-  let responseBody = {
+  const responseBody = {
     trees: [],
   };
 
-  let captures = [];
+  const captures = [];
   for (let step = 0; step < 20; step++) {
     captures.push({
       captureId: uuidv4(step),
@@ -122,7 +122,7 @@ async function getMockPotentialTrees(req, res) {
   for (let step = 0; step < 20; step++) {
     responseBody.trees.push({
       tree_id: uuidv4(step),
-      captures: captures,
+      captures,
     });
   }
 

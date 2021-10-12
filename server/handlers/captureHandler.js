@@ -1,4 +1,5 @@
 const express = require('express');
+
 const captureRouter = express.Router();
 const { v4: uuidv4 } = require('uuid');
 const Joi = require('joi');
@@ -57,7 +58,7 @@ const captureHandlerPost = async function (req, res) {
 
   // create tree data including unique id and setting date/time to today
   const capture = {
-    id: id,
+    id,
     reference_id,
     image_url,
     estimated_geometric_location,
@@ -91,7 +92,7 @@ const captureHandlerPost = async function (req, res) {
     if (session.isTransactionInProgress()) {
       await session.rollbackTransaction();
     }
-    let result = e;
+    const result = e;
     res.status(422).json({ ...result });
   }
 };

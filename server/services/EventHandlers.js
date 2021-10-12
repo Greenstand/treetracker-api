@@ -9,7 +9,7 @@ const { DomainEvent, receiveEvent } = require('../models/DomainEvent');
 const { applyVerification } = require('../models/Capture');
 
 const registerEventHandlers = () => {
-  //subscribe('admin-verification', handleVerifyCaptureProcessed);
+  // subscribe('admin-verification', handleVerifyCaptureProcessed);
 };
 
 module.exports = registerEventHandlers;

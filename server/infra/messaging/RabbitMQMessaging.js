@@ -1,5 +1,5 @@
 const Broker = require('rascal').BrokerAsPromised;
-const config = require('./config').config;
+const {config} = require('./config');
 
 const publishMessage = async (publicationName, payload, resultHandler) => {
   const broker = await Broker.create(config);

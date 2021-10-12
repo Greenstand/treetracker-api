@@ -2,6 +2,7 @@ const sinon = require('sinon')
 const chai = require("chai");
 const assertArrays = require('chai-arrays');
 const sinonChai = require("sinon-chai");
+
 chai.use(sinonChai);
 chai.use(assertArrays);
 const {expect} = chai;

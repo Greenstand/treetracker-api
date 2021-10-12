@@ -2,8 +2,8 @@
  * Some utils for router/express
  */
 const log = require('loglevel');
-const HttpError = require('../utils/HttpError');
 const { ValidationError } = require('joi');
+const HttpError = require('../utils/HttpError');
 
 /*
  * This is from the library https://github.com/Abazhenov/express-async-handler

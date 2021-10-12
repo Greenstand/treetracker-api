@@ -9,9 +9,9 @@ class Session {
     console.log('SESSION getDB');
     if (this.thx) {
       return this.thx;
-    } else {
+    } 
       return knex;
-    }
+    
   }
 
   isTransactionInProgress() {
