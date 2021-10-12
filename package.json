@@ -3,7 +3,7 @@
   "version": "1.4.0",
   "private": true,
   "engines": {
-    "node": ">=12.0.0 <13",
+    "node": ">=16.0.0 <17",
     "npm": ">=6.0.0"
   },
   "main": "server/server.js",
@@ -31,7 +31,7 @@
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "@sentry/node": "^5.1.0",
-    "amqplib": "^0.7.1",
+    "amqplib": "^0.8.0",
     "body-parser": "^1.18.2",
     "dotenv": "^8.2.0",
     "expect": "^26.4.2",
@@ -60,6 +60,7 @@
     "eslint-config-prettier": "^6.13.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-prettier": "^3.2.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
     "expect-runtime": "^0.7.0",
     "husky": "^4.3.5",
     "mocha": "^8.1.3",
