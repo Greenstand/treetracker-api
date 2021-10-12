@@ -23,17 +23,13 @@ spec:
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  name: treetracker-database-connection
+                  name: database-connection
                   key: db
             - name: DATABASE_SCHEMA
               valueFrom:
                 secretKeyRef:
-                  name: treetracker-database-connection
+                  name: database-connection
                   key: schema
-            - name: NODE_LOG_LEVEL
-              value: trace
-            - name: REMOTE_LOG_URL
-              value: http://104.131.78.177:8000
             - name: RABBIT_MQ_URL
               valueFrom:
                 secretKeyRef:
