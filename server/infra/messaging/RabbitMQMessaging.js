@@ -1,5 +1,5 @@
 const Broker = require('rascal').BrokerAsPromised;
-const {config} = require('./config');
+const { config } = require('./config');
 
 const publishMessage = async (publicationName, payload, resultHandler) => {
   const broker = await Broker.create(config);
@@ -20,6 +20,8 @@ const publishMessage = async (publicationName, payload, resultHandler) => {
 
 // not used currently, but saving for future use
 const subscribe = async (subscriptionName, eventHandler) => {
+  // Not Sure where this is to come from
+  const queueName = '';
   const broker = await Broker.create(config);
   try {
     const subscription = await broker.subscribe(subscriptionName);

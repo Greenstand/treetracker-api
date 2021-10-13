@@ -22,7 +22,9 @@ describe('Seed data into DB', () => {
 
     before(async () => {
       expect(seed.token).to.have.property('id');
-      r = await pool.query(`select * from token where id = '${seed.token.id}'`);
+      const r = await pool.query(
+        `select * from token where id = '${seed.token.id}'`,
+      );
       expect(r).to.have.property('rows').to.have.lengthOf(1);
       token = r.rows[0];
     });

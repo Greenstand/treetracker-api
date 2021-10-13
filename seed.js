@@ -79,7 +79,7 @@ async function seed() {
     uuid: token.uuid,
   });
 
-  await knex('token').insert(tokenB);
+  // await knex('token').insert(tokenB);
 }
 
 async function clear() {

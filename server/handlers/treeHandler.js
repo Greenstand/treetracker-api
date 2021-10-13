@@ -9,15 +9,13 @@ const { dispatch } = require('../models/DomainEvent');
 const Session = require('../infra/database/Session');
 const { publishMessage } = require('../infra/messaging/RabbitMQMessaging');
 
-const {
-  TreeRepository,
-  CaptureRepository,
-  EventRepository,
-} = require('../infra/database/PgRepositories');
+const EventRepository = require('../infra/database/EventRepository');
+const TreeRepository = require('../infra/database/TreeRepository');
 
 const treeHandlerGet = async function (req, res) {
   const session = new Session(false);
   // todo
+  const result = {};
   res.send(result);
   res.end();
 };

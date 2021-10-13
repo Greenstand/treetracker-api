@@ -1,4 +1,5 @@
 // MOCK QUERIES
+const { v4: uuidv4 } = require('uuid');
 
 const randIndex = (arr) => {
   return Math.round(Math.random() * arr.length);
