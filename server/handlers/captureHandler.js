@@ -15,8 +15,8 @@ const { dispatch } = require('../models/DomainEvent');
 const Session = require('../infra/database/Session');
 const { publishMessage } = require('../infra/messaging/RabbitMQMessaging');
 
-const CaptureRepository = require('../infra/database/CaptureRepository');
-const EventRepository = require('../infra/database/EventRepository');
+const CaptureRepository = require('../infra/repositories/CaptureRepository');
+const EventRepository = require('../infra/repositories/EventRepository');
 
 const captureHandlerGet = async function (req, res) {
   console.log('CAPTURE ROUTER get', req.query);

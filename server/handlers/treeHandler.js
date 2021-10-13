@@ -9,8 +9,8 @@ const { dispatch } = require('../models/DomainEvent');
 const Session = require('../infra/database/Session');
 const { publishMessage } = require('../infra/messaging/RabbitMQMessaging');
 
-const EventRepository = require('../infra/database/EventRepository');
-const TreeRepository = require('../infra/database/TreeRepository');
+const EventRepository = require('../infra/repositories/EventRepository');
+const TreeRepository = require('../infra/repositories/TreeRepository');
 
 const treeHandlerGet = async function (req, res) {
   const session = new Session(false);

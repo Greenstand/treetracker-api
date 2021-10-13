@@ -1,5 +1,4 @@
 const expect = require('expect-runtime');
-const Session = require('./Session');
 const HttpError = require('../../utils/HttpError');
 
 class BaseRepository {

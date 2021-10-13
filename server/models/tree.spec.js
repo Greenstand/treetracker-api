@@ -8,7 +8,7 @@ chai.use(assertArrays);
 const { expect } = chai;
 
 const { treeFromRequest, createTree } = require('./tree.js');
-const TreeRepository = require('../infra/database/TreeRepository');
+const TreeRepository = require('../infra/repositories/TreeRepository');
 
 describe('executing treeFromRequest function', () => {
   const tree = treeFromRequest({
@@ -24,7 +24,8 @@ describe('executing treeFromRequest function', () => {
   });
 
   it('should return an object with the required parameters', function () {
-    expect(Object.keys(tree)).to.equalTo([
+    console.log(tree);
+    expect(Object.keys(tree)).to.eql([
       'id',
       'latest_capture_id',
       'image_url',
@@ -34,6 +35,8 @@ describe('executing treeFromRequest function', () => {
       'morphology',
       'age',
       'status',
+      'created_at',
+      'updated_at',
     ]);
   });
 });
