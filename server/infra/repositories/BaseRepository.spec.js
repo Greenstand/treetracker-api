@@ -1,6 +1,6 @@
 const BaseRepository = require('./BaseRepository');
 const { expect } = require('chai');
-const knex = require('../database/knex');
+const knex = require('knex');
 const mockKnex = require('mock-knex');
 
 const tracker = mockKnex.getTracker();
@@ -9,9 +9,10 @@ const Session = require('../database/Session');
 
 describe('BaseRepository', () => {
   let baseRepository;
+  let knexDB = knex({ client: 'pg' });
 
   beforeEach(() => {
-    mockKnex.mock(knex);
+    mockKnex.mock(knexDB);
     tracker.install();
     const session = new Session();
     baseRepository = new BaseRepository('testTable', session);
@@ -19,7 +20,7 @@ describe('BaseRepository', () => {
 
   afterEach(() => {
     tracker.uninstall();
-    mockKnex.unmock(knex);
+    mockKnex.unmock(knexDB);
   });
 
   it('getById', async () => {
