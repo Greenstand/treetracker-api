@@ -9,7 +9,7 @@ const Session = require('../database/Session');
 
 describe('BaseRepository', () => {
   let baseRepository;
-  let knexDB = knex({ client: 'pg' });
+  const knexDB = knex({ client: 'pg' });
 
   beforeEach(() => {
     mockKnex.mock(knexDB);
