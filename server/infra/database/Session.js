@@ -9,13 +9,12 @@ class Session {
     console.log('SESSION getDB');
     if (this.thx) {
       return this.thx;
-    } 
-      return knex;
-    
+    }
+    return knex;
   }
 
   isTransactionInProgress() {
-    return this.thx != undefined;
+    return this.thx !== undefined;
   }
 
   async beginTransaction() {

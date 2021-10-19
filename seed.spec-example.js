@@ -1,9 +1,9 @@
 const { expect } = require('chai');
 const Crypto = require('crypto');
 const log = require('loglevel');
-const pool = require('../server/infra/database/database');
-const seed = require('./seed');
-const knex = require('../server/infra/database/knex');
+const pool = require('./server/infra/database/knex');
+const seed = require('./seed-example');
+const knex = require('./server/infra/database/knex');
 
 // Run the seed, and check that it's working
 
@@ -22,7 +22,9 @@ describe('Seed data into DB', () => {
 
     before(async () => {
       expect(seed.token).to.have.property('id');
-      r = await pool.query(`select * from token where id = '${seed.token.id}'`);
+      const r = await pool.query(
+        `select * from token where id = '${seed.token.id}'`,
+      );
       expect(r).to.have.property('rows').to.have.lengthOf(1);
       token = r.rows[0];
     });

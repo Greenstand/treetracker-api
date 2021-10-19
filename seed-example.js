@@ -1,15 +1,9 @@
 /*
  * seed data to DB for testing
  */
-const pool = require('../server/infra/database/database.js');
 const uuid = require('uuid');
 const log = require('loglevel');
-const assert = require('assert');
-const knex = require('knex')({
-  client: 'pg',
-  //  debug: true,
-  connection: require('../config/config').connectionString,
-});
+const knex = require('./server/infra/database/knex');
 
 // Example of a database seed using knex
 // This follows from the wallet microservice
@@ -79,7 +73,7 @@ async function seed() {
     uuid: token.uuid,
   });
 
-  await knex('token').insert(tokenB);
+  // await knex('token').insert(tokenB);
 }
 
 async function clear() {
