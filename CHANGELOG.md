@@ -1,3 +1,10 @@
+## [1.4.2](https://github.com/Greenstand/treetracker-api/compare/v1.4.1...v1.4.2) (2021-10-20)
+
+
+### Bug Fixes
+
+* switch to ssl=no-verify ([e9c3405](https://github.com/Greenstand/treetracker-api/commit/e9c340561ef6159ab4b2140690901990d607bc02))
+
 ## [1.4.1](https://github.com/Greenstand/treetracker-api/compare/v1.4.0...v1.4.1) (2021-10-20)
 
 
