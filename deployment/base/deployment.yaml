@@ -35,10 +35,7 @@ spec:
                   name: database-connection
                   key: db
             - name: DATABASE_SCHEMA
-              valueFrom:
-                secretKeyRef:
-                  name: database-connection
-                  key: schema
+              value: treetracker
             - name: RABBIT_MQ_URL
               valueFrom:
                 secretKeyRef:
