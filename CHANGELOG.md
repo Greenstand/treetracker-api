@@ -1,3 +1,18 @@
+## [1.4.1](https://github.com/Greenstand/treetracker-api/compare/v1.4.0...v1.4.1) (2021-10-20)
+
+
+### Bug Fixes
+
+* added eslint configs ([24bec8a](https://github.com/Greenstand/treetracker-api/commit/24bec8a6045f0c25579af0ef8c2de01629827bcf))
+* baserepository.spec.js issue ([706b881](https://github.com/Greenstand/treetracker-api/commit/706b8813a0f39c3eb8982f520953f7dbc9623a8a))
+* configure database schema name ([1b943e5](https://github.com/Greenstand/treetracker-api/commit/1b943e5e773ff7f04286532eed4288a88b11e0ca))
+* convert to updated deployment structure ([85c5f74](https://github.com/Greenstand/treetracker-api/commit/85c5f749480dd8c556dd1c30901b17a75fa941cd))
+* fix name of base ([ad5c344](https://github.com/Greenstand/treetracker-api/commit/ad5c3443ea70c601e63d202b1ce2529ef2c4678f))
+* fix name of database connection resource in deployment ([e050ca8](https://github.com/Greenstand/treetracker-api/commit/e050ca81cb0a4e796fd7029f8cf7d69ba63bdfaa))
+* linting issues ([3b11f63](https://github.com/Greenstand/treetracker-api/commit/3b11f6382a7423f98575bda90a180909dafc0d53))
+* release from main branch ([6b2156d](https://github.com/Greenstand/treetracker-api/commit/6b2156d4cb0ef6edd69bbb6fde7ff40b2cb2aab4))
+* update package.json to node 16, add missing eslint package ([27189a6](https://github.com/Greenstand/treetracker-api/commit/27189a6501a597048086346425d72879b1728987))
+
 # [1.4.0](https://github.com/Greenstand/treetracker-api/compare/v1.3.0...v1.4.0) (2021-05-11)
 
 
