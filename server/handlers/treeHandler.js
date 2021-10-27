@@ -21,7 +21,8 @@ const treeHandlerGet = async function (req, res) {
 };
 
 const treeHandlerGetPotentialMatches = async function (req, res) {
-
+  const session = new Session(false);
+  const captureRepo = new TreeRepository(session);
 }
 
 const treeSchema = Joi.object({
