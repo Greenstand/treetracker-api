@@ -69,7 +69,7 @@ const treeHandlerGetPotentialMatches = utils.handlerWrapper(async (req, res) => 
   log.warn("handle potentialMatches");
   const session = new Session();
   const execute = potentialMatches(session);
-  const result = await execute();
+  const result = await execute(req.query.capture_id);
   log.warn("result of match:", result);
   res.status(200).json({matches: result});
 });

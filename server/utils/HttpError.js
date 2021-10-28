@@ -3,6 +3,8 @@
  * code, to bring some convenient for the internal class to throw out the error 
  * and the outside of the layer can catch the error and convert to a http 
  * response to client
+ *
+ * USAGE: new HttpError(422, "require some parameter...");
  */
 
 class HttpError extends Error {

@@ -1,7 +1,6 @@
 {
   "id": "a15cd26a-3727-11ec-8d3d-0242ac130003",
-  "location": "POINT(96.25518281124721 4.335420234501272)",
-  "latest_capture_id": "c02a5ae6-3727-11ec-8d3d-0242ac130003",
+  "location": "POINT(0 0)",
   "lat": 0,
   "lon": 0,
   "status": "alive",
