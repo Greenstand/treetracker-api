@@ -36,6 +36,7 @@ const createTree = (treeRepository) => (async tree => {
 
 /*
  * To find matched tree by providing capture id
+ * Didn't use Repository because I think this business-specific SQL don't worth to put into Repository for future reuse.
  */
 const potentialMatches = (session) => (async (captureId, distance = 6) => {
     log.warn("potentialMatches...");
