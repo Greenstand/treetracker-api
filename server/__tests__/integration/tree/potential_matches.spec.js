@@ -48,7 +48,7 @@ describe("GET /trees/potential_matches", () => {
       .to.not.have.members([tree1.id]);
   });
 
-  it("tree1 doesn't potential matches capture1 because it's too far away with c1", async () => {
+  it("tree1 doesn't potential matches capture1 because it's too far away from c1", async () => {
     await utils.addTree({
       ...tree1,
       location: "POINT(179 70)",
