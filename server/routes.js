@@ -12,13 +12,19 @@ const {
 const {
   treeHandlerPost,
   treeHandlerGet,
+  treeHandlerGetPotentialMatches,
 } = require('./handlers/treeHandler.js');
 
 router.post('/captures', validateRequest, captureHandlerPost);
 router.get('/captures', validateRequest, captureHandlerGet);
 router.patch('/captures/:capture_id', validateRequest, captureHandlerPatch);
+
+router.get('/trees/potential_matches', validateRequest, treeHandlerGetPotentialMatches);
 router.post('/trees', validateRequest, treeHandlerPost);
 router.get('/trees', validateRequest, treeHandlerGet);
-router.get('/trees/potential_matches', validateRequest, treeHandlerGetPotentialMatches);
+
+
+const r = require("./routes-old/treeRouter");
+router.use(r);
 
 module.exports = router;
