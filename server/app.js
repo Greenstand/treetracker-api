@@ -42,9 +42,9 @@ app.use(errorHandler);
 
 const {version} = require('../package.json');
 
-//app.get('*', function (req, res) {
-//  res.status(200).send(version);
-//});
+app.get('*', function (req, res) {
+  res.status(200).send(version);
+});
 
 registerEventHandlers();
 

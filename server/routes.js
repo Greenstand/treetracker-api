@@ -23,8 +23,4 @@ router.get('/trees/potential_matches', validateRequest, treeHandlerGetPotentialM
 router.post('/trees', validateRequest, treeHandlerPost);
 router.get('/trees', validateRequest, treeHandlerGet);
 
-
-const r = require("./routes-old/treeRouter");
-router.use(r);
-
 module.exports = router;
