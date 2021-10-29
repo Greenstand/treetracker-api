@@ -44,7 +44,7 @@ const potentialMatches = (session) => (async (captureId, distance = 6) => {
     throw new HttpError(400, "missing parameter captureId");
   }
     const id = captureId;
-    //maximum distance in meters between possible matches and tree in query
+    // maximum distance in meters between possible matches and tree in query
     const query = `
 SELECT
 	t1.id,
