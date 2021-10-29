@@ -8,15 +8,15 @@ Description of this microservice
 
 Open terminal and navigate to a folder to install this project:
 
-```
+```bash
 git clone https://github.com/Greenstand/treetracker-repository-name.git
 
 ```
 Install all necessary dependencies: 
 
-```
+```bash
 npm install
-
+```
 ### Database Setup
 
 To run a local db, please install postgres. 
@@ -28,19 +28,19 @@ Here are some resources to get started on local database set up and migration:
 We need a user to connect to the database. We can either use the default postgres user, or create a new user. We then need to create a database associated with that user.
 
 To create a new user (role):
-
+```SQL
 CREATE ROLE "treetracker" WITH LOGIN CREATEDB CREATEROLE INHERIT NOREPLICATION CONNECTION LIMIT -1;
-
+```
 To set the password:
-
+```SQL
 ALTER USER treetracker WITH PASSWORD '<password>';
-
+```
 To create a new database:
-
+```SQL
 CREATE DATABASE treetracker_db WITH OWNER = treetracker ENCODING = 'UTF8';
 
-create schema treetracker;
-
+CREATE SCHEMA treetracker;
+```
 Create a `.env` file under the project folder and assign the value for
 ```
 DATABASE_URL="postgresql://username:pwd@db_host:port/treetracker_db?false"
@@ -48,13 +48,13 @@ DATABASE_URL="postgresql://username:pwd@db_host:port/treetracker_db?false"
 
 To create the necessary tables for your application, run db-migrate below.
 
-```
+```bash
 db-migrate up --env dev --sql-file --migrations-dir=database/migrations --config=database/database.json
 ```
 
 If you have not installed db-migrate globally, you can run:
 
-```
+```bash
 ../node_modules/db-migrate/bin/db-migrate --env dev up --sql-file --migrations-dir=database/migrations --config=database/database.json
 ```
 
@@ -103,7 +103,7 @@ TODO: Add link to WIKI page detailing our architecture rules
 
 To run the unit tests:
 
-```
+```bash
 npm run test-unit
 ```
 
@@ -115,14 +115,14 @@ To run the integration test:
 
 Run tests:
 
-```
+```bash
 npm run test-integration
 ```
 
 ## Database seeding test
 In order to efficiently run our integration tests, we rely on automated database seeding/clearing functions to mock database entries. To test these functions, run:
 
-```
+```bash
 npm run test-seedDB
 ```
 
@@ -130,7 +130,7 @@ npm run test-seedDB
 
 There is a command in the `package.json`:
 
-```
+```bash
 npm run test-watch
 ```
 
@@ -144,7 +144,7 @@ Can also use Postman to test the API in a more real environment. Import the API 
 
 To run a local server with some seed data, run command:
 
-```
+```bash
 npm run server-test
 ```
 
