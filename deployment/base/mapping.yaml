@@ -7,6 +7,6 @@ spec:
   service: treetracker-api
   rewrite: /
   cors:
-    origins: "*"
+    origins: '*'
     methods: GET, POST, PATCH, OPTIONS
     headers: Content-Type
