@@ -1,3 +1,20 @@
+# [1.5.0](https://github.com/Greenstand/treetracker-api/compare/v1.4.2...v1.5.0) (2021-10-29)
+
+
+### Bug Fixes
+
+* dont include schema in migrations ([f396e2f](https://github.com/Greenstand/treetracker-api/commit/f396e2f08335fa39b21564b8815d38ed6e7fecc8))
+* duplicated variable ([e108e5e](https://github.com/Greenstand/treetracker-api/commit/e108e5ef11d3de36ec59c50bce56c3bc81412765))
+* lint and prettier fix ([3cc7a39](https://github.com/Greenstand/treetracker-api/commit/3cc7a39c5556180e1203fd23afb148bae1e5e0d7))
+* lint:fix ([3fd75ef](https://github.com/Greenstand/treetracker-api/commit/3fd75ef88f38b8ebabf584dac04d3f6a58ea4f96))
+* more lint ([d372711](https://github.com/Greenstand/treetracker-api/commit/d372711842224b08ff6fab373539ea1ada9f4821))
+* separate migrations ([1dc786a](https://github.com/Greenstand/treetracker-api/commit/1dc786a95d43d02a887f5a21c0b05452ceb0db3f))
+
+
+### Features
+
+* add estimated_geographic_location column ([7eec3d5](https://github.com/Greenstand/treetracker-api/commit/7eec3d56cba030c1d64945f161709602ed1a4df0))
+
 ## [1.4.2](https://github.com/Greenstand/treetracker-api/compare/v1.4.1...v1.4.2) (2021-10-20)
 
 
