@@ -18,11 +18,11 @@ spec:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
-            - matchExpressions:
-              - key: doks.digitalocean.com/node-pool
-                operator: In
-                values:
-                - microservices-node-pool
+              - matchExpressions:
+                  - key: doks.digitalocean.com/node-pool
+                    operator: In
+                    values:
+                      - microservices-node-pool
       containers:
         - name: treetracker-api
           image: greenstand/treetracker-api:VERSION
