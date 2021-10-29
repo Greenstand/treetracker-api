@@ -1,9 +1,9 @@
 const express = require('express');
-
+const log = require("loglevel");
 const treeRouter = express.Router();
 const Joi = require('joi');
 
-const { createTree, treeFromRequest } = require('../models/tree');
+const { createTree, treeFromRequest, potentialMatches } = require('../models/tree');
 const { dispatch } = require('../models/DomainEvent');
 
 const Session = require('../infra/database/Session');
@@ -11,6 +11,8 @@ const { publishMessage } = require('../infra/messaging/RabbitMQMessaging');
 
 const EventRepository = require('../infra/repositories/EventRepository');
 const TreeRepository = require('../infra/repositories/TreeRepository');
+
+const utils = require("./utils");
 
 const treeHandlerGet = async function (req, res) {
   const session = new Session(false);
@@ -63,7 +65,17 @@ const treeHandlerPost = async function (req, res, next) {
   }
 };
 
+const treeHandlerGetPotentialMatches = utils.handlerWrapper(async (req, res) => {
+  log.warn("handle potentialMatches");
+  const session = new Session();
+  const execute = potentialMatches(session);
+  const result = await execute(req.query.capture_id);
+  log.warn("result of match:", result);
+  res.status(200).json({matches: result});
+});
+
 module.exports = {
   treeHandlerGet,
   treeHandlerPost,
+  treeHandlerGetPotentialMatches,
 };
