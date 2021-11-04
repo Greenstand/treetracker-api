@@ -34,7 +34,7 @@ class TreeRepository extends BaseRepository {
   }
 
   async getPotentialMatches(id, distance){
-    //maximum distance in meters between possible matches and tree in query
+    // maximum distance in meters between possible matches and tree in query
     const query = `
 SELECT
 	t1.id,
