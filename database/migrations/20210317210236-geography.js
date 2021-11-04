@@ -1,8 +1,6 @@
-'use strict';
-
-var dbm;
-var type;
-var seed;
+let dbm;
+let type;
+let seed;
 
 /**
  * We receive the dbmigrate dependency from dbmigrate initially.
@@ -16,14 +14,14 @@ exports.setup = function (options, seedLink) {
 
 exports.up = function (db, callback) {
   db.runSql(
-    'ALTER TABLE treetracker.tree ADD COLUMN estimated_geographic_location GEOGRAPHY(Point, 4326)',
+    'ALTER TABLE tree ADD COLUMN estimated_geographic_location GEOGRAPHY(Point, 4326)',
     callback,
   );
 };
 
-exports.down = function (db) {
+exports.down = function (db, callback) {
   db.runSql(
-    'ALTER TABLE treetracker.tree DROP COLUMN estimated_geographic_location',
+    'ALTER TABLE tree DROP COLUMN estimated_geographic_location',
     callback,
   );
 };

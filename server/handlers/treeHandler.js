@@ -1,7 +1,8 @@
 const express = require('express');
 const log = require("loglevel");
-const treeRouter = express.Router();
 const Joi = require('joi');
+
+const treeRouter = express.Router();
 
 const { createTree, treeFromRequest, potentialMatches } = require('../models/tree');
 const { dispatch } = require('../models/DomainEvent');

@@ -4,17 +4,17 @@ const log = require("loglevel");
 const HttpError = require("../utils/HttpError");
 
 const treeFromRequest = ({
-    capture_id, 
-    image_url,
-    lat,
-    lon,
-    species_id = -1,
-    morphology = '',
-    age = -1,
-    created_at,
-    updated_at
+  capture_id,
+  image_url,
+  lat,
+  lon,
+  species_id = -1,
+  morphology = '',
+  age = -1,
+  created_at,
+  updated_at,
 }) => {
-return Object.freeze({ 
+  return Object.freeze({
     id: uuid(),
     latest_capture_id: capture_id,
     image_url,
@@ -25,14 +25,14 @@ return Object.freeze({
     age,
     status: 'alive',
     created_at,
-    updated_at
-    });
-}
+    updated_at,
+  });
+};
 
-const createTree = (treeRepository) => (async tree => {
-    const repository = new Repository(treeRepository);
-    return repository.add(tree);
-});
+const createTree = (treeRepository) => async (tree) => {
+  const repository = new Repository(treeRepository);
+  return repository.add(tree);
+};
 
 /*
  * To find matched tree by providing capture id
@@ -49,7 +49,7 @@ const potentialMatches = (treeRepository) => (async (captureId, distance = 6) =>
 });
 
 module.exports = {
-    createTree,
-    treeFromRequest,
+  createTree,
+  treeFromRequest,
   potentialMatches,
 };
