@@ -3,3 +3,6 @@ resources:
   - mapping.yaml
   - service.yaml
   - database-connection-sealed-secret.yaml
+  - cluster-role.yaml
+  - cluster-role-binding.yaml
+  - database-migration-job.yaml
