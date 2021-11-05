@@ -1,3 +1,10 @@
+## [1.6.1](https://github.com/Greenstand/treetracker-api/compare/v1.6.0...v1.6.1) (2021-11-05)
+
+
+### Bug Fixes
+
+* add missing database migration secret ([6cec49b](https://github.com/Greenstand/treetracker-api/commit/6cec49bd4c7097e74cab2744ec5abb35ac85d7ca))
+
 # [1.6.0](https://github.com/Greenstand/treetracker-api/compare/v1.5.0...v1.6.0) (2021-11-05)
 
 
