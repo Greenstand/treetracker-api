@@ -1,3 +1,12 @@
+## [1.6.2](https://github.com/Greenstand/treetracker-api/compare/v1.6.1...v1.6.2) (2021-11-05)
+
+
+### Bug Fixes
+
+* add database migration connection sealed secret to overlay ([071151d](https://github.com/Greenstand/treetracker-api/commit/071151d80db7e8937e0a5525394f3a8b744ceaec))
+* add database migration sealed secret to base ([411951a](https://github.com/Greenstand/treetracker-api/commit/411951a0e0b79b08a1605f28ce1ea7879cae6607))
+* update api version of cluster role specs ([2c51e42](https://github.com/Greenstand/treetracker-api/commit/2c51e421f9a0117d0558b1bffc482d311990c75b))
+
 ## [1.6.1](https://github.com/Greenstand/treetracker-api/compare/v1.6.0...v1.6.1) (2021-11-05)
 
 
