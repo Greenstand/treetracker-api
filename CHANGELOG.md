@@ -1,3 +1,10 @@
+## [1.6.3](https://github.com/Greenstand/treetracker-api/compare/v1.6.2...v1.6.3) (2021-11-05)
+
+
+### Bug Fixes
+
+* sealed secret was missing password ([0d4e1c4](https://github.com/Greenstand/treetracker-api/commit/0d4e1c4e4eb75291ce1ff2ce7fc84ff07f88fcb0))
+
 ## [1.6.2](https://github.com/Greenstand/treetracker-api/compare/v1.6.1...v1.6.2) (2021-11-05)
 
 
