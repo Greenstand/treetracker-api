@@ -1,3 +1,17 @@
+# [1.6.0](https://github.com/Greenstand/treetracker-api/compare/v1.5.0...v1.6.0) (2021-11-05)
+
+
+### Bug Fixes
+
+* remove extra space, use 16.x image ([dd0384e](https://github.com/Greenstand/treetracker-api/commit/dd0384eb55ce10350e9ba47a09b55900f107a0d5))
+* update database secret ([a444a6d](https://github.com/Greenstand/treetracker-api/commit/a444a6d2188132b435d7182e68fda4509549376e))
+
+
+### Features
+
+* add configurations for running db-migrate in deployment workflow ([e664606](https://github.com/Greenstand/treetracker-api/commit/e6646066923902595984f65c9be4e32bf6e8b097))
+* add database migration deployment manifesets ([b5dce70](https://github.com/Greenstand/treetracker-api/commit/b5dce70a811376eab5f214b439ec16b723abac51))
+
 # [1.5.0](https://github.com/Greenstand/treetracker-api/compare/v1.4.2...v1.5.0) (2021-10-29)
 
 
