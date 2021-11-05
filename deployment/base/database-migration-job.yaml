@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name:database-migration-job
+  name: database-migration-job
 spec:
   backoffLimit: 1 # allow for one re-try of the migration
   template:
