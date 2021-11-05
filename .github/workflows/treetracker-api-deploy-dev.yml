@@ -11,8 +11,8 @@ env:
   project-directory: ./
 
 jobs:
-  deploy-test:
-    name: Deploy latest to test environment, requires approval
+  deploy-dev:
+    name: Deploy latest to dev environment, requires approval
     runs-on: ubuntu-latest
     if: |
       github.repository == "Greenstand/${{ github.event.repository.name }}"
