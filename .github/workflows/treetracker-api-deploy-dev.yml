@@ -1,4 +1,4 @@
-name: Deploy Service to Test Env
+name: Deploy Service to Dev Env
 
 on:
   workflow_dispatch:
