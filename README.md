@@ -49,6 +49,7 @@ DATABASE_URL="postgresql://username:pwd@db_host:port/treetracker_db?false"
 To create the necessary tables for your application, run db-migrate below.
 
 ```bash
+cd datbaase/
 db-migrate up --env dev --sql-file --migrations-dir=database/migrations --config=database/database.json
 ```
 
