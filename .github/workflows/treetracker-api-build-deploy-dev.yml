@@ -34,10 +34,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js 14.x
+      - name: Use Node.js 16.x
         uses: actions/setup-node@v1
         with:
-          node-version: '14.x'
+          node-version: '16.x'
       - name: npm clean install
         run: npm ci
         working-directory: ${{ env.project-directory }}
@@ -66,10 +66,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Use Node.js 14.x
+      - name: Use Node.js 16.x
         uses: actions/setup-node@v1
         with:
-          node-version: '14.x'
+          node-version: '16.x'
 
       - name: npm clean install
         run: npm ci
@@ -139,4 +139,4 @@ jobs:
       - name: Update kubernetes resources
         run: kustomize build deployment/overlays/development | kubectl apply -n ${{ secrets.K8S_NAMESPACE }} --wait -f -
       - name: Attempt to wait for migration job to complete
-         run: kubectl wait --for=condition=complete --timeout=45s job/db-migration-job
+        run: kubectl wait --for=condition=complete --timeout=45s job/db-migration-job
