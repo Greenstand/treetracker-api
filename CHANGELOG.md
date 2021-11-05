@@ -1,3 +1,11 @@
+## [1.6.4](https://github.com/Greenstand/treetracker-api/compare/v1.6.3...v1.6.4) (2021-11-05)
+
+
+### Bug Fixes
+
+* update sealed secrets ([377ac06](https://github.com/Greenstand/treetracker-api/commit/377ac06c3331a7d5df38ea4ddd50e69e33d595fe))
+* update sealed secrets ([eac05d0](https://github.com/Greenstand/treetracker-api/commit/eac05d054e1a01332246722bc7559988f81a81cf))
+
 ## [1.6.3](https://github.com/Greenstand/treetracker-api/compare/v1.6.2...v1.6.3) (2021-11-05)
 
 
