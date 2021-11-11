@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/Greenstand/treetracker-api/compare/v1.6.4...v1.7.0) (2021-11-11)
+
+
+### Features
+
+* support for db-migrate automation not ready yet after all ([5f353e4](https://github.com/Greenstand/treetracker-api/commit/5f353e497e3af309ce468c351572a7f0ba0ae50c))
+
 ## [1.6.4](https://github.com/Greenstand/treetracker-api/compare/v1.6.3...v1.6.4) (2021-11-05)
 
 
