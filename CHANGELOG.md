@@ -1,3 +1,10 @@
+## [1.7.1](https://github.com/Greenstand/treetracker-api/compare/v1.7.0...v1.7.1) (2021-11-25)
+
+
+### Bug Fixes
+
+* enable database migrations via CD ([66f128b](https://github.com/Greenstand/treetracker-api/commit/66f128b3b04358e1db132bc56a7db882158793f0))
+
 # [1.7.0](https://github.com/Greenstand/treetracker-api/compare/v1.6.4...v1.7.0) (2021-11-11)
 
 
