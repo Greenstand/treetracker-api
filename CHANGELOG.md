@@ -1,3 +1,10 @@
+## [1.7.2](https://github.com/Greenstand/treetracker-api/compare/v1.7.1...v1.7.2) (2021-11-25)
+
+
+### Bug Fixes
+
+* restore k8s resources for db migration automation ([e20a599](https://github.com/Greenstand/treetracker-api/commit/e20a59937dbf72b38624c75db8f817f108bf4d83))
+
 ## [1.7.1](https://github.com/Greenstand/treetracker-api/compare/v1.7.0...v1.7.1) (2021-11-25)
 
 
