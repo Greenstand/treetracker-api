@@ -42,4 +42,4 @@ jobs:
       - name: Update kubernetes resources
         run: kustomize build deployment/overlays/development | kubectl apply -n ${{ secrets.K8S_NAMESPACE }} --wait -f -
       - name: Attempt to wait for migration job to complete
-        run: kubectl wait --for=condition=complete --timeout=45s job/database-migration-job
+        run: kubectl wait -n ${{ secrets.K8S_NAMESPACE }} --for=condition=complete --timeout=45s job/database-migration-job
