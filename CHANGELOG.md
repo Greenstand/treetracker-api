@@ -1,3 +1,11 @@
+## [1.7.3](https://github.com/Greenstand/treetracker-api/compare/v1.7.2...v1.7.3) (2021-11-25)
+
+
+### Bug Fixes
+
+* add database secrets for test env ([71f9acb](https://github.com/Greenstand/treetracker-api/commit/71f9acb5e13ea2cb286d7aa39eb66b7a95a0e25b))
+* update sealed secrets ([81268f0](https://github.com/Greenstand/treetracker-api/commit/81268f0841e139bc95d6e38948e43902c2e8a9ab))
+
 ## [1.7.2](https://github.com/Greenstand/treetracker-api/compare/v1.7.1...v1.7.2) (2021-11-25)
 
 
