@@ -1,6 +1,6 @@
 const { v4: uuid } = require('uuid');
-const { Repository } = require('./Repository.js');
 const log = require("loglevel");
+const { Repository } = require('./Repository.js');
 const HttpError = require("../utils/HttpError");
 
 const treeFromRequest = ({

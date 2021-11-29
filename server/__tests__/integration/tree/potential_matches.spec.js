@@ -1,13 +1,13 @@
 const request = require("supertest");
-const app = require("../../../app");
 const { expect } = require('chai');
 const log = require("loglevel");
+const uuid = require("uuid");
+const app = require("../../../app");
 const utils = require("../../utils");
 const tree1 = require("../../mock/tree1.json");
 const tree2 = require("../../mock/tree2.json");
 const capture1 = require("../../mock/capture1.json");
 const capture2 = require("../../mock/capture2.json");
-const uuid = require("uuid");
 
 describe("GET /trees/potential_matches", () => {
   beforeEach(async () => {
