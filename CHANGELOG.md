@@ -1,3 +1,12 @@
+## [1.7.4](https://github.com/Greenstand/treetracker-api/compare/v1.7.3...v1.7.4) (2021-12-02)
+
+
+### Bug Fixes
+
+* broken tests ([a158e6a](https://github.com/Greenstand/treetracker-api/commit/a158e6a95a2752ca2a8548e25ba01188a8ea7c21))
+* update call to run tests ([29cb6e4](https://github.com/Greenstand/treetracker-api/commit/29cb6e4339d5ce97fb1649e4927ebc73fbd5f14a))
+* update docker hub image for postgix ([164d51e](https://github.com/Greenstand/treetracker-api/commit/164d51e4d7cd3b365a525bd5a688efdb238a37db))
+
 ## [1.7.3](https://github.com/Greenstand/treetracker-api/compare/v1.7.2...v1.7.3) (2021-11-25)
 
 
