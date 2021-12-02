@@ -1,6 +1,6 @@
 CREATE TABLE capture
 (
-    id uuid NOT NULL PRIMARY KEY,
+    id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
     reference_id int8 NOT NULL,
     tree_id uuid NULL,
     image_url varchar NOT NULL,
