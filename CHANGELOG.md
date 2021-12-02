@@ -1,3 +1,10 @@
+## [1.7.5](https://github.com/Greenstand/treetracker-api/compare/v1.7.4...v1.7.5) (2021-12-02)
+
+
+### Bug Fixes
+
+* update sealed secret and replicas for dev ([349419a](https://github.com/Greenstand/treetracker-api/commit/349419aa8b89b0e62e5e0efa0a3a5de7eb8c70fa))
+
 ## [1.7.4](https://github.com/Greenstand/treetracker-api/compare/v1.7.3...v1.7.4) (2021-12-02)
 
 
