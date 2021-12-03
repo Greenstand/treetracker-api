@@ -1,6 +1,6 @@
 CREATE TABLE tree
 (
-    id uuid NOT NULL PRIMARY KEY,
+    id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
     latest_capture_id uuid NOT NULL,
     image_url varchar NOT NULL,
     lat numeric NOT NULL,

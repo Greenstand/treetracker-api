@@ -1,7 +1,7 @@
 /* Replace with your SQL commands */
 CREATE TABLE domain_event
 (
-    id uuid NOT NULL,
+    id uuid NOT NULL DEFAULT uuid_generate_v4(),
     payload jsonb NOT NULL,
     status varchar NOT NULL,
     retry_count smallint NULL,
