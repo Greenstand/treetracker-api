@@ -1,9 +1,9 @@
 {
   "id": "05150034-3787-11ec-8d3d-0242ac130003",
-  "location": "POINT(0 0)",
+  "location": "POINT(50 50)",
   "reference_id": 1,
-  "lat": 0,
-  "lon": 0,
+  "lat": 50,
+  "lon": 50,
   "planter_id": 1,
   "planter_username": "x",
   "status": "approved",

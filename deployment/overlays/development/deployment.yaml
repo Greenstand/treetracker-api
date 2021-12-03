@@ -1,0 +1,8 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: treetracker-api
+  labels:
+    app: treetracker-api
+spec:
+  replicas: 1
