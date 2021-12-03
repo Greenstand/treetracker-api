@@ -4,6 +4,7 @@ const router = express.Router();
 const validateRequest = (req, res, next) => {
   next();
 };
+const { handlerWrapper } = require('./handlers/utils');
 const {
   captureHandlerPost,
   captureHandlerGet,
@@ -16,18 +17,22 @@ const {
 } = require('./handlers/treeHandler.js');
 const { planterHandlerGet } = require('./handlers/planterHandler.js');
 
-router.post('/captures', validateRequest, captureHandlerPost);
-router.get('/captures', validateRequest, captureHandlerGet);
-router.patch('/captures/:capture_id', validateRequest, captureHandlerPatch);
+router.post('/captures', validateRequest, handlerWrapper(captureHandlerPost));
+router.get('/captures', validateRequest, handlerWrapper(captureHandlerGet));
+router.patch(
+  '/captures/:capture_id',
+  validateRequest,
+  handlerWrapper(captureHandlerPatch),
+);
 
-router.post('/trees', validateRequest, treeHandlerPost);
-router.get('/trees', validateRequest, treeHandlerGet);
+router.post('/trees', validateRequest, handlerWrapper(treeHandlerPost));
+router.get('/trees', validateRequest, handlerWrapper(treeHandlerGet));
 router.get(
   '/trees/potential_matches',
   validateRequest,
-  treeHandlerGetPotentialMatches,
+  handlerWrapper(treeHandlerGetPotentialMatches),
 );
 
-router.get('/planters', planterHandlerGet);
+router.get('/planters', handlerWrapper(planterHandlerGet));
 
 module.exports = router;

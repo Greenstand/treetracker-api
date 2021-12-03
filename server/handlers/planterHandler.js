@@ -5,7 +5,7 @@ const { getPlanters } = require('../models/Planter');
 
 const planterQuerySchema = Joi.object({
   organization_id: Joi.string().guid(),
-  limit: Joi.number().integer().greater(0).less(51),
+  limit: Joi.number().integer().greater(0).less(101),
   offset: Joi.number().integer().greater(-1),
 });
 
