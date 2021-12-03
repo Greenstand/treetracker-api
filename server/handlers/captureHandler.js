@@ -1,6 +1,3 @@
-const express = require('express');
-
-const captureRouter = express.Router();
 const { v4: uuidv4 } = require('uuid');
 const Joi = require('joi');
 
@@ -19,12 +16,10 @@ const CaptureRepository = require('../infra/repositories/CaptureRepository');
 const EventRepository = require('../infra/repositories/EventRepository');
 
 const captureHandlerGet = async function (req, res) {
-  console.log('CAPTURE ROUTER get', req.query);
   const session = new Session(false);
   const captureRepo = new CaptureRepository(session);
   const executeGetCaptures = getCaptures(captureRepo);
   const result = await executeGetCaptures(req.query);
-  console.log('CAPTURE ROUTER get result', result);
   res.send(result);
   res.end();
 };
@@ -39,7 +34,6 @@ const captureHandlerPost = async function (req, res) {
 
   // destructure from req.body and set defaults
   const {
-    id,
     reference_id,
     image_url = '',
     estimated_geometric_location,
@@ -50,13 +44,12 @@ const captureHandlerPost = async function (req, res) {
     planter_username,
     device_identifier,
     note = '',
-    timestamp,
     attributes = [],
   } = req.body;
 
   // create tree data including unique id and setting date/time to today
   const capture = {
-    id,
+    id: uuidv4(),
     reference_id,
     image_url,
     estimated_geometric_location,
@@ -73,11 +66,9 @@ const captureHandlerPost = async function (req, res) {
   };
 
   try {
-    console.log('CAPTURE ROUTER post', req.body, capture);
     const newCapture = captureFromRequest({ ...capture });
     await session.beginTransaction();
     const { entity, raisedEvents } = await executeCreateCapture(newCapture);
-    console.log('CAPTURE ROUTER execute create capture', entity, raisedEvents);
     await session.commitTransaction();
     raisedEvents.forEach((domainEvent) =>
       eventDispatch('capture-created', domainEvent),
@@ -101,6 +92,7 @@ const captureHandlerPatch = async function (req, res, next) {
   const captureRepo = new CaptureRepository(session);
   const executeUpdateCapture = updateCapture(captureRepo);
   const updateCaptureSchema = Joi.object({
+    tree_id: Joi.string().uuid(),
     id: Joi.any().forbidden(),
     lat: Joi.any().forbidden(),
     lon: Joi.any().forbidden(),
@@ -114,7 +106,7 @@ const captureHandlerPatch = async function (req, res, next) {
         abortEarly: false,
       });
     const result = await executeUpdateCapture({ id: capture_id, ...req.body });
-    console.log('CAPTURE ROUTER update result', result);
+    console.log('CAPTURE ROUTER update result', result, value);
     res.send(result);
     res.end();
   } catch (e) {

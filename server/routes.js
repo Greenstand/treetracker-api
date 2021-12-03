@@ -15,12 +15,20 @@ const {
   treeHandlerGetPotentialMatches,
 } = require('./handlers/treeHandler.js');
 
-router.post('/captures', validateRequest, captureHandlerPost);
-router.get('/captures', validateRequest, captureHandlerGet);
-router.patch('/captures/:capture_id', validateRequest, captureHandlerPatch);
+router
+  .route('/')
+  .get(validateRequest, captureHandlerGet)
+  .post(validateRequest, captureHandlerPost);
 
-router.post('/trees', validateRequest, treeHandlerPost);
-router.get('/trees', validateRequest, treeHandlerGet);
-router.get('/trees/potential_matches', validateRequest, treeHandlerGetPotentialMatches);
+router.route('/:capture_id').patch(validateRequest, captureHandlerPatch);
+
+router
+  .route('/:capture_id/potential_matches')
+  .get(validateRequest, treeHandlerGetPotentialMatches);
+
+router
+  .route('/trees')
+  .get(validateRequest, treeHandlerGet)
+  .post(validateRequest, treeHandlerPost);
 
 module.exports = router;
