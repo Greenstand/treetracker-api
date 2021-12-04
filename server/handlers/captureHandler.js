@@ -1,4 +1,5 @@
 const { v4: uuidv4 } = require('uuid');
+const log = require('loglevel');
 const Joi = require('joi');
 
 const {
@@ -77,7 +78,7 @@ const captureHandlerPost = async function (req, res) {
       ...entity,
     });
   } catch (e) {
-    console.log(e);
+    log.warn(e);
     if (session.isTransactionInProgress()) {
       await session.rollbackTransaction();
     }
@@ -106,7 +107,6 @@ const captureHandlerPatch = async function (req, res, next) {
         abortEarly: false,
       });
     const result = await executeUpdateCapture({ id: capture_id, ...req.body });
-    console.log('CAPTURE ROUTER update result', result, value);
     res.send(result);
     res.end();
   } catch (e) {

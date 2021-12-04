@@ -1,4 +1,3 @@
-const express = require('express');
 const log = require('loglevel');
 const Joi = require('joi');
 
@@ -42,7 +41,7 @@ const treeHandlerPost = async function (req, res, next) {
   const eventRepository = new EventRepository(session);
   const executeCreateTree = createTree(captureRepo);
 
-  // const eventDispatch = dispatch(eventRepository, publishMessage);
+  const eventDispatch = dispatch(eventRepository, publishMessage);
   const now = new Date().toISOString();
   const tree = treeFromRequest({
     ...req.body,
@@ -55,12 +54,11 @@ const treeHandlerPost = async function (req, res, next) {
       abortEarly: false,
     });
     await session.beginTransaction();
-    // const { entity, raisedEvents } = await executeCreateTree(tree);
-    const treeEntity = await executeCreateTree(tree);
+    const { treeEntity, raisedEvents } = await executeCreateTree(tree);
     await session.commitTransaction();
-    // raisedEvents.forEach((domainEvent) =>
-    //   eventDispatch('capture-created', domainEvent),
-    // );
+    raisedEvents.forEach((domainEvent) =>
+      eventDispatch('capture-created', domainEvent),
+    );
     res.status(201).json({
       ...treeEntity,
     });
