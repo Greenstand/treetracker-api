@@ -24,7 +24,6 @@ describe('executing treeFromRequest function', () => {
   });
 
   it('should return an object with the required parameters', function () {
-    console.log(tree);
     expect(Object.keys(tree)).to.eql([
       'id',
       'latest_capture_id',

@@ -9,10 +9,10 @@ class CaptureRepository extends BaseRepository {
 
   async getByFilter(filterCriteria, options) {
     console.log('PG REPOSITORY DB getByFilter', filterCriteria, options);
-    const query = Object.keys(filterCriteria).length
-      ? filterCriteria
-      : `id` > 10;
-    return await this._session
+    // const query = Object.keys(filterCriteria).length
+    //   ? filterCriteria
+    //   : `id` > 10;
+    return this._session
       .getDB()
       .where(filterCriteria)
       .select(
@@ -41,7 +41,7 @@ class CaptureRepository extends BaseRepository {
   }
 
   async add(capture) {
-    return await super.create(capture);
+    return super.create(capture);
   }
 }
 

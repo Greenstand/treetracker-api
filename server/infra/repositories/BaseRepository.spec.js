@@ -1,10 +1,9 @@
-const BaseRepository = require('./BaseRepository');
 const { expect } = require('chai');
 const knex = require('knex');
 const mockKnex = require('mock-knex');
 
 const tracker = mockKnex.getTracker();
-const jestExpect = require('expect');
+const BaseRepository = require('./BaseRepository');
 const Session = require('../database/Session');
 
 describe('BaseRepository', () => {
@@ -35,9 +34,9 @@ describe('BaseRepository', () => {
   });
 
   // TODO
-  it.skip('getById can not find result, should throw 404', () => {});
+  //   it.skip('getById can not find result, should throw 404', () => {});
 
-  describe.only('getByFilter', () => {
+  describe('getByFilter', () => {
     it('getByFilter', async () => {
       tracker.uninstall();
       tracker.install();
@@ -65,6 +64,25 @@ describe('BaseRepository', () => {
         },
         {
           limit: 1,
+        },
+      );
+      expect(result).lengthOf(1);
+      expect(result[0]).property('id').eq(1);
+    });
+
+    it('getByFilter with limit', async () => {
+      tracker.uninstall();
+      tracker.install();
+      tracker.on('query', (query) => {
+        expect(query.sql).match(/select.*testTable.*offset.*/);
+        query.response([{ id: 1 }]);
+      });
+      const result = await baseRepository.getByFilter(
+        {
+          name: 'testName',
+        },
+        {
+          offset: 1,
         },
       );
       expect(result).lengthOf(1);
@@ -231,7 +249,7 @@ describe('BaseRepository', () => {
       tracker.install();
       tracker.on('query', (query) => {
         expect(query.sql).match(/update.*testTable.*/);
-        query.response({ id: 1 });
+        query.response([{ id: 1 }]);
       });
       const result = await baseRepository.update({
         id: 1,

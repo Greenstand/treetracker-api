@@ -42,8 +42,12 @@ const getPlanters = (planterRepo) => async (filterCriteria, url) => {
   delete filter.offset;
   let options = { ...QueryOptions({ ...filterCriteria }) };
 
-  if (!filterCriteria.limit && !organization_id) {
+  if (!filterCriteria?.limit && !organization_id) {
     options = { ...options, limit: 100, offset: 0 };
+  }
+
+  if (!filterCriteria?.limit && organization_id) {
+    options = {};
   }
 
   let query = `${url}?`;
@@ -51,7 +55,7 @@ const getPlanters = (planterRepo) => async (filterCriteria, url) => {
   let prev = '';
 
   if (options.limit) {
-    query = query + 'limit=' + options.limit + '&';
+    query = `${query  }limit=${  options.limit  }&`;
   }
 
   if (options.offset || options.offset === 0) {
@@ -76,4 +80,6 @@ const getPlanters = (planterRepo) => async (filterCriteria, url) => {
 
 module.exports = {
   getPlanters,
+  QueryOptions,
+  Planter,
 };

@@ -1,7 +1,3 @@
-const express = require('express');
-
-const captureRouter = express.Router();
-const { v4: uuidv4 } = require('uuid');
 const Joi = require('joi');
 
 const {
@@ -108,11 +104,9 @@ const captureHandlerPatch = async function (req, res, next) {
     created_at: Joi.any().forbidden(),
   });
   try {
-    const value = await updateCaptureSchema
-      .unknown(true)
-      .validateAsync(req.body, {
-        abortEarly: false,
-      });
+    await updateCaptureSchema.unknown(true).validateAsync(req.body, {
+      abortEarly: false,
+    });
     const result = await executeUpdateCapture({ id: capture_id, ...req.body });
     console.log('CAPTURE ROUTER update result', result);
     res.send(result);

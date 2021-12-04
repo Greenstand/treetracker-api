@@ -8,8 +8,8 @@ class PlanterRepository extends BaseRepository {
   }
 
   async getPlantersByOrganization(organization_id, options) {
-    const limit = options.limit;
-    const offset = options.offset;
+    const limit = options?.limit;
+    const offset = options?.offset;
     const planters = await this._session.getDB().raw(
       `SELECT planter.* FROM public.planter JOIN public.entity ON planter.organization_id = entity.id WHERE stakeholder_uuid = ? 
         ${limit ? `LIMIT ${limit}` : ''} ${offset ? `OFFSET ${offset}` : ''}`,

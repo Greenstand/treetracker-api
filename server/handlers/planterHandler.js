@@ -13,7 +13,7 @@ const planterHandlerGet = async function (req, res) {
   await planterQuerySchema.validateAsync(req.query, { abortEarly: false });
   const session = new Session();
   const planterRepo = new PlanterRepository(session);
-  const organization_id = req.query.organization_id;
+  const {organization_id} = req.query;
 
   const url = `planters${
     organization_id ? `?organization_id=${organization_id}` : ''

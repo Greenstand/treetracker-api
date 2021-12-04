@@ -8,7 +8,7 @@ class EventRepository extends BaseRepository {
   }
 
   async add(domainEvent) {
-    return await super.create(domainEvent);
+    return super.create(domainEvent);
   }
 }
 

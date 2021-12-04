@@ -1,24 +1,23 @@
-const express = require('express');
 const log = require('loglevel');
 const Joi = require('joi');
 
-const treeRouter = express.Router();
+// const treeRouter = express.Router();
 
 const {
   createTree,
   treeFromRequest,
   potentialMatches,
 } = require('../models/tree');
-const { dispatch } = require('../models/DomainEvent');
+// const { dispatch } = require('../models/DomainEvent');
 
 const Session = require('../infra/database/Session');
-const { publishMessage } = require('../infra/messaging/RabbitMQMessaging');
+// const { publishMessage } = require('../infra/messaging/RabbitMQMessaging');
 
 const EventRepository = require('../infra/repositories/EventRepository');
 const TreeRepository = require('../infra/repositories/TreeRepository');
 
 const treeHandlerGet = async function (req, res) {
-  const session = new Session(false);
+  // const session = new Session(false);
   // todo
   const result = {};
   res.send(result);
@@ -35,7 +34,7 @@ const treeSchema = Joi.object({
 const treeHandlerPost = async function (req, res, next) {
   const session = new Session();
   const captureRepo = new TreeRepository(session);
-  const eventRepository = new EventRepository(session);
+  // const eventRepository = new EventRepository(session);
   const executeCreateTree = createTree(captureRepo);
 
   // const eventDispatch = dispatch(eventRepository, publishMessage);
@@ -47,7 +46,7 @@ const treeHandlerPost = async function (req, res, next) {
   });
 
   try {
-    const value = await treeSchema.validateAsync(req.body, {
+    await treeSchema.validateAsync(req.body, {
       abortEarly: false,
     });
     await session.beginTransaction();
