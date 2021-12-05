@@ -8,32 +8,14 @@ class CaptureRepository extends BaseRepository {
   }
 
   async getByFilter(filterCriteria, options) {
-    console.log('PG REPOSITORY DB getByFilter', filterCriteria, options);
+    // console.log('CAPTURE REPOSITORY DB getByFilter', filterCriteria, options);
     const query = Object.keys(filterCriteria).length
       ? filterCriteria
       : `id` > 10;
-    return await this._session
+    return this._session
       .getDB()
       .where(filterCriteria)
-      .select(
-        'id',
-        'reference_id',
-        'image_url',
-        'lat',
-        'lon',
-        'gps_accuracy',
-        'planter_id',
-        'planter_photo_url',
-        'planter_username',
-        'device_identifier',
-        'note',
-        'morphology',
-        'age',
-        'attributes',
-        'status',
-        'created_at',
-        'updated_at',
-      )
+      .select('*')
       .from('treetracker.capture')
       .orderBy('created_at', 'desc')
       .limit(options.limit)
@@ -41,7 +23,7 @@ class CaptureRepository extends BaseRepository {
   }
 
   async add(capture) {
-    return await super.create(capture);
+    return super.create(capture);
   }
 }
 
