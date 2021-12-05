@@ -13,7 +13,7 @@ const { getCaptures } = require('../models/Capture');
 const { dispatch } = require('../models/DomainEvent');
 
 const Session = require('../infra/database/Session');
-// const { publishMessage } = require('../infra/messaging/RabbitMQMessaging');
+const { publishMessage } = require('../infra/messaging/RabbitMQMessaging');
 
 const CaptureRepository = require('../infra/repositories/CaptureRepository');
 const EventRepository = require('../infra/repositories/EventRepository');
@@ -40,7 +40,7 @@ const treeSchema = Joi.object({
 const treeHandlerPost = async function (req, res, next) {
   const session = new Session();
   const captureRepo = new TreeRepository(session);
-  // const eventRepository = new EventRepository(session);
+  const eventRepository = new EventRepository(session);
   const executeCreateTree = createTree(captureRepo);
 
   const eventDispatch = dispatch(eventRepository, publishMessage);
