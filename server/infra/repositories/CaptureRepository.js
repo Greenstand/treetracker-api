@@ -12,28 +12,15 @@ class CaptureRepository extends BaseRepository {
     // const query = Object.keys(filterCriteria).length
     //   ? filterCriteria
     //   : `id` > 10;
+    
+    const query = Object.keys(filterCriteria).length
+      ? filterCriteria
+      : `id` > 10;
+
     return this._session
       .getDB()
       .where(filterCriteria)
-      .select(
-        'id',
-        'reference_id',
-        'image_url',
-        'lat',
-        'lon',
-        'gps_accuracy',
-        'planter_id',
-        'planter_photo_url',
-        'planter_username',
-        'device_identifier',
-        'note',
-        'morphology',
-        'age',
-        'attributes',
-        'status',
-        'created_at',
-        'updated_at',
-      )
+      .select('*')
       .from('treetracker.capture')
       .orderBy('created_at', 'desc')
       .limit(options.limit)

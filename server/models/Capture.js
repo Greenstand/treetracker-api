@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable prefer-destructuring */
 const { raiseEvent, DomainEvent } = require('./DomainEvent');
 const { Repository } = require('./Repository');
 
@@ -119,12 +121,8 @@ const createCapture = (captureRepositoryImpl, eventRepositoryImpl) => async (
   return { entity: capture, raisedEvents: [domainEvent] };
 };
 
-const FilterCriteria = ({
-  status = undefined,
-  field_username = undefined,
-  field_user_id = undefined,
-}) => {
-  return Object.entries({ status, field_username, field_user_id })
+const FilterCriteria = ({ tree_id = undefined }) => {
+  return Object.entries({ tree_id })
     .filter((entry) => entry[1] !== undefined)
     .reduce((result, item) => {
       result[item[0]] = item[1];
@@ -150,7 +148,7 @@ const getCaptures = (captureRepositoryImpl) => async (
     filter = FilterCriteria({ ...filterCriteria });
     options = { ...options, ...QueryOptions({ ...filterCriteria }) };
   }
-  console.log('CAPTURE MODEL getCaptures', filterCriteria, filter, options);
+  // console.log('CAPTURE MODEL getCaptures', filterCriteria, filter, options);
   const captureRepository = new Repository(captureRepositoryImpl);
   const captures = await captureRepository.getByFilter(filter, options);
   return captures.map((row) => {
@@ -176,7 +174,7 @@ const applyVerification = (captureRepositoryImpl) => async (
 };
 
 const updateCapture = (captureRepositoryImpl) => async (update_object) => {
-  await captureRepositoryImpl.update(update_object);
+  return captureRepositoryImpl.update(update_object);
 };
 
 module.exports = {

@@ -17,21 +17,22 @@ const {
 } = require('./handlers/treeHandler.js');
 const { planterHandlerGet } = require('./handlers/planterHandler.js');
 
-router.post('/captures', validateRequest, handlerWrapper(captureHandlerPost));
-router.get('/captures', validateRequest, handlerWrapper(captureHandlerGet));
-router.patch(
-  '/captures/:capture_id',
-  validateRequest,
-  handlerWrapper(captureHandlerPatch),
-);
 
-router.post('/trees', validateRequest, handlerWrapper(treeHandlerPost));
-router.get('/trees', validateRequest, handlerWrapper(treeHandlerGet));
-router.get(
-  '/trees/potential_matches',
-  validateRequest,
-  handlerWrapper(treeHandlerGetPotentialMatches),
-);
+router
+  .route('/')
+  .get(validateRequest, captureHandlerGet)
+  .post(validateRequest, captureHandlerPost);
+
+router.route('/:capture_id').patch(validateRequest, captureHandlerPatch);
+
+router
+  .route('/:capture_id/potential_matches')
+  .get(validateRequest, treeHandlerGetPotentialMatches);
+
+router
+  .route('/trees')
+  .get(validateRequest, treeHandlerGet)
+  .post(validateRequest, treeHandlerPost);
 
 router.get('/planters', handlerWrapper(planterHandlerGet));
 

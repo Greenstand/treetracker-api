@@ -1,7 +1,7 @@
 const express = require('express');
 // const Sentry = require('@sentry/node');
-// const asyncHandler = require('express-async-handler');
-// const { body, check, validationResult } = require('express-validator');
+const cors = require('cors');
+const log = require('loglevel');
 const HttpError = require('./utils/HttpError');
 const { errorHandler } = require('./handlers/utils');
 const helper = require('./handlers/utils');
@@ -9,6 +9,11 @@ const router = require('./routes.js');
 const registerEventHandlers = require('./services/EventHandlers');
 
 const app = express();
+
+if (process.env.NODE_ENV === 'development') {
+  log.info('disable cors');
+  app.use(cors());
+}
 
 // Sentry.init({ dsn: config.sentry_dsn });
 
@@ -37,7 +42,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.use('/', router);
-// Global error handler
+
 app.use(errorHandler);
 
 const { version } = require('../package.json');
