@@ -1,9 +1,9 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable prefer-destructuring */
 const { v4: uuid } = require('uuid');
+const log = require("loglevel");
 const { Repository } = require('./Repository.js');
-const log = require('loglevel');
-const HttpError = require('../utils/HttpError');
+const HttpError = require("../utils/HttpError");
 
 const treeFromRequest = ({
   capture_id,

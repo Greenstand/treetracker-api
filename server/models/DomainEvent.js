@@ -11,12 +11,12 @@ const DomainEvent = (payload) =>
 
 const raiseEvent = (eventRepositoryImpl) => async (domainEvent) => {
   const eventRepository = new Repository(eventRepositoryImpl);
-  return await eventRepository.add({ ...domainEvent, status: 'raised' });
+  return eventRepository.add({ ...domainEvent, status: 'raised' });
 };
 
 const receiveEvent = (eventRepositoryImpl) => async (domainEvent) => {
   const eventRepository = new Repository(eventRepositoryImpl);
-  return await eventRepository.add({ ...domainEvent, status: 'received' });
+  return eventRepository.add({ ...domainEvent, status: 'received' });
 };
 
 const dispatch = (eventRepositoryImpl, publishToTopic) => async (

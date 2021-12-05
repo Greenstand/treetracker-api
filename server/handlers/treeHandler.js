@@ -1,17 +1,19 @@
 const log = require('loglevel');
 const Joi = require('joi');
 
+
 const {
   getTrees,
   createTree,
   treeFromRequest,
   potentialMatches,
 } = require('../models/tree');
+
 const { getCaptures } = require('../models/Capture');
 const { dispatch } = require('../models/DomainEvent');
 
 const Session = require('../infra/database/Session');
-const { publishMessage } = require('../infra/messaging/RabbitMQMessaging');
+// const { publishMessage } = require('../infra/messaging/RabbitMQMessaging');
 
 const CaptureRepository = require('../infra/repositories/CaptureRepository');
 const EventRepository = require('../infra/repositories/EventRepository');
@@ -38,7 +40,7 @@ const treeSchema = Joi.object({
 const treeHandlerPost = async function (req, res, next) {
   const session = new Session();
   const captureRepo = new TreeRepository(session);
-  const eventRepository = new EventRepository(session);
+  // const eventRepository = new EventRepository(session);
   const executeCreateTree = createTree(captureRepo);
 
   const eventDispatch = dispatch(eventRepository, publishMessage);
@@ -50,7 +52,7 @@ const treeHandlerPost = async function (req, res, next) {
   });
 
   try {
-    const value = await treeSchema.validateAsync(req.body, {
+    await treeSchema.validateAsync(req.body, {
       abortEarly: false,
     });
     await session.beginTransaction();
@@ -69,6 +71,7 @@ const treeHandlerPost = async function (req, res, next) {
     next(e);
   }
 };
+
 
 const getCapturesByTreeId = async function (treeId) {
   const session = new Session(false);

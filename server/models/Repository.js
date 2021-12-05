@@ -6,12 +6,12 @@ class Repository {
 
   async add(data) {
     console.log('REPOSITORY MODEL add', typeof this.repoImpl, data);
-    return await this.repoImpl.add(data);
+    return this.repoImpl.add(data);
   }
 
   async update(data) {
     console.log('REPOSITORY MODEL update', this.repoImpl);
-    return await this.repoImpl.update(data);
+    return this.repoImpl.update(data);
   }
 
   async getByFilter(filterCriteria, options) {
@@ -21,7 +21,7 @@ class Repository {
       filterCriteria,
       options,
     );
-    return await this.repoImpl.getByFilter(filterCriteria, options);
+    return this.repoImpl.getByFilter(filterCriteria, options);
   }
 }
 

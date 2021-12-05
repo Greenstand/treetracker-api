@@ -54,12 +54,12 @@ const loglevelServerSend = function (logger, options) {
       'loglevel instance has to be specified in order to be extended',
     );
 
-  const _url = (options && options.url) || 'http://localhost:8000/main/log';
+  // const _url = (options && options.url) || 'http://localhost:8000/main/log';
   const _callOriginal = (options && options.callOriginal) || false;
   const _prefix = options && options.prefix;
   const _originalFactory = logger.methodFactory;
-  const _sendQueue = [];
-  const _isSending = false;
+  // const _sendQueue = [];
+  // const _isSending = false;
 
   logger.methodFactory = function (methodName, logLevel, loggerName) {
     const rawMethod = _originalFactory(methodName, logLevel);

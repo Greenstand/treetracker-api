@@ -4,6 +4,7 @@ const router = express.Router();
 const validateRequest = (req, res, next) => {
   next();
 };
+const { handlerWrapper } = require('./handlers/utils');
 const {
   captureHandlerPost,
   captureHandlerGet,
@@ -14,6 +15,8 @@ const {
   treeHandlerGet,
   treeHandlerGetPotentialMatches,
 } = require('./handlers/treeHandler.js');
+const { planterHandlerGet } = require('./handlers/planterHandler.js');
+
 
 router
   .route('/')
@@ -30,5 +33,7 @@ router
   .route('/trees')
   .get(validateRequest, treeHandlerGet)
   .post(validateRequest, treeHandlerPost);
+
+router.get('/planters', handlerWrapper(planterHandlerGet));
 
 module.exports = router;
