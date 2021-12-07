@@ -1,3 +1,18 @@
+# [1.8.0](https://github.com/Greenstand/treetracker-api/compare/v1.7.5...v1.8.0) (2021-12-07)
+
+
+### Bug Fixes
+
+* add missing modules back in ([bac228a](https://github.com/Greenstand/treetracker-api/commit/bac228afdf0bce8e7b6f822ede5e615802054082))
+* add Tree missing variable and cors to package.json ([e1926f7](https://github.com/Greenstand/treetracker-api/commit/e1926f784281c7f482e490eb5e6ec3406cb501c0))
+* fix initial table create scripts to add default values ([a5e925b](https://github.com/Greenstand/treetracker-api/commit/a5e925b6313027ec92141f59db25692275c7c506))
+
+
+### Features
+
+* add /planters route ([068dafc](https://github.com/Greenstand/treetracker-api/commit/068dafcf68c87b82a18b944db52a017bf4b0b58d))
+* add planter route ([41ab16e](https://github.com/Greenstand/treetracker-api/commit/41ab16ec38d05bfbe09f6e3c31ca1d8578b140fa))
+
 ## [1.7.5](https://github.com/Greenstand/treetracker-api/compare/v1.7.4...v1.7.5) (2021-12-02)
 
 
