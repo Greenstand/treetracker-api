@@ -1,9 +1,9 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable prefer-destructuring */
 const { v4: uuid } = require('uuid');
-const log = require("loglevel");
+const log = require('loglevel');
 const { Repository } = require('./Repository.js');
-const HttpError = require("../utils/HttpError");
+const HttpError = require('../utils/HttpError');
 
 const treeFromRequest = ({
   capture_id,
@@ -35,6 +35,40 @@ const treeFromRequest = ({
     estimated_geographic_location,
     created_at,
     updated_at,
+  });
+};
+
+const Tree = ({
+  id,
+  latest_capture_id,
+  image_url,
+  lat,
+  lon,
+  location,
+  gps_accuracy,
+  species_id,
+  morphology,
+  age,
+  status,
+  created_at,
+  updated_at,
+  estimated_geographic_location,
+}) => {
+  return Object.freeze({
+    id,
+    latest_capture_id,
+    image_url,
+    lat,
+    lon,
+    location,
+    gps_accuracy,
+    species_id,
+    morphology,
+    age,
+    status,
+    created_at,
+    updated_at,
+    estimated_geographic_location,
   });
 };
 

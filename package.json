@@ -33,6 +33,7 @@
     "@sentry/node": "^5.1.0",
     "amqplib": "^0.8.0",
     "body-parser": "^1.18.2",
+    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "expect": "^26.4.2",
     "express": "^4.16.2",
