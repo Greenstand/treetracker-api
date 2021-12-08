@@ -49,6 +49,10 @@ paths:
                           type: boolean
                         status:
                           type: boolean
+                        tags:
+                          type: array
+                          items:
+                            type: string
                       required:
                         - id
                         - image_url
@@ -96,6 +100,23 @@ paths:
           name: tree_associated
           description: filter by weather or not returned captures have been associated with a tree
           allowEmptyValue: true
+        - schema:
+            type: integer
+          in: query
+          name: tree_id
+        - schema:
+            type: string
+          in: query
+          name: planter_id
+        - schema:
+            type: string
+          in: query
+          name: planting_organization_id
+          description: 'filter by planting organization, respecting organizational hierarchy.'
+        - schema:
+            type: string
+          in: query
+          name: species_id
     post:
       summary: ''
       operationId: post-captures
@@ -111,7 +132,6 @@ paths:
               properties:
                 id:
                   type: string
-                  minLength: 1
                 reference_id:
                   type: number
                 tree_id:
@@ -123,14 +143,15 @@ paths:
                   type: number
                 lon:
                   type: number
-                user_id:
+                ground_user_id:
                   type: number
-                user_photo_url:
+                ground_user_photo_url:
                   type: string
                   minLength: 1
-                username:
+                ground_username:
                   type: string
                   minLength: 1
+                  description: 'username is either phone number or email, whichever was supplied'
                 planting_organization_id:
                   type: number
                 species_id:
@@ -145,8 +166,6 @@ paths:
                   minLength: 1
                 attributes:
                   type: object
-                  required:
-                    - entries
                   properties:
                     entries:
                       type: array
@@ -164,15 +183,16 @@ paths:
                         required:
                           - key
                           - value
+                  required:
+                    - entries
               required:
-                - id
                 - reference_id
                 - image_url
                 - lat
                 - lon
-                - user_id
-                - user_photo_url
-                - username
+                - ground_user_id
+                - ground_user_photo_url
+                - ground_username
       description: Create a verified capture
   '/captures/{capture_id}':
     parameters:
@@ -205,6 +225,181 @@ paths:
               example-1:
                 value:
                   tree_id: f07488fc-5e0e-4ee8-a1d2-6e2f8b420128
+    get:
+      summary: ''
+      operationId: get-captures-capture_id
+      responses:
+        '200':
+          description: A list of captures
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capture'
+  '/captures/{capture_id}/tags/':
+    parameters:
+      - schema:
+          type: string
+        name: capture_id
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses: {}
+      operationId: get-captures-capture_id-tags
+    post:
+      summary: ''
+      operationId: post-captures-capture_id-tags
+      responses:
+        '200':
+          description: OK
+  '/captures/{capture_id}/tags/{tag_id}':
+    parameters:
+      - schema:
+          type: string
+        name: capture_id
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: tag_id
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses: {}
+      operationId: get-captures-capture_id-tags-tag_id
+    delete:
+      summary: ''
+      operationId: delete-captures-capture_id-tags-tag_id
+      responses:
+        '204':
+          description: No Content
+    patch:
+      summary: ''
+      operationId: patch-captures-capture_id-tags-tag_id
+      responses:
+        '200':
+          description: OK
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                public:
+                  type: boolean
+  /trees:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  trees:
+                    type: array
+                    items: {}
+              examples:
+                example:
+                  value:
+                    trees:
+                      - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                        latest_capture_id: 1e5fbe21-6c4f-4591-9b61-068335323eab
+                        image_url: string
+                        lat: 0
+                        lon: 0
+                        species_id: string
+                        morphology: string
+                        age: 0
+                        status: string
+                        created_at: string
+                        updated_at: string
+      operationId: get-trees
+      description: Return all trees with some filtering criteria. The filtering criteria will be added as more information about the use case is determined.
+      parameters:
+        - schema:
+            type: number
+            default: 100
+            format: int
+            example: 100
+          in: query
+          name: limit
+          description: The number of results to return on a invocation
+        - schema:
+            type: string
+            default: '0'
+            example: '10'
+          in: query
+          name: offset
+          description: The number of trees objects to skip and return the rest for pagination
+        - schema:
+            type: string
+          in: query
+          name: species_id
+          description: Id of the species
+    post:
+      summary: ''
+      operationId: post-trees
+      responses:
+        '201':
+          description: Created
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              properties:
+                id:
+                  type: string
+                  minLength: 1
+                latest_capture_id:
+                  type: string
+                  minLength: 1
+                image_url:
+                  type: string
+                  minLength: 1
+                lat:
+                  type: number
+                lon:
+                  type: number
+                species_id:
+                  type: string
+                morphology:
+                  type: string
+                age:
+                  type: number
+              required:
+                - id
+                - latest_capture_id
+                - image_url
+                - lat
+                - lon
+      description: 'Create a new unique tree in greenstand platform. '
+  '/trees/{tree_id}':
+    parameters:
+      - schema:
+          type: string
+        name: tree_id
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses: {}
+      operationId: get-trees-tree_id
+    patch:
+      summary: ''
+      operationId: patch-trees-tree_id
+      responses:
+        '200':
+          description: OK
   /trees/potential_matches:
     get:
       summary: Your GET endpoint
@@ -291,93 +486,55 @@ paths:
           name: capture_id
           description: 7020672e-da27-4213-aee4-101f05377537
     parameters: []
-  /trees:
+  /tags:
     get:
       summary: Your GET endpoint
       tags: []
+      responses: {}
+      operationId: get-tag
+    post:
+      summary: ''
+      operationId: post-tag
       responses:
         '200':
           description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  trees:
-                    type: array
-                    items: {}
-              examples:
-                example:
-                  value:
-                    trees:
-                      - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
-                        latest_capture_id: 1e5fbe21-6c4f-4591-9b61-068335323eab
-                        image_url: string
-                        lat: 0
-                        lon: 0
-                        species_id: string
-                        morphology: string
-                        age: 0
-                        status: string
-                        created_at: string
-                        updated_at: string
-      operationId: get-trees
-      description: Return all trees with some filtering criteria. The filtering criteria will be added as more information about the use case is determined.
-      parameters:
-        - schema:
-            type: number
-            default: 100
-            format: int
-            example: 100
-          in: query
-          name: limit
-          description: The number of results to return on a invocation
-        - schema:
-            type: string
-            default: '0'
-            example: '10'
-          in: query
-          name: offset
-          description: The number of trees objects to skip and return the rest for pagination
+    parameters: []
+  '/tags/{tagid}':
+    parameters:
+      - schema:
+          type: string
+        name: tagid
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses: {}
+      operationId: get-tags-tagid
+    patch:
+      summary: ''
+      operationId: patch-tags-tagid
+      responses:
+        '200':
+          description: OK
+  /ground_users:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses: {}
+      operationId: get-ground_users
     post:
       summary: ''
-      operationId: post-trees
+      operationId: post-ground_users
       responses:
-        '201':
-          description: Created
-      requestBody:
-        content:
-          application/json:
-            schema:
-              description: ''
-              type: object
-              properties:
-                id:
-                  type: string
-                  minLength: 1
-                latest_capture_id:
-                  type: string
-                  minLength: 1
-                image_url:
-                  type: string
-                  minLength: 1
-                lat:
-                  type: number
-                lon:
-                  type: number
-                species_id:
-                  type: string
-                morphology:
-                  type: string
-                age:
-                  type: number
-              required:
-                - id
-                - latest_capture_id
-                - image_url
-                - lat
-                - lon
-      description: 'Create a new unique tree in greenstand platform. '
+        '200':
+          description: OK
+    patch:
+      summary: ''
+      operationId: patch-ground_users
+      responses:
+        '200':
+          description: OK
 components:
   schemas:
     capture:
@@ -549,3 +706,15 @@ components:
         - image_url
         - lat
         - lon
+    tag:
+      title: tag
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        public:
+          type: boolean
+        active:
+          type: boolean
