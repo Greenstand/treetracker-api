@@ -36,7 +36,7 @@ router
   .post(validateRequest, handlerWrapper(treeHandlerPost));
 
 router
-  .route('/groundUsers')
+  .route('/ground_users')
   .get(validateRequest, handlerWrapper(groundUserHandlerGet));
 
 module.exports = router;

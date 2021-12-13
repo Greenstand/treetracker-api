@@ -73,7 +73,7 @@ const getGroundUsers = (groundUserRepo) => async (filterCriteria, url) => {
     : await groundUserRepo.getByFilter(filter, options);
 
   return {
-    groundUsers: groundUsers.map((row) => GroundUser(row)),
+    ground_users: groundUsers.map((row) => GroundUser(row)),
     links: {
       prev,
       next,
