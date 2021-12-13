@@ -1,7 +1,6 @@
 const log = require('loglevel');
 const Joi = require('joi');
 
-
 const {
   getTrees,
   createTree,
@@ -18,8 +17,6 @@ const { publishMessage } = require('../infra/messaging/RabbitMQMessaging');
 const CaptureRepository = require('../infra/repositories/CaptureRepository');
 const EventRepository = require('../infra/repositories/EventRepository');
 const TreeRepository = require('../infra/repositories/TreeRepository');
-
-const utils = require('./utils');
 
 const treeHandlerGet = async function (req, res) {
   const session = new Session(false);
@@ -72,7 +69,6 @@ const treeHandlerPost = async function (req, res, next) {
   }
 };
 
-
 const getCapturesByTreeId = async function (treeId) {
   const session = new Session(false);
   const captureRepo = new CaptureRepository(session);
@@ -81,26 +77,24 @@ const getCapturesByTreeId = async function (treeId) {
   return captures;
 };
 
-const treeHandlerGetPotentialMatches = utils.handlerWrapper(
-  async (req, res) => {
-    log.warn('handle potentialMatches');
-    const session = new Session();
-    const treeRepository = new TreeRepository(session);
-    const execute = potentialMatches(treeRepository);
-    const potentialTrees = await execute(req.params.capture_id);
-    log.warn('result of match:', potentialTrees.length);
+const treeHandlerGetPotentialMatches = async (req, res) => {
+  log.warn('handle potentialMatches');
+  const session = new Session();
+  const treeRepository = new TreeRepository(session);
+  const execute = potentialMatches(treeRepository);
+  const potentialTrees = await execute(req.params.capture_id);
+  log.warn('result of match:', potentialTrees.length);
 
-    // get the captures for each match and add as .captures
-    const matches = await Promise.all(
-      potentialTrees.map(async (tree) => {
-        // eslint-disable-next-line no-param-reassign
-        tree.captures = await getCapturesByTreeId(tree.id);
-        return tree;
-      }),
-    );
-    res.status(200).json({ matches });
-  },
-);
+  // get the captures for each match and add as .captures
+  const matches = await Promise.all(
+    potentialTrees.map(async (tree) => {
+      // eslint-disable-next-line no-param-reassign
+      tree.captures = await getCapturesByTreeId(tree.id);
+      return tree;
+    }),
+  );
+  res.status(200).json({ matches });
+};
 
 module.exports = {
   treeHandlerGet,

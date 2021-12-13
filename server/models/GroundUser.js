@@ -1,4 +1,4 @@
-const Planter = ({
+const GroundUser = ({
   id,
   first_name,
   last_name,
@@ -8,7 +8,7 @@ const Planter = ({
   pwd_reset_required,
   image_url,
   person_id,
-  ordanization_id,
+  organization_id,
   image_rotation,
 }) => {
   return Object.freeze({
@@ -21,7 +21,7 @@ const Planter = ({
     pwd_reset_required,
     image_url,
     person_id,
-    ordanization_id,
+    organization_id,
     image_rotation,
   });
 };
@@ -35,7 +35,7 @@ const QueryOptions = ({ limit = undefined, offset = undefined }) => {
     }, {});
 };
 
-const getPlanters = (planterRepo) => async (filterCriteria, url) => {
+const getGroundUsers = (groundUserRepo) => async (filterCriteria, url) => {
   const organization_id = filterCriteria?.organization_id;
   const filter = { ...filterCriteria };
   delete filter.limit;
@@ -55,7 +55,7 @@ const getPlanters = (planterRepo) => async (filterCriteria, url) => {
   let prev = '';
 
   if (options.limit) {
-    query = `${query  }limit=${  options.limit  }&`;
+    query = `${query}limit=${options.limit}&`;
   }
 
   if (options.offset || options.offset === 0) {
@@ -65,12 +65,15 @@ const getPlanters = (planterRepo) => async (filterCriteria, url) => {
     }
   }
 
-  const planters = organization_id
-    ? await planterRepo.getPlantersByOrganization(organization_id, options)
-    : await planterRepo.getByFilter(filter, options);
+  const groundUsers = organization_id
+    ? await groundUserRepo.getGroundUsersByOrganization(
+        organization_id,
+        options,
+      )
+    : await groundUserRepo.getByFilter(filter, options);
 
   return {
-    planters: planters.map((row) => Planter(row)),
+    groundUsers: groundUsers.map((row) => GroundUser(row)),
     links: {
       prev,
       next,
@@ -79,7 +82,7 @@ const getPlanters = (planterRepo) => async (filterCriteria, url) => {
 };
 
 module.exports = {
-  getPlanters,
+  getGroundUsers,
   QueryOptions,
-  Planter,
+  GroundUser,
 };

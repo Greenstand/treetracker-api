@@ -1,20 +1,20 @@
 const { expect } = require('chai');
 const mockKnex = require('mock-knex');
 const knex = require('knex');
-const PlanterRepository = require('./PlanterRepository');
+const GroundUserRepository = require('./GroundUserRepository');
 
 const tracker = mockKnex.getTracker();
 const Session = require('../database/Session');
 
-describe('PlanterRepository', () => {
-  let planterRepository;
+describe('GroundUserRepository', () => {
+  let groundUserRepository;
   const knexDB = knex({ client: 'pg' });
 
   beforeEach(() => {
     mockKnex.mock(knexDB);
     tracker.install();
     const session = new Session();
-    planterRepository = new PlanterRepository(session);
+    groundUserRepository = new GroundUserRepository(session);
   });
 
   afterEach(() => {
@@ -22,7 +22,7 @@ describe('PlanterRepository', () => {
     mockKnex.unmock(knexDB);
   });
 
-  it('getPlantersByOrganization', async () => {
+  it('getGroundUsersByOrganization', async () => {
     tracker.uninstall();
     tracker.install();
     tracker.on('query', (query) => {
@@ -32,11 +32,11 @@ describe('PlanterRepository', () => {
 
       query.response({ rows: [{ id: 1 }] });
     });
-    const result = await planterRepository.getPlantersByOrganization(1);
+    const result = await groundUserRepository.getGroundUsersByOrganization(1);
     expect(result[0]).property('id').eq(1);
   });
 
-  it('getPlantersByOrganization with LIMIT', async () => {
+  it('getGroundUsersByOrganization with LIMIT', async () => {
     tracker.uninstall();
     tracker.install();
     tracker.on('query', (query) => {
@@ -45,13 +45,13 @@ describe('PlanterRepository', () => {
       );
       query.response({ rows: [{ id: 1 }] });
     });
-    const result = await planterRepository.getPlantersByOrganization(1, {
+    const result = await groundUserRepository.getGroundUsersByOrganization(1, {
       limit: 1,
     });
     expect(result[0]).property('id').eq(1);
   });
 
-  it('getPlantersByOrganization with OFFSET', async () => {
+  it('getGroundUsersByOrganization with OFFSET', async () => {
     tracker.uninstall();
     tracker.install();
     tracker.on('query', (query) => {
@@ -60,7 +60,7 @@ describe('PlanterRepository', () => {
       );
       query.response({ rows: [{ id: 1 }] });
     });
-    const result = await planterRepository.getPlantersByOrganization(1, {
+    const result = await groundUserRepository.getGroundUsersByOrganization(1, {
       offset: 1,
     });
     expect(result[0]).property('id').eq(1);

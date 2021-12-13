@@ -15,25 +15,28 @@ const {
   treeHandlerGet,
   treeHandlerGetPotentialMatches,
 } = require('./handlers/treeHandler.js');
-const { planterHandlerGet } = require('./handlers/planterHandler.js');
-
+const { groundUserHandlerGet } = require('./handlers/groundUserHandler.js');
 
 router
   .route('/')
-  .get(validateRequest, captureHandlerGet)
-  .post(validateRequest, captureHandlerPost);
+  .get(validateRequest, handlerWrapper(captureHandlerGet))
+  .post(validateRequest, handlerWrapper(captureHandlerPost));
 
-router.route('/:capture_id').patch(validateRequest, captureHandlerPatch);
+router
+  .route('/:capture_id')
+  .patch(validateRequest, handlerWrapper(captureHandlerPatch));
 
 router
   .route('/:capture_id/potential_matches')
-  .get(validateRequest, treeHandlerGetPotentialMatches);
+  .get(validateRequest, handlerWrapper(treeHandlerGetPotentialMatches));
 
 router
   .route('/trees')
-  .get(validateRequest, treeHandlerGet)
-  .post(validateRequest, treeHandlerPost);
+  .get(validateRequest, handlerWrapper(treeHandlerGet))
+  .post(validateRequest, handlerWrapper(treeHandlerPost));
 
-router.get('/planters', handlerWrapper(planterHandlerGet));
+router
+  .route('/groundUsers')
+  .get(validateRequest, handlerWrapper(groundUserHandlerGet));
 
 module.exports = router;
