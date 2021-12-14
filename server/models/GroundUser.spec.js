@@ -56,9 +56,9 @@ describe('GroundUser Model', () => {
       const result = await executeGetGroundUsers({ organization_id: 'uuid' });
       expect(getByFilter.notCalled);
       expect(getGroundUsersByOrganization.calledWith('uuid', {})).to.be.true;
-      expect(result.planters).to.have.length(1);
+      expect(result.ground_users).to.have.length(1);
       expect(result.links).to.have.keys(['prev', 'next']);
-      expect(result.planters[0]).property('id').eq(1);
+      expect(result.ground_users[0]).property('id').eq(1);
     });
 
     it('should get groundUsers with organization_id -- with limit', async () => {
@@ -76,9 +76,9 @@ describe('GroundUser Model', () => {
       expect(getByFilter.notCalled);
       expect(getGroundUsersByOrganization.calledWith('uuid', { limit: 2 })).to
         .be.true;
-      expect(result.planters).to.have.length(1);
+      expect(result.ground_users).to.have.length(1);
       expect(result.links).to.have.keys(['prev', 'next']);
-      expect(result.planters[0]).property('id').eq(1);
+      expect(result.ground_users[0]).property('id').eq(1);
     });
 
     it('should get groundUsers with organization_id -- with offset', async () => {
@@ -95,9 +95,9 @@ describe('GroundUser Model', () => {
       });
       expect(getByFilter.notCalled);
       expect(getGroundUsersByOrganization.calledWith('uuid', {})).to.be.true;
-      expect(result.planters).to.have.length(1);
+      expect(result.ground_users).to.have.length(1);
       expect(result.links).to.have.keys(['prev', 'next']);
-      expect(result.planters[0]).property('id').eq(1);
+      expect(result.ground_users[0]).property('id').eq(1);
     });
 
     it('should get groundUsers with organization_id -- with limit and offset', async () => {
@@ -120,9 +120,9 @@ describe('GroundUser Model', () => {
           offset: 2,
         }),
       ).to.be.true;
-      expect(result.planters).to.have.length(1);
+      expect(result.ground_users).to.have.length(1);
       expect(result.links).to.have.keys(['prev', 'next']);
-      expect(result.planters[0]).property('id').eq(1);
+      expect(result.ground_users[0]).property('id').eq(1);
     });
 
     it('should get groundUsers without organization_id', async () => {
@@ -136,9 +136,9 @@ describe('GroundUser Model', () => {
       const result = await executeGetGroundUsers();
       expect(getGroundUsersByOrganization.notCalled);
       expect(getByFilter.calledWith({}, { limit: 100, offset: 0 })).to.be.true;
-      expect(result.planters).to.have.length(1);
+      expect(result.ground_users).to.have.length(1);
       expect(result.links).to.have.keys(['prev', 'next']);
-      expect(result.planters[0]).property('id').eq(1);
+      expect(result.ground_users[0]).property('id').eq(1);
     });
 
     it('should get groundUsers without organization_id -- with limit', async () => {
@@ -152,9 +152,9 @@ describe('GroundUser Model', () => {
       const result = await executeGetGroundUsers({ limit: 2 });
       expect(getGroundUsersByOrganization.notCalled);
       expect(getByFilter.calledWith({}, { limit: 2 })).to.be.true;
-      expect(result.planters).to.have.length(1);
+      expect(result.ground_users).to.have.length(1);
       expect(result.links).to.have.keys(['prev', 'next']);
-      expect(result.planters[0]).property('id').eq(1);
+      expect(result.ground_users[0]).property('id').eq(1);
     });
 
     it('should get groundUsers without organization_id -- with offset', async () => {
@@ -168,9 +168,9 @@ describe('GroundUser Model', () => {
       const result = await executeGetGroundUsers({ offset: 2 });
       expect(getGroundUsersByOrganization.notCalled);
       expect(getByFilter.calledWith({}, { limit: 100, offset: 0 })).to.be.true;
-      expect(result.planters).to.have.length(1);
+      expect(result.ground_users).to.have.length(1);
       expect(result.links).to.have.keys(['prev', 'next']);
-      expect(result.planters[0]).property('id').eq(1);
+      expect(result.ground_users[0]).property('id').eq(1);
     });
 
     it('should get groundUsers without organization_id -- with limit and offset', async () => {
@@ -184,9 +184,9 @@ describe('GroundUser Model', () => {
       const result = await executeGetGroundUsers({ limit: 4, offset: 2 });
       expect(getGroundUsersByOrganization.notCalled);
       expect(getByFilter.calledWith({}, { limit: 4, offset: 2 })).to.be.true;
-      expect(result.planters).to.have.length(1);
+      expect(result.ground_users).to.have.length(1);
       expect(result.links).to.have.keys(['prev', 'next']);
-      expect(result.planters[0]).property('id').eq(1);
+      expect(result.ground_users[0]).property('id').eq(1);
     });
   });
 });

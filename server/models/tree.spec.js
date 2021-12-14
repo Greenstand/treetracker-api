@@ -30,10 +30,13 @@ describe('executing treeFromRequest function', () => {
       'image_url',
       'lat',
       'lon',
+      'location',
+      'gps_accuracy',
       'species_id',
       'morphology',
       'age',
       'status',
+      'estimated_geographic_location',
       'created_at',
       'updated_at',
     ]);
