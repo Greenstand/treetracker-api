@@ -25,7 +25,7 @@ describe('GET /trees/potential_matches', () => {
       ...capture1,
     });
     const response = await request(app).get(
-      `/trees/potential_matches?capture_id=${capture1.id}`,
+      `/${capture1.id}/potential_matches`,
     );
     expect(response.body).to.have.property('matches');
     //    expect(response.body.matches[0].id).eq(1);
@@ -42,7 +42,7 @@ describe('GET /trees/potential_matches', () => {
       tree_id: tree1.id,
     });
     const response = await request(app).get(
-      `/trees/potential_matches?capture_id=${capture1.id}`,
+      `/${capture1.id}/potential_matches`,
     );
     expect(response.body).to.have.property('matches');
     expect(response.body.matches.map((m) => m.id)).to.not.have.members([
@@ -60,7 +60,7 @@ describe('GET /trees/potential_matches', () => {
       ...capture1,
     });
     const response = await request(app).get(
-      `/trees/potential_matches?capture_id=${capture1.id}`,
+      `/${capture1.id}/potential_matches`,
     );
     expect(response.body).to.have.property('matches');
     expect(response.body.matches.map((m) => m.id)).to.not.have.members([
