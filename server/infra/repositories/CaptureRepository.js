@@ -12,7 +12,7 @@ class CaptureRepository extends BaseRepository {
     // const query = Object.keys(filterCriteria).length
     //   ? filterCriteria
     //   : `id` > 10;
-    
+
     const query = Object.keys(filterCriteria).length
       ? filterCriteria
       : `id` > 10;
@@ -21,7 +21,7 @@ class CaptureRepository extends BaseRepository {
       .getDB()
       .where(filterCriteria)
       .select('*')
-      .from('treetracker.capture')
+      .from('capture')
       .orderBy('created_at', 'desc')
       .limit(options.limit)
       .offset(options.offset);
