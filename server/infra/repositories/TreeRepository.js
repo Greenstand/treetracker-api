@@ -10,7 +10,7 @@ class TreeRepository extends BaseRepository {
   async add(tree) {
     const wellKnownText = `POINT(${tree.lon} ${tree.lat})`;
     const result = await this._session.getDB().raw(
-      `insert into treetracker.tree (
+      `insert into tree (
            id, lat, lon, location, latest_capture_id, image_url, species_id, age, morphology,
            status, created_at, updated_at)
            values(?, ?, ?, ST_PointFromText(?, 4326), ?, ?, ?, ?, ?, ?, ?, ?)
@@ -49,8 +49,8 @@ SELECT
 	t1.created_at,
 	t1.updated_at
 FROM
-	treetracker.capture t2
-LEFT JOIN treetracker.tree t1 ON
+	capture t2
+LEFT JOIN tree t1 ON
 	ST_DWithin(t1.location,
 	t2.location,
 	:distance)
