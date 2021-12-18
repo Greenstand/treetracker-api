@@ -1,3 +1,10 @@
+## [1.8.1](https://github.com/Greenstand/treetracker-api/compare/v1.8.0...v1.8.1) (2021-12-18)
+
+
+### Bug Fixes
+
+* open cors for dev in the correct place ([fa7be4c](https://github.com/Greenstand/treetracker-api/commit/fa7be4cc93aa6a49223d3b79a9dbc83950354fa3))
+
 # [1.8.0](https://github.com/Greenstand/treetracker-api/compare/v1.7.5...v1.8.0) (2021-12-07)
 
 
