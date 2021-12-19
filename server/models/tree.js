@@ -4,6 +4,7 @@ const { v4: uuid } = require('uuid');
 const log = require('loglevel');
 const { Repository } = require('./Repository.js');
 const HttpError = require('../utils/HttpError');
+const { PaginationQueryOptions } = require('./helper');
 
 const treeFromRequest = ({
   capture_id,
@@ -84,22 +85,12 @@ const FilterCriteria = ({
       return result;
     }, {});
 };
-
-const QueryOptions = ({ limit = undefined, offset = undefined }) => {
-  return Object.entries({ limit, offset })
-    .filter((entry) => entry[1] !== undefined)
-    .reduce((result, item) => {
-      result[item[0]] = item[1];
-      return result;
-    }, {});
-};
-
 const getTrees = (treeRepositoryImpl) => async (filterCriteria = undefined) => {
   let filter = {};
   let options = { limit: 1000, offset: 0 };
   if (filterCriteria !== undefined) {
     filter = FilterCriteria({ ...filterCriteria });
-    options = { ...options, ...QueryOptions({ ...filterCriteria }) };
+    options = { ...options, ...PaginationQueryOptions({ ...filterCriteria }) };
   }
   // console.log('TREE MODEL getTrees', filterCriteria, filter, options);
   const treeRepository = new Repository(treeRepositoryImpl);

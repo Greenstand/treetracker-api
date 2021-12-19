@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable prefer-destructuring */
 const { raiseEvent, DomainEvent } = require('./DomainEvent');
+const { PaginationQueryOptions } = require('./helper');
 const { Repository } = require('./Repository');
 
 const Capture = ({
@@ -130,15 +131,6 @@ const FilterCriteria = ({ tree_id = undefined }) => {
     }, {});
 };
 
-const QueryOptions = ({ limit = undefined, offset = undefined }) => {
-  return Object.entries({ limit, offset })
-    .filter((entry) => entry[1] !== undefined)
-    .reduce((result, item) => {
-      result[item[0]] = item[1];
-      return result;
-    }, {});
-};
-
 const getCaptures = (captureRepositoryImpl) => async (
   filterCriteria = undefined,
 ) => {
@@ -146,7 +138,7 @@ const getCaptures = (captureRepositoryImpl) => async (
   let options = { limit: 1000, offset: 0 };
   if (filterCriteria !== undefined) {
     filter = FilterCriteria({ ...filterCriteria });
-    options = { ...options, ...QueryOptions({ ...filterCriteria }) };
+    options = { ...options, ...PaginationQueryOptions({ ...filterCriteria }) };
   }
   // console.log('CAPTURE MODEL getCaptures', filterCriteria, filter, options);
   const captureRepository = new Repository(captureRepositoryImpl);

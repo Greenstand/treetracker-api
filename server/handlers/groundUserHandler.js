@@ -7,7 +7,7 @@ const groundUserQuerySchema = Joi.object({
   organization_id: Joi.string().guid(),
   limit: Joi.number().integer().greater(0).less(101),
   offset: Joi.number().integer().greater(-1),
-});
+}).unknown(false);
 
 const groundUserHandlerGet = async function (req, res) {
   await groundUserQuerySchema.validateAsync(req.query, { abortEarly: false });

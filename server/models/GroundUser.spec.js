@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
-const { getGroundUsers, QueryOptions, GroundUser } = require('./GroundUser');
+const { getGroundUsers, GroundUser } = require('./GroundUser');
 
 describe('GroundUser Model', () => {
   it('GroundUser Model should return defined fields', () => {
@@ -18,30 +18,6 @@ describe('GroundUser Model', () => {
       'organization_id',
       'image_rotation',
     ]);
-  });
-
-  describe('QueryOptions', () => {
-    it('QueryOptions should not return results other than limit, offset', () => {
-      const filter = QueryOptions({ check: true });
-      expect(filter).to.be.empty;
-    });
-
-    it('QueryOptions should not return undefined fields', () => {
-      const filter = QueryOptions({
-        limit: undefined,
-        offset: undefined,
-      });
-      expect(filter).to.be.empty;
-    });
-
-    it('QueryOptions should limit, offset', () => {
-      const filter = QueryOptions({
-        limit: 12,
-        offset: 4,
-        org: 'undefined',
-      });
-      expect(filter).to.have.keys(['limit', 'offset']);
-    });
   });
 
   describe('getGroundUsers', () => {
