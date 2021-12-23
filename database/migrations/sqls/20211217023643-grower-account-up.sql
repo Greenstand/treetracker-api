@@ -14,4 +14,4 @@ CREATE TABLE grower_account
     first_registration_at timestamptz NOT NULL,
     created_at timestamptz NOT NULL DEFAULT now(),
     updated_at timestamptz NOT NULL DEFAULT now()
-)
+);

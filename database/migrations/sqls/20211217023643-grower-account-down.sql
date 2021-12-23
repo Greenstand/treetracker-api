@@ -1,1 +1,1 @@
-DROP TABLE grower_account
+DROP TABLE grower_account;

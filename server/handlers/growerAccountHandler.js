@@ -5,6 +5,7 @@ const {
   getGrowerAccounts,
   GrowerAccountInsertObject,
   updateGrowerAccount,
+  GrowerAccount,
 } = require('../models/GrowerAccount');
 
 const growerAccountGetQuerySchema = Joi.object({
@@ -29,7 +30,6 @@ const growerAccountPostQuerySchema = Joi.object({
   .or('email', 'phone');
 
 const growerAccountPatchQuerySchema = Joi.object({
-  grower_account_id: Joi.string().uuid().required(),
   person_id: Joi.string().uuid(),
   organization_id: Joi.string().uuid(),
   name: Joi.string(),
@@ -39,6 +39,10 @@ const growerAccountPatchQuerySchema = Joi.object({
   image_rotation: Joi.number().integer(),
   status: Joi.string().valid('active', 'deleted'),
 }).unknown(false);
+
+const growerAccountIdQuerySchema = Joi.object({
+  grower_account_id: Joi.string().uuid().required(),
+});
 
 const growerAccountHandlerGet = async function (req, res) {
   await growerAccountGetQuerySchema.validateAsync(req.query, {
@@ -55,6 +59,7 @@ const growerAccountHandlerGet = async function (req, res) {
   res.send(result);
   res.end();
 };
+
 const growerAccountHandlerPost = async function (req, res, next) {
   await growerAccountPostQuerySchema.validateAsync(req.body, {
     abortEarly: false,
@@ -64,8 +69,10 @@ const growerAccountHandlerPost = async function (req, res, next) {
   const growerAccountRepo = new GrowerAccountRepository(session);
 
   try {
+    await session.beginTransaction();
     const growerAccountInsertObject = GrowerAccountInsertObject(req.body);
     await growerAccountRepo.create(growerAccountInsertObject);
+    await session.commitTransaction();
 
     res.status(204).send();
     res.end();
@@ -76,7 +83,12 @@ const growerAccountHandlerPost = async function (req, res, next) {
     next(error);
   }
 };
-const growerAccountHandlerPatch = async function (req, res) {
+
+const growerAccountHandlerPatch = async function (req, res, next) {
+  await growerAccountIdQuerySchema.validateAsync(req.params, {
+    abortEarly: false,
+  });
+
   await growerAccountPatchQuerySchema.validateAsync(req.body, {
     abortEarly: false,
   });
@@ -85,8 +97,10 @@ const growerAccountHandlerPatch = async function (req, res) {
   const growerAccountRepo = new GrowerAccountRepository(session);
 
   try {
+    await session.beginTransaction();
     const executeGrowerAccount = updateGrowerAccount(growerAccountRepo);
-    await executeGrowerAccount(req.body);
+    await executeGrowerAccount({ ...req.body, ...req.params });
+    await session.commitTransaction();
 
     res.status(204).send();
     res.end();
@@ -98,8 +112,24 @@ const growerAccountHandlerPatch = async function (req, res) {
   }
 };
 
+const growerAccountHandlerSingleGet = async function (req, res) {
+  await growerAccountIdQuerySchema.validateAsync(req.params, {
+    abortEarly: false,
+  });
+
+  const session = new Session();
+  const growerAccountRepo = new GrowerAccountRepository(session);
+
+  const growerAccount = await growerAccountRepo.getById(
+    req.params.grower_account_id,
+  );
+
+  res.send(GrowerAccount(growerAccount));
+};
+
 module.exports = {
   growerAccountHandlerGet,
   growerAccountHandlerPost,
   growerAccountHandlerPatch,
+  growerAccountHandlerSingleGet,
 };

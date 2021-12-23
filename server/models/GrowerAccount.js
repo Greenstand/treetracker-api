@@ -46,6 +46,7 @@ const PropertiesToUpdate = ({
   image_rotation = undefined,
 }) => {
   const id = grower_account_id;
+  const updated_at = new Date().toISOString();
   return Object.entries({
     id,
     person_id,
@@ -56,6 +57,7 @@ const PropertiesToUpdate = ({
     image_url,
     image_rotation,
     status,
+    updated_at,
   })
     .filter((entry) => entry[1] !== undefined)
     .reduce((result, item) => {
@@ -112,4 +114,5 @@ module.exports = {
   getGrowerAccounts,
   GrowerAccountInsertObject,
   updateGrowerAccount,
+  GrowerAccount,
 };
