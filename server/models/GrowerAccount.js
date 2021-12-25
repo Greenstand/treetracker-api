@@ -69,6 +69,7 @@ const PropertiesToUpdate = ({
 const GrowerAccountInsertObject = (requestBody) =>
   Object.freeze({
     ...GrowerAccount(requestBody),
+    status: 'active',
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
     id: uuid(),

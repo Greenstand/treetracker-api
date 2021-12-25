@@ -3,9 +3,9 @@
 const { v4: uuid } = require('uuid');
 const HttpError = require('../utils/HttpError');
 
-const CaptureTag = ({
+const TreeTag = ({
   id,
-  capture_id,
+  tree_id,
   tag_id,
   tag_name,
   status,
@@ -14,7 +14,7 @@ const CaptureTag = ({
 }) =>
   Object.freeze({
     id,
-    capture_id,
+    tree_id,
     tag_id,
     tag_name,
     status,
@@ -22,18 +22,18 @@ const CaptureTag = ({
     updated_at,
   });
 
-const captureTagInsertObject = ({ tag_id, capture_id }) =>
+const treeTagInsertObject = ({ tag_id, tree_id }) =>
   Object.freeze({
     id: uuid(),
     tag_id,
-    capture_id,
+    tree_id,
     status: 'active',
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   });
 
-const FilterCriteria = ({ capture_id = undefined, tag_id = undefined }) => {
-  return Object.entries({ capture_id, tag_id })
+const FilterCriteria = ({ tree_id = undefined, tag_id = undefined }) => {
+  return Object.entries({ tree_id, tag_id })
     .filter((entry) => entry[1] !== undefined)
     .reduce((result, item) => {
       result[item[0]] = item[1];
@@ -41,37 +41,34 @@ const FilterCriteria = ({ capture_id = undefined, tag_id = undefined }) => {
     }, {});
 };
 
-const getCaptureTags = (captureTagRepositoryImpl) => async (
+const getTreeTags = (treeTagRepositoryImpl) => async (
   filterCriteria = undefined,
 ) => {
   const filter = { ...FilterCriteria(filterCriteria) };
-  const captureTags = await captureTagRepositoryImpl.getCaptureTags(filter);
-  return captureTags.map((row) => CaptureTag({ ...row }));
+  const treeTags = await treeTagRepositoryImpl.getTreeTags(filter);
+  return treeTags.map((row) => TreeTag({ ...row }));
 };
 
-const addTagsToCapture = (captureTagRepositoryImpl) => async ({
-  tags,
-  capture_id,
-}) => {
+const addTagsToTree = (treeTagRepositoryImpl) => async ({ tags, tree_id }) => {
   const insertObjectArray = await Promise.all(
     tags.map(async (t) => {
-      const captureTag = await captureTagRepositoryImpl.getByFilter({
+      const treeTag = await treeTagRepositoryImpl.getByFilter({
         tag_id: t,
-        capture_id,
+        tree_id,
       });
-      if (captureTag.length > 0)
+      if (treeTag.length > 0)
         throw new HttpError(
           400,
-          `Tag ${t} has already been assigned to the specified capture`,
+          `Tag ${t} has already been assigned to the specified tree`,
         );
-      return captureTagInsertObject({ tag_id: t, capture_id });
+      return treeTagInsertObject({ tag_id: t, tree_id });
     }),
   );
 
-  await captureTagRepositoryImpl.create(insertObjectArray);
+  await treeTagRepositoryImpl.create(insertObjectArray);
 };
 
 module.exports = {
-  getCaptureTags,
-  addTagsToCapture,
+  getTreeTags,
+  addTagsToTree,
 };

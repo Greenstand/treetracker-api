@@ -3,7 +3,7 @@ const Joi = require('joi');
 
 const {
   createCapture,
-  captureFromRequest,
+  captureInsertObject,
   getCaptures,
   Capture,
 } = require('../models/Capture');
@@ -17,12 +17,12 @@ const CaptureRepository = require('../infra/repositories/CaptureRepository');
 const CaptureTagRepository = require('../infra/repositories/CaptureTagRepository');
 const EventRepository = require('../infra/repositories/EventRepository');
 
-const CapturePostSchema = Joi.object({
+const capturePostSchema = Joi.object({
   session_id: Joi.string().uuid().required(),
   image_url: Joi.string().uri().required(),
   lat: Joi.number().required().min(-90).max(90).required(),
   lon: Joi.number().required().min(-180).max(180).required(),
-  gps_accuracy: Joi.number().required(),
+  gps_accuracy: Joi.number().integer().required(),
   grower_id: Joi.string().uuid().required(),
   grower_photo_url: Joi.string().uri().required(),
   grower_username: Joi.string().required(),
@@ -45,7 +45,7 @@ const CapturePostSchema = Joi.object({
   domain_specific_data: Joi.object(),
 }).unknown(false);
 
-const CapturePatchSchema = Joi.object({
+const capturePatchSchema = Joi.object({
   tree_id: Joi.string().valid(null),
   species_id: Joi.string().uuid(),
   morphology: Joi.string(),
@@ -53,19 +53,20 @@ const CapturePatchSchema = Joi.object({
   status: Joi.string().valid('active', 'deleted'),
 }).unknown(false);
 
-const CaptureIdParamSchema = Joi.object({
+const captureIdParamSchema = Joi.object({
   capture_id: Joi.string().uuid().required(),
 }).unknown(true);
 
-const TagIdQuerySchema = Joi.object({
+const captureTagIdQuerySchema = Joi.object({
+  capture_id: Joi.string().uuid().required(),
   tag_id: Joi.string().uuid().required(),
 }).unknown(true);
 
-const CaptureTagsPostSchema = Joi.object({
+const captureTagsPostSchema = Joi.object({
   tags: Joi.array().items(Joi.string().uuid()).required().min(1),
 }).unknown(false);
 
-const CaptureTagPatchSchema = Joi.object({
+const captureTagPatchSchema = Joi.object({
   status: Joi.string().valid('active', 'deleted'),
 }).unknown(false);
 
@@ -83,7 +84,7 @@ const captureHandlerPost = async function (req, res, next) {
   const captureRepo = new CaptureRepository(session);
   const eventRepository = new EventRepository(session);
 
-  await CapturePostSchema.validateAsync(req.body, {
+  await capturePostSchema.validateAsync(req.body, {
     abortEarly: false,
   });
 
@@ -92,7 +93,7 @@ const captureHandlerPost = async function (req, res, next) {
   const eventDispatch = dispatch(eventRepository, publishMessage);
 
   try {
-    const newCapture = captureFromRequest({ ...req.body });
+    const newCapture = captureInsertObject({ ...req.body });
     await session.beginTransaction();
     const { raisedEvents } = await executeCreateCapture(newCapture);
     await session.commitTransaction();
@@ -111,11 +112,11 @@ const captureHandlerPost = async function (req, res, next) {
 };
 
 const captureHandlerPatch = async function (req, res, next) {
-  await CapturePatchSchema.validateAsync(req.body, {
+  await capturePatchSchema.validateAsync(req.body, {
     abortEarly: false,
   });
 
-  await CaptureIdParamSchema.validateAsync(req.params, {
+  await captureIdParamSchema.validateAsync(req.params, {
     abortEarly: false,
   });
 
@@ -127,6 +128,7 @@ const captureHandlerPatch = async function (req, res, next) {
     await captureRepo.update({
       id: req.params.capture_id,
       ...req.body,
+      updated_at: new Date().toISOString(),
     });
     await session.commitTransaction();
     res.status(204).send();
@@ -141,7 +143,7 @@ const captureHandlerPatch = async function (req, res, next) {
 };
 
 const captureHandlerSingleGet = async function (req, res) {
-  await CaptureIdParamSchema.validateAsync(req.params, {
+  await captureIdParamSchema.validateAsync(req.params, {
     abortEarly: false,
   });
 
@@ -154,7 +156,7 @@ const captureHandlerSingleGet = async function (req, res) {
 };
 
 const captureHanglerTagGet = async function (req, res) {
-  await CaptureIdParamSchema.validateAsync(req.params, {
+  await captureIdParamSchema.validateAsync(req.params, {
     abortEarly: false,
   });
 
@@ -171,11 +173,11 @@ const captureHanglerTagGet = async function (req, res) {
 };
 
 const captureHandlerTagPost = async function (req, res, next) {
-  await CaptureIdParamSchema.validateAsync(req.params, {
+  await captureIdParamSchema.validateAsync(req.params, {
     abortEarly: false,
   });
 
-  await CaptureTagsPostSchema.validateAsync(req.body, {
+  await captureTagsPostSchema.validateAsync(req.body, {
     abortEarly: false,
   });
 
@@ -203,12 +205,8 @@ const captureHandlerTagPost = async function (req, res, next) {
   }
 };
 
-const captureHanglerSingleTagGet = async function (req, res) {
-  await CaptureIdParamSchema.validateAsync(req.params, {
-    abortEarly: false,
-  });
-
-  await TagIdQuerySchema.validateAsync(req.params, {
+const captureHandlerSingleTagGet = async function (req, res) {
+  await captureTagIdQuerySchema.validateAsync(req.params, {
     abortEarly: false,
   });
 
@@ -222,19 +220,17 @@ const captureHanglerSingleTagGet = async function (req, res) {
     tag_id: req.params.tag_id,
   });
 
-  res.send(result);
+  const [r = {}] = result;
+
+  res.send(r);
 };
 
 const captureHandlerSingleTagPatch = async function (req, res, next) {
-  await CaptureIdParamSchema.validateAsync(req.params, {
+  await captureTagIdQuerySchema.validateAsync(req.params, {
     abortEarly: false,
   });
 
-  await TagIdQuerySchema.validateAsync(req.params, {
-    abortEarly: false,
-  });
-
-  await CaptureTagPatchSchema.validateAsync(req.body, {
+  await captureTagPatchSchema.validateAsync(req.body, {
     abortEarly: false,
   });
 
@@ -260,12 +256,8 @@ const captureHandlerSingleTagPatch = async function (req, res, next) {
   }
 };
 
-const captureHanglerSingleTagDelete = async function (req, res, next) {
-  await CaptureIdParamSchema.validateAsync(req.params, {
-    abortEarly: false,
-  });
-
-  await TagIdQuerySchema.validateAsync(req.params, {
+const captureHandlerSingleTagDelete = async function (req, res, next) {
+  await captureTagIdQuerySchema.validateAsync(req.params, {
     abortEarly: false,
   });
 
@@ -298,7 +290,7 @@ module.exports = {
   captureHandlerSingleGet,
   captureHanglerTagGet,
   captureHandlerTagPost,
-  captureHanglerSingleTagGet,
+  captureHandlerSingleTagGet,
   captureHandlerSingleTagPatch,
-  captureHanglerSingleTagDelete,
+  captureHandlerSingleTagDelete,
 };

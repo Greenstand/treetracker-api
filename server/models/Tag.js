@@ -15,6 +15,7 @@ const TagInsertObject = (requestBody) =>
   Object.freeze({
     ...Tag(requestBody),
     id: uuid(),
+    status: 'active',
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   });

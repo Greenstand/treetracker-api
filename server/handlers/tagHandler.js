@@ -11,7 +11,6 @@ const tagGetQuerySchema = Joi.object({
 const tagPostQuerySchema = Joi.object({
   public: Joi.boolean().required(),
   name: Joi.string().required(),
-  status: Joi.string().valid('active', 'deleted'),
 }).unknown(false);
 
 const TagPatchQuerySchema = Joi.object({
@@ -78,8 +77,8 @@ const tagHandlerPatch = async function (req, res, next) {
 
   try {
     await session.beginTransaction();
-    const executetag = updatetag(tagRepo);
-    await executetag({ ...req.body, ...req.params });
+    const executeUpdatetag = updatetag(tagRepo);
+    await executeUpdatetag({ ...req.body, ...req.params });
     await session.commitTransaction();
 
     res.status(204).send();

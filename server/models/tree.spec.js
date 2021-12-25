@@ -7,11 +7,11 @@ chai.use(sinonChai);
 chai.use(assertArrays);
 const { expect } = chai;
 
-const { treeFromRequest, createTree } = require('./tree.js');
+const { treeInsertObject, createTree } = require('./tree.js');
 const TreeRepository = require('../infra/repositories/TreeRepository');
 
-describe('executing treeFromRequest function', () => {
-  const tree = treeFromRequest({
+describe('executing treeInsertObject function', () => {
+  const tree = treeInsertObject({
     capture_id: 'fde165f6-5ebe-4ef6-aa46-fc0e391c1b78',
     image_url: 'http://test',
     lat: 10.15,
@@ -41,7 +41,7 @@ describe('executing treeFromRequest function', () => {
 });
 
 describe('executing createTree function', () => {
-  const tree = treeFromRequest({
+  const tree = treeInsertObject({
     capture_id: 'fde165f6-5ebe-4ef6-aa46-fc0e391c1b78',
     image_url: 'http://test',
     lat: 10.15,

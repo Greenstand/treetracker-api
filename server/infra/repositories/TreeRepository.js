@@ -8,29 +8,43 @@ class TreeRepository extends BaseRepository {
   }
 
   async add(tree) {
-    const wellKnownText = `POINT(${tree.lon} ${tree.lat})`;
-    const result = await this._session.getDB().raw(
-      `insert into treetracker.tree (
-           id, lat, lon, location, latest_capture_id, image_url, species_id, age, morphology,
-           status, created_at, updated_at)
-           values(?, ?, ?, ST_PointFromText(?, 4326), ?, ?, ?, ?, ?, ?, ?, ?)
-           returning id`,
+    await this._session.getDB().raw(
+      `INSERT INTO tree (
+        id,
+        latest_capture_id,
+        image_url,
+        lat,
+        lon,
+        gps_accuracy,
+        morphology,
+        age,
+        status,
+        attributes,
+        species_id,
+        created_at,
+        updated_at,
+        estimated_geometric_location,
+        estimated_geographic_location
+      )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ST_PointFromText(?, 4326), ?);`,
       [
         tree.id,
-        tree.lat,
-        tree.lon,
-        wellKnownText,
         tree.latest_capture_id,
         tree.image_url,
-        tree.species_id,
-        tree.age,
+        tree.lat,
+        tree.lon,
+        tree.gps_accuracy,
         tree.morphology,
+        tree.age,
         tree.status,
+        tree.attributes,
+        tree.species_id,
         tree.created_at,
         tree.updated_at,
+        tree.point,
+        tree.point,
       ],
     );
-    return result.rows[0];
   }
 
   async getPotentialMatches(id, distance) {

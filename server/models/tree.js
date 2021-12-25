@@ -6,36 +6,32 @@ const { Repository } = require('./Repository.js');
 const HttpError = require('../utils/HttpError');
 const { PaginationQueryOptions } = require('./helper');
 
-const treeFromRequest = ({
-  capture_id,
+const treeInsertObject = ({
+  latest_capture_id,
   image_url,
   lat,
   lon,
-  location,
   gps_accuracy,
-  species_id = -1,
-  morphology = '',
-  age = -1,
-  status,
-  estimated_geographic_location,
-  created_at,
-  updated_at,
+  species_id = null,
+  morphology = null,
+  age = null,
+  attributes,
 }) => {
   return Object.freeze({
     id: uuid(),
-    latest_capture_id: capture_id,
+    latest_capture_id,
     image_url,
     lat,
     lon,
-    location,
     gps_accuracy,
-    species_id,
     morphology,
     age,
-    status: status || 'alive',
-    estimated_geographic_location,
-    created_at,
-    updated_at,
+    status: 'active',
+    attributes: attributes ? { entries: requestBody.attributes } : null,
+    species_id,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    point: `POINT( ${lon} ${lat} )`,
   });
 };
 
@@ -45,14 +41,15 @@ const Tree = ({
   image_url,
   lat,
   lon,
-  location,
   gps_accuracy,
-  species_id,
   morphology,
   age,
   status,
+  attributes,
+  species_id,
   created_at,
   updated_at,
+  estimated_geometric_location,
   estimated_geographic_location,
 }) => {
   return Object.freeze({
@@ -61,14 +58,15 @@ const Tree = ({
     image_url,
     lat,
     lon,
-    location,
     gps_accuracy,
-    species_id,
     morphology,
     age,
     status,
+    attributes,
+    species_id,
     created_at,
     updated_at,
+    estimated_geometric_location,
     estimated_geographic_location,
   });
 };
@@ -125,6 +123,7 @@ const potentialMatches = (treeRepository) => async (
 module.exports = {
   getTrees,
   createTree,
-  treeFromRequest,
+  treeInsertObject,
   potentialMatches,
+  Tree,
 };

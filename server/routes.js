@@ -12,9 +12,9 @@ const {
   captureHandlerSingleGet,
   captureHanglerTagGet,
   captureHandlerTagPost,
-  captureHanglerSingleTagGet,
+  captureHandlerSingleTagGet,
   captureHandlerSingleTagPatch,
-  captureHanglerSingleTagDelete,
+  captureHandlerSingleTagDelete,
 } = require('./handlers/captureHandler.js');
 const {
   treeHandlerPost,
@@ -49,19 +49,19 @@ router
 
 router
   .route('/trees/:tree_id')
-  .get(validateRequest, handlerWrapper(treeHandlerSingleGet)) //todo
-  .patch(validateRequest, handlerWrapper(treeHandlerPatch)); //todo
+  .get(validateRequest, handlerWrapper(treeHandlerSingleGet))
+  .patch(validateRequest, handlerWrapper(treeHandlerPatch));
 
 router
   .route('/trees/:tree_id/tags')
-  .get(validateRequest, handlerWrapper(treeHandlerTagGet)) //todo
-  .post(validateRequest, handlerWrapper(treeHandlerTagPost)); //todo
+  .get(validateRequest, handlerWrapper(treeHandlerTagGet))
+  .post(validateRequest, handlerWrapper(treeHandlerTagPost));
 
 router
   .route('/trees/:tree_id/tags/:tag_id')
-  .get(validateRequest, handlerWrapper(treeHandlerSingleTagGet)) //todo
-  .patch(validateRequest, handlerWrapper(treeHandlerSingleTagPatch)) //todo
-  .delete(validateRequest, handlerWrapper(treeHandlerSingleTagDelete)); //todo
+  .get(validateRequest, handlerWrapper(treeHandlerSingleTagGet))
+  .patch(validateRequest, handlerWrapper(treeHandlerSingleTagPatch))
+  .delete(validateRequest, handlerWrapper(treeHandlerSingleTagDelete));
 
 router
   .route('/trees/:tree_id/potential_matches')
@@ -109,8 +109,8 @@ router
 
 router
   .route('/captures/:capture_id/tags/:tag_id')
-  .get(validateRequest, handlerWrapper(captureHanglerSingleTagGet))
+  .get(validateRequest, handlerWrapper(captureHandlerSingleTagGet))
   .patch(validateRequest, handlerWrapper(captureHandlerSingleTagPatch))
-  .delete(validateRequest, handlerWrapper(captureHanglerSingleTagDelete));
+  .delete(validateRequest, handlerWrapper(captureHandlerSingleTagDelete));
 
 module.exports = router;

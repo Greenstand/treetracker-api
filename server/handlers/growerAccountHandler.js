@@ -23,7 +23,6 @@ const growerAccountPostQuerySchema = Joi.object({
   phone: Joi.string(),
   image_url: Joi.string().uri().required(),
   image_rotation: Joi.number().integer(),
-  status: Joi.string().valid('active', 'deleted'),
   first_registration_at: Joi.date().iso().required(),
 })
   .unknown(false)
@@ -98,8 +97,8 @@ const growerAccountHandlerPatch = async function (req, res, next) {
 
   try {
     await session.beginTransaction();
-    const executeGrowerAccount = updateGrowerAccount(growerAccountRepo);
-    await executeGrowerAccount({ ...req.body, ...req.params });
+    const executeUpdateGrowerAccount = updateGrowerAccount(growerAccountRepo);
+    await executeUpdateGrowerAccount({ ...req.body, ...req.params });
     await session.commitTransaction();
 
     res.status(204).send();

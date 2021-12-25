@@ -5,7 +5,6 @@ const { raiseEvent, DomainEvent } = require('./DomainEvent');
 const { PaginationQueryOptions } = require('./helper');
 const { Repository } = require('./Repository');
 
-// Not updated
 const Capture = ({
   id,
   reference_id,
@@ -59,7 +58,7 @@ const Capture = ({
     species_id,
   });
 
-const captureFromRequest = ({
+const captureInsertObject = ({
   reference_id = null,
   tree_id = null,
   image_url,
@@ -100,7 +99,7 @@ const captureFromRequest = ({
     planting_organization_id,
     point: `POINT( ${lon} ${lat} )`,
     status: 'active',
-    attributes: attributes ? { entries: requestBody.attributes } : null,
+    attributes: attributes ? { entries: attributes } : null,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   });
@@ -183,7 +182,7 @@ const applyVerification = (captureRepositoryImpl) => async (
 };
 
 module.exports = {
-  captureFromRequest,
+  captureInsertObject,
   createCapture,
   getCaptures,
   applyVerification,
