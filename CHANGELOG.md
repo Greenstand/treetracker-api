@@ -1,3 +1,10 @@
+## [1.8.2](https://github.com/Greenstand/treetracker-api/compare/v1.8.1...v1.8.2) (2021-12-28)
+
+
+### Bug Fixes
+
+* upgrade dockerfile to use node 16 ([38b7acb](https://github.com/Greenstand/treetracker-api/commit/38b7acb7bfcbb292cbb7eb6ee0107a083691c63a))
+
 ## [1.8.1](https://github.com/Greenstand/treetracker-api/compare/v1.8.0...v1.8.1) (2021-12-18)
 
 
