@@ -382,6 +382,24 @@ paths:
                 - lat
                 - lon
       description: 'Create a new unique tree in greenstand platform. '
+  '/trees/{tree_id}/tags/':
+    parameters:
+      - schema:
+          type: string
+        name: tree_id
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses: {}
+      operationId: get-trees-capture_id-tags
+    post:
+      summary: ''
+      operationId: post-trees-capture_id-tags
+      responses:
+        '200':
+          description: OK
   '/trees/{tree_id}':
     parameters:
       - schema:
