@@ -44,28 +44,28 @@ const { groundUserHandlerGet } = require('./handlers/groundUserHandler.js');
 
 router
   .route('/trees')
-  .get(validateRequest, handlerWrapper(treeHandlerGet))
-  .post(validateRequest, handlerWrapper(treeHandlerPost));
+  .get(validateRequest, handlerWrapper(treeHandlerGet)) //tested
+  .post(validateRequest, handlerWrapper(treeHandlerPost)); //tested
+
+router
+  .route('/trees/potential_matches')
+  .get(validateRequest, handlerWrapper(treeHandlerGetPotentialMatches)); //tested
 
 router
   .route('/trees/:tree_id')
-  .get(validateRequest, handlerWrapper(treeHandlerSingleGet))
-  .patch(validateRequest, handlerWrapper(treeHandlerPatch));
+  .get(validateRequest, handlerWrapper(treeHandlerSingleGet)) //tested
+  .patch(validateRequest, handlerWrapper(treeHandlerPatch)); //tested
 
 router
   .route('/trees/:tree_id/tags')
-  .get(validateRequest, handlerWrapper(treeHandlerTagGet))
-  .post(validateRequest, handlerWrapper(treeHandlerTagPost));
+  .get(validateRequest, handlerWrapper(treeHandlerTagGet)) //tested
+  .post(validateRequest, handlerWrapper(treeHandlerTagPost)); //tested
 
 router
   .route('/trees/:tree_id/tags/:tag_id')
-  .get(validateRequest, handlerWrapper(treeHandlerSingleTagGet))
-  .patch(validateRequest, handlerWrapper(treeHandlerSingleTagPatch))
-  .delete(validateRequest, handlerWrapper(treeHandlerSingleTagDelete));
-
-router
-  .route('/trees/:tree_id/potential_matches')
-  .get(validateRequest, handlerWrapper(treeHandlerGetPotentialMatches));
+  .get(validateRequest, handlerWrapper(treeHandlerSingleTagGet)) //tested
+  .patch(validateRequest, handlerWrapper(treeHandlerSingleTagPatch)) //tested
+  .delete(validateRequest, handlerWrapper(treeHandlerSingleTagDelete)); //tested
 
 // Legacy Planters Table
 router
@@ -74,23 +74,23 @@ router
 
 router
   .route('/grower_accounts')
-  .get(validateRequest, handlerWrapper(growerAccountHandlerGet))
-  .post(validateRequest, handlerWrapper(growerAccountHandlerPost));
+  .get(validateRequest, handlerWrapper(growerAccountHandlerGet)) //tested
+  .post(validateRequest, handlerWrapper(growerAccountHandlerPost)); //tested
 
 router
   .route('/grower_accounts/:grower_account_id')
-  .get(validateRequest, handlerWrapper(growerAccountHandlerSingleGet))
-  .patch(validateRequest, handlerWrapper(growerAccountHandlerPatch));
+  .get(validateRequest, handlerWrapper(growerAccountHandlerSingleGet)) //tested
+  .patch(validateRequest, handlerWrapper(growerAccountHandlerPatch)); //tested
 
 router
   .route('/tags')
-  .get(validateRequest, handlerWrapper(tagHandlerGet))
-  .post(validateRequest, handlerWrapper(tagHandlerPost));
+  .get(validateRequest, handlerWrapper(tagHandlerGet)) //tested
+  .post(validateRequest, handlerWrapper(tagHandlerPost)); //tested
 
 router
   .route('/tags/:tag_id')
-  .get(validateRequest, handlerWrapper(tagHandlerSingleGet))
-  .patch(validateRequest, handlerWrapper(tagHandlerPatch));
+  .get(validateRequest, handlerWrapper(tagHandlerSingleGet)) //tested
+  .patch(validateRequest, handlerWrapper(tagHandlerPatch)); //tested
 
 router
   .route('/captures')

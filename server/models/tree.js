@@ -27,7 +27,7 @@ const treeInsertObject = ({
     morphology,
     age,
     status: 'active',
-    attributes: attributes ? { entries: requestBody.attributes } : null,
+    attributes: attributes ? { entries: attributes } : null,
     species_id,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),

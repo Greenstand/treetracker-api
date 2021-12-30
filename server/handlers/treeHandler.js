@@ -106,7 +106,7 @@ const treeHandlerGetPotentialMatches = async (req, res) => {
   const session = new Session();
   const treeRepository = new TreeRepository(session);
   const execute = potentialMatches(treeRepository);
-  const potentialTrees = await execute(req.params.tree_id);
+  const potentialTrees = await execute(req.query.capture_id);
   log.warn('result of match:', potentialTrees.length);
 
   // get the captures for each match and add as .captures
