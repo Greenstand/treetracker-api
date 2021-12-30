@@ -108,7 +108,7 @@ const updateGrowerAccount = (growerAccountRepo) => async (updateObject) => {
 
   await growerAccountRepo.update(properties);
 
-  return;
+  
 };
 
 module.exports = {

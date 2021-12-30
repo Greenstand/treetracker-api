@@ -1,11 +1,11 @@
 const { v4: uuid } = require('uuid');
 const { PaginationQueryOptions } = require('./helper');
 
-const Tag = ({ id, name, public, status, created_at, updated_at }) =>
+const Tag = ({ id, name, isPublic, status, created_at, updated_at }) =>
   Object.freeze({
     id,
     name,
-    public,
+    isPublic,
     status,
     created_at,
     updated_at,
@@ -22,14 +22,14 @@ const TagInsertObject = (requestBody) =>
 
 const PropertiesToUpdate = ({
   status = undefined,
-  public = undefined,
+  isPublic = undefined,
   tag_id = undefined,
 }) => {
   const id = tag_id;
   const updated_at = new Date().toISOString();
   return Object.entries({
     id,
-    public,
+    isPublic,
     status,
     updated_at,
   })
@@ -70,7 +70,7 @@ const updatetag = (tagRepo) => async (updateObject) => {
 
   await tagRepo.update(properties);
 
-  return;
+  
 };
 
 module.exports = {

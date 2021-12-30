@@ -7,7 +7,7 @@ const { knex } = require('../../utils');
 describe('/tag', () => {
   const tagUpdates = {
     status: 'deleted',
-    public: true,
+    isPublic: true,
   };
 
   after(async () => {

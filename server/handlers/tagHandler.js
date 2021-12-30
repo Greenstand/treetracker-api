@@ -9,12 +9,12 @@ const tagGetQuerySchema = Joi.object({
 }).unknown(false);
 
 const tagPostQuerySchema = Joi.object({
-  public: Joi.boolean().required(),
+  isPublic: Joi.boolean().required(),
   name: Joi.string().required(),
 }).unknown(false);
 
 const TagPatchQuerySchema = Joi.object({
-  public: Joi.boolean(),
+  isPublic: Joi.boolean(),
   status: Joi.string().valid('active', 'deleted'),
 }).unknown(false);
 
