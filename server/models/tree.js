@@ -1,12 +1,13 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable prefer-destructuring */
-const { v4: uuid } = require('uuid');
 const log = require('loglevel');
 const { Repository } = require('./Repository.js');
 const HttpError = require('../utils/HttpError');
 const { PaginationQueryOptions } = require('./helper');
+const { raiseEvent, DomainEvent } = require('./DomainEvent');
 
 const treeInsertObject = ({
+  id,
   latest_capture_id,
   image_url,
   lat,
@@ -18,7 +19,7 @@ const treeInsertObject = ({
   attributes,
 }) => {
   return Object.freeze({
-    id: uuid(),
+    id,
     latest_capture_id,
     image_url,
     lat,
@@ -98,15 +99,15 @@ const getTrees = (treeRepositoryImpl) => async (filterCriteria = undefined) => {
   });
 };
 
-const createTree = (treeRepository) => async (tree) => {
+const createTree = (treeRepository, eventRepository) => async (tree) => {
   const repository = new Repository(treeRepository);
-  return repository.add(tree);
+  await repository.add(tree);
+
+  const raiseCaptureEvent = raiseEvent(eventRepository);
+  const domainEvent = await raiseCaptureEvent(DomainEvent(tree));
+  return { raisedEvents: { domainEvent } };
 };
 
-/*
- * To find matched tree by providing capture id
- * Didn't use Repository because I think this business-specific SQL don't worth to put into Repository for future reuse.
- */
 const potentialMatches = (treeRepository) => async (
   captureId,
   distance = 6,

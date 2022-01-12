@@ -10,14 +10,18 @@ const {
 } = require('../models/tree');
 const { getTreeTags, addTagsToTree } = require('../models/TreeTag');
 const { getCaptures } = require('../models/Capture');
+const { dispatch } = require('../models/DomainEvent');
 
 const Session = require('../infra/database/Session');
+const { publishMessage } = require('../infra/messaging/RabbitMQMessaging');
 
 const CaptureRepository = require('../infra/repositories/CaptureRepository');
 const TreeRepository = require('../infra/repositories/TreeRepository');
 const TreeTagRepository = require('../infra/repositories/TreeTagRepository');
+const EventRepository = require('../infra/repositories/EventRepository');
 
 const treePostSchema = Joi.object({
+  id: Joi.string().uuid().required(),
   latest_capture_id: Joi.string().uuid().required(),
   image_url: Joi.string().uri().required(),
   lat: Joi.number().min(0).max(90).required(),
@@ -73,17 +77,32 @@ const treeHandlerGet = async function (req, res) {
 
 const treeHandlerPost = async function (req, res, next) {
   const session = new Session();
-  const captureRepo = new TreeRepository(session);
-  const executeCreateTree = createTree(captureRepo);
+  const treeRepo = new TreeRepository(session);
+  const eventRepo = new EventRepository(session);
 
-  const tree = treeInsertObject(req.body);
+  const executeCreateTree = createTree(treeRepo, eventRepo);
+  const eventDispatch = dispatch(eventRepo, publishMessage);
+
+  const newTree = treeInsertObject(req.body);
   try {
     await treePostSchema.validateAsync(req.body, {
       abortEarly: false,
     });
-    await session.beginTransaction();
-    await executeCreateTree(tree);
-    await session.commitTransaction();
+
+    const existingTree = await treeRepo.getById(newTree.id);
+    if (existingTree) {
+      const domainEvent = await eventRepo.getDomainEvent(newTree.id);
+      if (domainEvent.status !== 'sent') {
+        eventDispatch('tree-created', domainEvent);
+      }
+    } else {
+      await session.beginTransaction();
+      const {
+        raisedEvents: { domainEvent },
+      } = await executeCreateTree(newTree);
+      await session.commitTransaction();
+      eventDispatch('tree-created', domainEvent);
+    }
     res.status(204).send();
   } catch (e) {
     if (session.isTransactionInProgress()) {
@@ -225,7 +244,7 @@ const treeHandlerSingleTagGet = async function (req, res) {
   const executeGetTreeTags = getTreeTags(treeTagRepo);
 
   const result = await executeGetTreeTags({
-    capture_id: req.params.capture_id,
+    tree_id: req.params.tree_id,
     tag_id: req.params.tag_id,
   });
 

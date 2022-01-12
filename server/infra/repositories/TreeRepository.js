@@ -77,6 +77,16 @@ class TreeRepository extends BaseRepository {
     const data = await this._session.getDB().raw(query, { id, distance });
     return data.rows;
   }
+
+  async getById(id) {
+    const object = await this._session
+      .getDB()
+      .select()
+      .table(this._tableName)
+      .where('id', id)
+      .first();
+    return object;
+  }
 }
 
 module.exports = TreeRepository;

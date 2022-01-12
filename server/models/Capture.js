@@ -1,6 +1,5 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable prefer-destructuring */
-const { v4: uuidv4 } = require('uuid');
 const { raiseEvent, DomainEvent } = require('./DomainEvent');
 const { PaginationQueryOptions } = require('./helper');
 const { Repository } = require('./Repository');
@@ -59,6 +58,7 @@ const Capture = ({
   });
 
 const captureInsertObject = ({
+  id,
   reference_id = null,
   tree_id = null,
   image_url,
@@ -79,7 +79,7 @@ const captureInsertObject = ({
   planting_organization_id,
 }) =>
   Object.freeze({
-    id: uuidv4(),
+    id,
     reference_id,
     tree_id,
     image_url,
@@ -135,7 +135,7 @@ const createCapture = (captureRepositoryImpl, eventRepositoryImpl) => async (
 
   const raiseCaptureEvent = raiseEvent(eventRepositoryImpl);
   const domainEvent = await raiseCaptureEvent(DomainEvent(captureCreated));
-  return { raisedEvents: [domainEvent] };
+  return { raisedEvents: { domainEvent } };
 };
 
 const FilterCriteria = ({ tree_id = undefined }) => {

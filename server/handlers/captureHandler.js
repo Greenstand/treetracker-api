@@ -18,6 +18,7 @@ const CaptureTagRepository = require('../infra/repositories/CaptureTagRepository
 const EventRepository = require('../infra/repositories/EventRepository');
 
 const capturePostSchema = Joi.object({
+  id: Joi.string().uuid().required(),
   session_id: Joi.string().uuid().required(),
   image_url: Joi.string().uri().required(),
   lat: Joi.number().required().min(-90).max(90).required(),
@@ -94,12 +95,21 @@ const captureHandlerPost = async function (req, res, next) {
 
   try {
     const newCapture = captureInsertObject({ ...req.body });
-    await session.beginTransaction();
-    const { raisedEvents } = await executeCreateCapture(newCapture);
-    await session.commitTransaction();
-    raisedEvents.forEach((domainEvent) =>
-      eventDispatch('capture-created', domainEvent),
-    );
+    const existingCapture = await captureRepo.getById(newCapture.id);
+    if (existingCapture) {
+      const domainEvent = await eventRepo.getDomainEvent(newCapture.id);
+      if (domainEvent.status !== 'sent') {
+        eventDispatch('capture-created', domainEvent);
+      }
+    } else {
+      await session.beginTransaction();
+      const {
+        raisedEvents: { domainEvent },
+      } = await executeCreateCapture(newCapture);
+      await session.commitTransaction();
+      eventDispatch('capture-created', domainEvent);
+    }
+
     res.status(204).send();
     res.end();
   } catch (e) {
