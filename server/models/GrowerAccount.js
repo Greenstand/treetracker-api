@@ -82,6 +82,8 @@ const getGrowerAccounts = (growerAccountRepo) => async (
   let options = { limit: 100, offset: 0 };
   options = { ...options, ...PaginationQueryOptions({ ...filterCriteria }) };
 
+  const organization_id = filterCriteria.organization_id;
+
   let next = '';
   let prev = '';
 
@@ -92,7 +94,10 @@ const getGrowerAccounts = (growerAccountRepo) => async (
     prev = `${query}offset=${+options.offset - +options.limit}`;
   }
 
-  const growerAccounts = await growerAccountRepo.getByFilter({}, options);
+  const growerAccounts = await growerAccountRepo.getByFilter(
+    { ...(organization_id && { organization_id }) },
+    options,
+  );
 
   return {
     grower_accounts: growerAccounts.map((row) => GrowerAccount(row)),
@@ -107,8 +112,6 @@ const updateGrowerAccount = (growerAccountRepo) => async (updateObject) => {
   const properties = { ...PropertiesToUpdate({ ...updateObject }) };
 
   await growerAccountRepo.update(properties);
-
-  
 };
 
 module.exports = {

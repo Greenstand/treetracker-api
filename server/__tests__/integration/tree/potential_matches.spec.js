@@ -28,7 +28,7 @@ describe('GET /trees/potential_matches', () => {
     created_at: '2021-05-04 11:24:43',
     updated_at: '2021-05-04 11:24:43',
     estimated_geometric_location: 'POINT(50 50)',
-    latest_capture_id: uuid.v1(),
+    latest_capture_id: uuid.v4(),
   };
 
   it('tree1 potential matches capture1', async () => {

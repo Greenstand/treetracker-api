@@ -2,9 +2,11 @@ const request = require('supertest');
 const { expect } = require('chai');
 const app = require('../../../app');
 const capture2 = require('../../mock/capture2.json');
+const capture1 = require('../../mock/capture1.json');
 const tag2 = require('../../mock/tag2.json');
 const grower_account2 = require('../../mock/grower_account2.json');
-const { knex } = require('../../utils');
+const domain_event2 = require('../../mock/domain_event2.json');
+const { knex, addCapture } = require('../../utils');
 
 describe('/captures', () => {
   const captureUpdates = {
@@ -36,14 +38,45 @@ describe('/captures', () => {
   });
 
   describe('POST', () => {
+    before(async () => {
+      await addCapture({
+        ...capture1,
+        estimated_geometric_location: 'POINT(50 50)',
+      });
+      await knex('domain_event').insert({ ...domain_event2 });
+    });
+
     it('should create a capture', async () => {
       await request(app)
         .post(`/captures`)
         .send(capture2)
         .set('Accept', 'application/json')
         .expect(204);
+    });
 
-      // test to see if an event is being emitted
+    it('should not error out when duplicate data is sent', async () => {
+      await request(app)
+        .post(`/captures`)
+        .send(capture2)
+        .set('Accept', 'application/json')
+        .expect(204);
+    });
+
+    it('should resend capture created event if it wasnt successful last time and capture already exists', async () => {
+      await request(app)
+        .post(`/captures`)
+        .send({ ...capture2, id: capture1.id })
+        .set('Accept', 'application/json')
+        .expect(204);
+    });
+
+    after(async () => {
+      await knex('capture')
+        .where({ ...capture1 })
+        .del();
+
+      const result = await knex('domain_event').where({ status: 'sent' }).del();
+      expect(result).to.eql(2);
     });
   });
 

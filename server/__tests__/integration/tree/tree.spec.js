@@ -1,9 +1,12 @@
 const request = require('supertest');
 const { expect } = require('chai');
+const uuid = require('uuid');
 const app = require('../../../app');
 const tree2 = require('../../mock/tree2.json');
+const tree1 = require('../../mock/tree1.json');
+const domain_event1 = require('../../mock/domain_event1.json');
 const tag2 = require('../../mock/tag2.json');
-const { knex } = require('../../utils');
+const { knex, addTree, delTree } = require('../../utils');
 
 describe('/trees', () => {
   const treeUpdates = {
@@ -25,14 +28,47 @@ describe('/trees', () => {
   });
 
   describe('POST', () => {
+    before(async () => {
+      await addTree({
+        ...tree1,
+        created_at: '2021-05-04 11:24:43',
+        updated_at: '2021-05-04 11:24:43',
+        estimated_geometric_location: 'POINT(50 50)',
+        latest_capture_id: uuid.v4(),
+        attributes: { entries: tree1.attributes },
+      });
+      await knex('domain_event').insert({ ...domain_event1 });
+    });
+
     it('should create a tree', async () => {
       await request(app)
         .post(`/trees`)
         .send(tree2)
         .set('Accept', 'application/json')
         .expect(204);
+    });
 
-      // test to see if an event is being emitted
+    it('should not error out when duplicate data is sent', async () => {
+      await request(app)
+        .post(`/trees`)
+        .send(tree2)
+        .set('Accept', 'application/json')
+        .expect(204);
+    });
+
+    it('should resend tree created event if it wasnt successful last time and tree already exists', async () => {
+      await request(app)
+        .post(`/trees`)
+        .send({ ...tree2, id: tree1.id })
+        .set('Accept', 'application/json')
+        .expect(204);
+    });
+
+    after(async () => {
+      await delTree(tree1.id);
+
+      const result = await knex('domain_event').where({ status: 'sent' }).del();
+      expect(result).to.eql(2);
     });
   });
 

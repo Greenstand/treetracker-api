@@ -83,15 +83,15 @@ const captureHandlerGet = async function (req, res) {
 const captureHandlerPost = async function (req, res, next) {
   const session = new Session();
   const captureRepo = new CaptureRepository(session);
-  const eventRepository = new EventRepository(session);
+  const eventRepo = new EventRepository(session);
 
   await capturePostSchema.validateAsync(req.body, {
     abortEarly: false,
   });
 
-  const executeCreateCapture = createCapture(captureRepo, eventRepository);
+  const executeCreateCapture = createCapture(captureRepo, eventRepo);
 
-  const eventDispatch = dispatch(eventRepository, publishMessage);
+  const eventDispatch = dispatch(eventRepo, publishMessage);
 
   try {
     const newCapture = captureInsertObject({ ...req.body });
