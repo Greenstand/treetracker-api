@@ -23,6 +23,16 @@ describe('/tag', () => {
         .set('Accept', 'application/json')
         .expect(204);
     });
+
+    it('should error out -- tag name already exists', async () => {
+      const result = await request(app)
+        .post(`/tags`)
+        .send(tag1)
+        .set('Accept', 'application/json')
+        .expect(422);
+
+      expect(result.body.message).to.equal('Tag name already exists');
+    });
   });
 
   describe('PATCH', () => {

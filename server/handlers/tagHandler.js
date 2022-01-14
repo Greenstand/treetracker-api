@@ -2,6 +2,7 @@ const Joi = require('joi');
 const Session = require('../infra/database/Session');
 const TagRepository = require('../infra/repositories/TagRepository');
 const { getTags, TagInsertObject, updatetag, Tag } = require('../models/Tag');
+const HttpError = require('../utils/HttpError');
 
 const tagGetQuerySchema = Joi.object({
   limit: Joi.number().integer().greater(0).less(101),
@@ -47,8 +48,11 @@ const tagHandlerPost = async function (req, res, next) {
   const tagRepo = new TagRepository(session);
 
   try {
-    await session.beginTransaction();
     const tagInsertObject = TagInsertObject(req.body);
+    const tag = await tagRepo.getByFilter({ name: tagInsertObject.name });
+
+    if (tag.length > 0) throw new HttpError(422, 'Tag name already exists');
+    await session.beginTransaction();
     await tagRepo.create(tagInsertObject);
 
     await session.commitTransaction();

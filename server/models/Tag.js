@@ -40,9 +40,20 @@ const PropertiesToUpdate = ({
     }, {});
 };
 
+const FilterCriteria = ({ name = undefined }) => {
+  return Object.entries({ name })
+    .filter((entry) => entry[1] !== undefined)
+    .reduce((result, item) => {
+      result[item[0]] = item[1];
+      return result;
+    }, {});
+};
+
 const getTags = (tagRepo) => async (filterCriteria, url) => {
   let options = { limit: 100, offset: 0 };
   options = { ...options, ...PaginationQueryOptions({ ...filterCriteria }) };
+
+  const filter = { status: 'active', ...FilterCriteria(filterCriteria) };
 
   let next = '';
   let prev = '';
@@ -54,7 +65,7 @@ const getTags = (tagRepo) => async (filterCriteria, url) => {
     prev = `${query}offset=${+options.offset - +options.limit}`;
   }
 
-  const tags = await tagRepo.getByFilter({ status: 'active' }, options);
+  const tags = await tagRepo.getByFilter(filter, options);
 
   return {
     tags: tags.map((row) => Tag(row)),
