@@ -12,7 +12,6 @@ describe('/grower_account', () => {
     phone: 'phonnnenumber',
     image_url: 'https://www.himage.com',
     image_rotation: 44,
-    status: 'deleted',
   };
 
   after(async () => {
@@ -66,6 +65,23 @@ describe('/grower_account', () => {
         ...grower_account1,
         ...growerAccountUpdates,
       });
+    });
+
+    it('should delete a grower account', async () => {
+      const growerAccount = await knex('grower_account')
+        .select('id')
+        .where({ ...grower_account1, ...growerAccountUpdates });
+      await request(app)
+        .patch(`/grower_accounts/${growerAccount[0].id}`)
+        .send({ status: 'deleted' })
+        .set('Accept', 'application/json')
+        .expect(204);
+    });
+
+    it('should get grower account --should be empty', async () => {
+      const result = await request(app).get(`/grower_accounts`).expect(200);
+      expect(result.body.grower_accounts.length).to.eql(0);
+      expect(result.body.links).to.have.keys(['prev', 'next']);
     });
   });
 });

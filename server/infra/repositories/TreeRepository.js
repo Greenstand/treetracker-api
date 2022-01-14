@@ -83,7 +83,7 @@ class TreeRepository extends BaseRepository {
       .getDB()
       .select()
       .table(this._tableName)
-      .where('id', id)
+      .where({ id, status: 'active' })
       .first();
     return object;
   }

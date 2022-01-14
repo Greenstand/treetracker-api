@@ -75,6 +75,15 @@ const GrowerAccountInsertObject = (requestBody) =>
     id: uuid(),
   });
 
+const FilterCriteria = ({ organization_id = undefined, id = undefined }) => {
+  return Object.entries({ organization_id, id })
+    .filter((entry) => entry[1] !== undefined)
+    .reduce((result, item) => {
+      result[item[0]] = item[1];
+      return result;
+    }, {});
+};
+
 const getGrowerAccounts = (growerAccountRepo) => async (
   filterCriteria,
   url,
@@ -82,7 +91,7 @@ const getGrowerAccounts = (growerAccountRepo) => async (
   let options = { limit: 100, offset: 0 };
   options = { ...options, ...PaginationQueryOptions({ ...filterCriteria }) };
 
-  const organization_id = filterCriteria.organization_id;
+  const filter = { status: 'active', ...FilterCriteria({ ...filterCriteria }) };
 
   let next = '';
   let prev = '';
@@ -94,10 +103,7 @@ const getGrowerAccounts = (growerAccountRepo) => async (
     prev = `${query}offset=${+options.offset - +options.limit}`;
   }
 
-  const growerAccounts = await growerAccountRepo.getByFilter(
-    { ...(organization_id && { organization_id }) },
-    options,
-  );
+  const growerAccounts = await growerAccountRepo.getByFilter(filter, options);
 
   return {
     grower_accounts: growerAccounts.map((row) => GrowerAccount(row)),

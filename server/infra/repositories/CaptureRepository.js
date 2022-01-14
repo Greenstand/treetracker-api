@@ -15,7 +15,7 @@ class CaptureRepository extends BaseRepository {
 
     return this._session
       .getDB()
-      .where(filterCriteria)
+      .where({ ...filterCriteria, status: 'active' })
       .select('*')
       .from('capture')
       .orderBy('created_at', 'desc')
@@ -86,7 +86,7 @@ class CaptureRepository extends BaseRepository {
       .getDB()
       .select()
       .table(this._tableName)
-      .where('id', id)
+      .where({ id, status: 'active' })
       .first();
     return object;
   }

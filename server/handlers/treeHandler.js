@@ -147,7 +147,7 @@ const treeHandlerSingleGet = async (req, res) => {
   const session = new Session();
   const treeRepo = new TreeRepository(session);
 
-  const tree = await treeRepo.getById(req.params.tree_id);
+  const tree = (await treeRepo.getById(req.params.tree_id)) || {};
 
   res.send(Tree(tree));
 };
@@ -293,10 +293,11 @@ const treeHandlerSingleTagDelete = async function (req, res, next) {
 
   try {
     await session.beginTransaction();
-    // confirm if this is to happen or if a soft delete is to happen with status set to deleted
-    await treeTagRepo.delete({
+    await treeTagRepo.update({
       tree_id: req.params.tree_id,
       tag_id: req.params.tag_id,
+      status: 'deleted',
+      updated_at: new Date().toISOString(),
     });
     await session.commitTransaction();
     res.status(204).send();

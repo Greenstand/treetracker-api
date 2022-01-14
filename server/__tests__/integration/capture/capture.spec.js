@@ -14,7 +14,6 @@ describe('/captures', () => {
     species_id: '12e2c0f6-b7df-43e3-8899-674e90b292d9',
     morphology: 'yyggollohhprom',
     age: 44,
-    status: 'deleted',
   };
 
   const modCapture = {
@@ -24,7 +23,10 @@ describe('/captures', () => {
 
   const updatedModCapture = { ...modCapture, ...captureUpdates };
   before(async () => {
-    await knex('grower_account').insert({ ...grower_account2 });
+    await knex('grower_account').insert({
+      ...grower_account2,
+      status: 'active',
+    });
   });
 
   after(async () => {
@@ -115,6 +117,23 @@ describe('/captures', () => {
       delete copy.attributes;
       expect(result.body[0]).to.include({ ...copy });
     });
+
+    it('should delete a capture', async () => {
+      const captureId = await knex('capture')
+        .select('id')
+        .where({ ...updatedModCapture });
+      await request(app)
+        .patch(`/captures/${captureId[0].id}`)
+        .send({ status: 'deleted' })
+        .set('Accept', 'application/json')
+        .expect(204);
+    });
+
+    it('should get captures -- should be empty', async () => {
+      const result = await request(app).get(`/captures`).expect(200);
+      const copy = { ...updatedModCapture };
+      expect(result.body.length).to.eql(0);
+    });
   });
 
   describe('/captures/capture_id/tags', () => {
@@ -180,6 +199,27 @@ describe('/captures', () => {
       ]);
     });
 
+    it('should get a single tag attached to a capture', async () => {
+      const result = await request(app)
+        .get(`/captures/${captureId}/tags/${tag2.id}`)
+        .expect(200);
+      expect(result.body).to.include({
+        capture_id: captureId,
+        tag_id: tag2.id,
+        tag_name: tag2.name,
+        status: 'active',
+      });
+      expect(result.body).to.have.keys([
+        'id',
+        'capture_id',
+        'tag_id',
+        'tag_name',
+        'status',
+        'created_at',
+        'updated_at',
+      ]);
+    });
+
     it('should update a single tag attached to a capture', async () => {
       const result = await request(app)
         .patch(`/captures/${captureId}/tags/${tag2.id}`)
@@ -191,21 +231,7 @@ describe('/captures', () => {
       const result = await request(app)
         .get(`/captures/${captureId}/tags/${tag2.id}`)
         .expect(200);
-      expect(result.body).to.include({
-        capture_id: captureId,
-        tag_id: tag2.id,
-        tag_name: tag2.name,
-        status: 'deleted',
-      });
-      expect(result.body).to.have.keys([
-        'id',
-        'capture_id',
-        'tag_id',
-        'tag_name',
-        'status',
-        'created_at',
-        'updated_at',
-      ]);
+      expect(result.body).to.be.empty;
     });
 
     it('should delete a single tag attached to a capture', async () => {

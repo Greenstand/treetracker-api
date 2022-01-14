@@ -138,8 +138,8 @@ const createCapture = (captureRepositoryImpl, eventRepositoryImpl) => async (
   return { raisedEvents: { domainEvent } };
 };
 
-const FilterCriteria = ({ tree_id = undefined }) => {
-  return Object.entries({ tree_id })
+const FilterCriteria = ({ tree_id = undefined, id = undefined }) => {
+  return Object.entries({ tree_id, id })
     .filter((entry) => entry[1] !== undefined)
     .reduce((result, item) => {
       result[item[0]] = item[1];

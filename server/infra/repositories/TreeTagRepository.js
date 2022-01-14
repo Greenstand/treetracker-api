@@ -10,7 +10,7 @@ class TreeTagRepository extends BaseRepository {
   async getTreeTags(filter) {
     const whereBuilder = function (object, builder) {
       const result = builder;
-      result.where(object);
+      result.where({ ...object, 'tree_tag.status': 'active' });
 
       return result;
     };
@@ -37,13 +37,6 @@ class TreeTagRepository extends BaseRepository {
       .getDB()(this._tableName)
       .update(object)
       .where({ tree_id: object.tree_id, tag_id: object.tag_id });
-  }
-
-  async delete(object) {
-    return this._session
-      .getDB()(this._tableName)
-      .where({ tree_id: object.tree_id, tag_id: object.tag_id })
-      .del();
   }
 }
 

@@ -73,11 +73,11 @@ const Tree = ({
 };
 
 const FilterCriteria = ({
-  status = undefined,
-  field_username = undefined,
-  field_user_id = undefined,
+  grower_username = undefined,
+  grower_id = undefined,
+  id = undefined,
 }) => {
-  return Object.entries({ status, field_username, field_user_id })
+  return Object.entries({ grower_username, grower_id, id })
     .filter((entry) => entry[1] !== undefined)
     .reduce((result, item) => {
       result[item[0]] = item[1];
@@ -93,7 +93,10 @@ const getTrees = (treeRepositoryImpl) => async (filterCriteria = undefined) => {
   }
   // console.log('TREE MODEL getTrees', filterCriteria, filter, options);
   const treeRepository = new Repository(treeRepositoryImpl);
-  const trees = await treeRepository.getByFilter(filter, options);
+  const trees = await treeRepository.getByFilter(
+    { ...filter, status: 'active' },
+    options,
+  );
   return trees.map((row) => {
     return Tree({ ...row });
   });

@@ -15,7 +15,6 @@ describe('/trees', () => {
     species_id: '74b6f9fa-fa5a-4571-849c-db17ea4ef3b5',
     morphology: 'ygolohprom',
     age: 44,
-    status: 'deleted',
   };
 
   const modTree = { ...tree2, attributes: { entries: tree2.attributes } };
@@ -107,6 +106,23 @@ describe('/trees', () => {
       delete copy.attributes;
       expect(result.body[0]).to.include({ ...copy });
     });
+
+    it('should delete a tree', async () => {
+      const treeId = await knex('tree')
+        .select('id')
+        .where({ ...updatedModTree });
+      await request(app)
+        .patch(`/trees/${treeId[0].id}`)
+        .send({ status: 'deleted' })
+        .set('Accept', 'application/json')
+        .expect(204);
+    });
+
+    it('should get trees --should be empty', async () => {
+      const result = await request(app).get(`/trees`).expect(200);
+      const copy = { ...updatedModTree };
+      expect(result.body.length).to.eql(0);
+    });
   });
 
   describe('/trees/tree_id/tags', () => {
@@ -170,6 +186,28 @@ describe('/trees', () => {
       ]);
     });
 
+    it('should get a single tag attached to a tree', async () => {
+      const result = await request(app)
+        .get(`/trees/${treeId}/tags/${tag2.id}`)
+        .expect(200);
+      expect(result.body).to.include({
+        tree_id: treeId,
+        tag_id: tag2.id,
+        tag_name: tag2.name,
+        status: 'active',
+      });
+
+      expect(result.body).to.have.keys([
+        'id',
+        'tree_id',
+        'tag_id',
+        'tag_name',
+        'status',
+        'created_at',
+        'updated_at',
+      ]);
+    });
+
     it('should update a single tag attached to a tree', async () => {
       const result = await request(app)
         .patch(`/trees/${treeId}/tags/${tag2.id}`)
@@ -181,21 +219,7 @@ describe('/trees', () => {
       const result = await request(app)
         .get(`/trees/${treeId}/tags/${tag2.id}`)
         .expect(200);
-      expect(result.body).to.include({
-        tree_id: treeId,
-        tag_id: tag2.id,
-        tag_name: tag2.name,
-        status: 'deleted',
-      });
-      expect(result.body).to.have.keys([
-        'id',
-        'tree_id',
-        'tag_id',
-        'tag_name',
-        'status',
-        'created_at',
-        'updated_at',
-      ]);
+      expect(result.body).to.be.empty;
     });
 
     it('should delete a single tag attached to a tree', async () => {

@@ -10,7 +10,7 @@ class CaptureTagRepository extends BaseRepository {
   async getCaptureTags(filter) {
     const whereBuilder = function (object, builder) {
       const result = builder;
-      result.where(object);
+      result.where({ ...object, 'capture_tag.status': 'active' });
 
       return result;
     };
@@ -37,13 +37,6 @@ class CaptureTagRepository extends BaseRepository {
       .getDB()(this._tableName)
       .update(object)
       .where({ capture_id: object.capture_id, tag_id: object.tag_id });
-  }
-
-  async delete(object) {
-    return this._session
-      .getDB()(this._tableName)
-      .where({ capture_id: object.capture_id, tag_id: object.tag_id })
-      .del();
   }
 }
 

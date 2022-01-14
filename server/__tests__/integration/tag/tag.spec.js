@@ -6,7 +6,6 @@ const { knex } = require('../../utils');
 
 describe('/tag', () => {
   const tagUpdates = {
-    status: 'deleted',
     isPublic: true,
   };
 
@@ -53,6 +52,23 @@ describe('/tag', () => {
       expect(result.body.tags.length).to.eql(1);
       expect(result.body.links).to.have.keys(['prev', 'next']);
       expect(result.body.tags[0]).to.include({ ...tag1, ...tagUpdates });
+    });
+
+    it('should delete a tag', async () => {
+      const tagId = await knex('tag')
+        .select('id')
+        .where({ ...tagUpdates });
+      await request(app)
+        .patch(`/tags/${tagId[0].id}`)
+        .send({ status: 'deleted' })
+        .set('Accept', 'application/json')
+        .expect(204);
+    });
+
+    it('should get tags --should be empty', async () => {
+      const result = await request(app).get(`/tags`).expect(200);
+      expect(result.body.tags.length).to.eql(0);
+      expect(result.body.links).to.have.keys(['prev', 'next']);
     });
   });
 });

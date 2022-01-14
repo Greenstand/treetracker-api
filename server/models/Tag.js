@@ -54,7 +54,7 @@ const getTags = (tagRepo) => async (filterCriteria, url) => {
     prev = `${query}offset=${+options.offset - +options.limit}`;
   }
 
-  const tags = await tagRepo.getByFilter({}, options);
+  const tags = await tagRepo.getByFilter({ status: 'active' }, options);
 
   return {
     tags: tags.map((row) => Tag(row)),
@@ -69,8 +69,6 @@ const updatetag = (tagRepo) => async (updateObject) => {
   const properties = { ...PropertiesToUpdate({ ...updateObject }) };
 
   await tagRepo.update(properties);
-
-  
 };
 
 module.exports = {
