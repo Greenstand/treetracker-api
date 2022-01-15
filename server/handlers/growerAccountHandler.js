@@ -12,6 +12,7 @@ const growerAccountGetQuerySchema = Joi.object({
   limit: Joi.number().integer().greater(0).less(101),
   offset: Joi.number().integer().greater(-1),
   organization_id: Joi.string().uuid(),
+  id: Joi.string().uuid(),
 }).unknown(false);
 
 const growerAccountPostQuerySchema = Joi.object({
