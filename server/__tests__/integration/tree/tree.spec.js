@@ -114,7 +114,7 @@ describe('/trees', () => {
   });
 
   describe('/trees/tree_id/tags', () => {
-    let treeId = tree2.id;
+    const treeId = tree2.id;
 
     before(async () => {
       await knex('tag').insert(tag2);

@@ -128,7 +128,7 @@ describe('/captures', () => {
   });
 
   describe('/captures/capture_id/tags', () => {
-    let captureId = capture2.id;
+    const captureId = capture2.id;
 
     before(async () => {
       await knex('tag').insert(tag2);
