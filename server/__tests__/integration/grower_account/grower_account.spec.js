@@ -32,11 +32,8 @@ describe('/grower_account', () => {
 
   describe('PATCH', () => {
     it('should uodate a grower account', async () => {
-      const growerAccount = await knex('grower_account')
-        .select('id')
-        .where({ ...grower_account1 });
       await request(app)
-        .patch(`/grower_accounts/${growerAccount[0].id}`)
+        .patch(`/grower_accounts/${grower_account1.id}`)
         .send(growerAccountUpdates)
         .set('Accept', 'application/json')
         .expect(204);
@@ -45,11 +42,8 @@ describe('/grower_account', () => {
 
   describe('GET', () => {
     it('should get a single grower account', async () => {
-      const growerAccount = await knex('grower_account')
-        .select('id')
-        .where({ ...grower_account1, ...growerAccountUpdates });
       const result = await request(app)
-        .get(`/grower_accounts/${growerAccount[0].id}`)
+        .get(`/grower_accounts/${grower_account1.id}`)
         .expect(200);
       expect(result.body).to.include({
         ...grower_account1,
@@ -68,11 +62,8 @@ describe('/grower_account', () => {
     });
 
     it('should delete a grower account', async () => {
-      const growerAccount = await knex('grower_account')
-        .select('id')
-        .where({ ...grower_account1, ...growerAccountUpdates });
       await request(app)
-        .patch(`/grower_accounts/${growerAccount[0].id}`)
+        .patch(`/grower_accounts/${grower_account1.id}`)
         .send({ status: 'deleted' })
         .set('Accept', 'application/json')
         .expect(204);

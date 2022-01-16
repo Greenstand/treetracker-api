@@ -84,11 +84,8 @@ describe('/captures', () => {
 
   describe('PATCH', () => {
     it('should uodate a capture', async () => {
-      const captureId = await knex('capture')
-        .select('id')
-        .where({ ...modCapture });
       await request(app)
-        .patch(`/captures/${captureId[0].id}`)
+        .patch(`/captures/${capture2.id}`)
         .send(captureUpdates)
         .set('Accept', 'application/json')
         .expect(204);
@@ -98,11 +95,8 @@ describe('/captures', () => {
   describe('GET', () => {
     it('should get a single capture', async () => {
       const copy = { ...updatedModCapture };
-      const captureId = await knex('capture')
-        .select('id')
-        .where({ ...copy });
       const result = await request(app)
-        .get(`/captures/${captureId[0].id}`)
+        .get(`/captures/${capture2.id}`)
         .expect(200);
       expect(result.body.attributes.entries).to.eql(copy.attributes.entries);
       delete copy.attributes;
@@ -119,11 +113,8 @@ describe('/captures', () => {
     });
 
     it('should delete a capture', async () => {
-      const captureId = await knex('capture')
-        .select('id')
-        .where({ ...updatedModCapture });
       await request(app)
-        .patch(`/captures/${captureId[0].id}`)
+        .patch(`/captures/${capture2.id}`)
         .send({ status: 'deleted' })
         .set('Accept', 'application/json')
         .expect(204);
@@ -137,15 +128,9 @@ describe('/captures', () => {
   });
 
   describe('/captures/capture_id/tags', () => {
-    let captureId;
+    let captureId = capture2.id;
 
     before(async () => {
-      const capture = await knex('capture')
-        .select('id')
-        .where({ ...updatedModCapture });
-
-      captureId = capture[0].id;
-
       await knex('tag').insert(tag2);
     });
 

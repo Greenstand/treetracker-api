@@ -73,11 +73,8 @@ describe('/trees', () => {
 
   describe('PATCH', () => {
     it('should uodate a tree', async () => {
-      const treeId = await knex('tree')
-        .select('id')
-        .where({ ...modTree });
       await request(app)
-        .patch(`/trees/${treeId[0].id}`)
+        .patch(`/trees/${tree2.id}`)
         .send(treeUpdates)
         .set('Accept', 'application/json')
         .expect(204);
@@ -87,12 +84,7 @@ describe('/trees', () => {
   describe('GET', () => {
     it('should get a single tree', async () => {
       const copy = { ...updatedModTree };
-      const treeId = await knex('tree')
-        .select('id')
-        .where({ ...copy });
-      const result = await request(app)
-        .get(`/trees/${treeId[0].id}`)
-        .expect(200);
+      const result = await request(app).get(`/trees/${tree2.id}`).expect(200);
       expect(result.body.attributes.entries).to.eql(copy.attributes.entries);
       delete copy.attributes;
       expect(result.body).to.include({ ...copy });
@@ -108,11 +100,8 @@ describe('/trees', () => {
     });
 
     it('should delete a tree', async () => {
-      const treeId = await knex('tree')
-        .select('id')
-        .where({ ...updatedModTree });
       await request(app)
-        .patch(`/trees/${treeId[0].id}`)
+        .patch(`/trees/${tree2.id}`)
         .send({ status: 'deleted' })
         .set('Accept', 'application/json')
         .expect(204);
@@ -120,21 +109,14 @@ describe('/trees', () => {
 
     it('should get trees --should be empty', async () => {
       const result = await request(app).get(`/trees`).expect(200);
-      const copy = { ...updatedModTree };
       expect(result.body.length).to.eql(0);
     });
   });
 
   describe('/trees/tree_id/tags', () => {
-    let treeId;
+    let treeId = tree2.id;
 
     before(async () => {
-      const tree = await knex('tree')
-        .select('id')
-        .where({ ...updatedModTree });
-
-      treeId = tree[0].id;
-
       await knex('tag').insert(tag2);
     });
 

@@ -72,7 +72,6 @@ const GrowerAccountInsertObject = (requestBody) =>
     status: 'active',
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
-    id: uuid(),
   });
 
 const FilterCriteria = ({ organization_id = undefined, id = undefined }) => {

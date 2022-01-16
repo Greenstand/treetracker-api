@@ -16,6 +16,7 @@ const growerAccountGetQuerySchema = Joi.object({
 }).unknown(false);
 
 const growerAccountPostQuerySchema = Joi.object({
+  id: Joi.string().uuid().required(),
   wallet_id: Joi.string().uuid().required(),
   wallet: Joi.string().required(),
   person_id: Joi.string().uuid(),
