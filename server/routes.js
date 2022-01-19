@@ -33,6 +33,7 @@ const {
   growerAccountHandlerPost,
   growerAccountHandlerPatch,
   growerAccountHandlerSingleGet,
+  growerAccountHandlerPut,
 } = require('./handlers/growerAccountHandler');
 const {
   tagHandlerGet,
@@ -75,7 +76,8 @@ router
 router
   .route('/grower_accounts')
   .get(validateRequest, handlerWrapper(growerAccountHandlerGet))
-  .post(validateRequest, handlerWrapper(growerAccountHandlerPost));
+  .post(validateRequest, handlerWrapper(growerAccountHandlerPost))
+  .put(validateRequest, handlerWrapper(growerAccountHandlerPut));
 
 router
   .route('/grower_accounts/:grower_account_id')

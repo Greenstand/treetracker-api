@@ -253,6 +253,7 @@ const captureHandlerSingleTagPatch = async function (req, res, next) {
       capture_id: req.params.capture_id,
       tag_id: req.params.tag_id,
       ...req.body,
+      updated_at: new Date().toISOString(),
     });
     await session.commitTransaction();
     res.status(204).send();

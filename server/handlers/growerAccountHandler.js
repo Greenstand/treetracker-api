@@ -7,6 +7,7 @@ const {
   updateGrowerAccount,
   GrowerAccount,
 } = require('../models/GrowerAccount');
+const HttpError = require('../utils/HttpError');
 
 const growerAccountGetQuerySchema = Joi.object({
   limit: Joi.number().integer().greater(0).less(101),
@@ -17,7 +18,6 @@ const growerAccountGetQuerySchema = Joi.object({
 
 const growerAccountPostQuerySchema = Joi.object({
   id: Joi.string().uuid().required(),
-  wallet_id: Joi.string().uuid().required(),
   wallet: Joi.string().required(),
   person_id: Joi.string().uuid(),
   organization_id: Joi.string().uuid(),
@@ -71,10 +71,23 @@ const growerAccountHandlerPost = async function (req, res, next) {
   const growerAccountRepo = new GrowerAccountRepository(session);
 
   try {
-    await session.beginTransaction();
     const growerAccountInsertObject = GrowerAccountInsertObject(req.body);
-    await growerAccountRepo.create(growerAccountInsertObject);
-    await session.commitTransaction();
+    const existingGrowerAccount = await growerAccountRepo.getByFilter({
+      or: [
+        {
+          id: growerAccountInsertObject.id,
+        },
+        {
+          wallet: growerAccountInsertObject.wallet,
+        },
+      ],
+    });
+
+    if (existingGrowerAccount.length === 0) {
+      await session.beginTransaction();
+      await growerAccountRepo.create(growerAccountInsertObject);
+      await session.commitTransaction();
+    }
 
     res.status(204).send();
     res.end();
@@ -129,9 +142,51 @@ const growerAccountHandlerSingleGet = async function (req, res) {
   res.send(GrowerAccount(growerAccount));
 };
 
+const growerAccountHandlerPut = async function (req, res, next) {
+  await growerAccountPostQuerySchema.validateAsync(req.body, {
+    abortEarly: false,
+  });
+
+  const session = new Session();
+  const growerAccountRepo = new GrowerAccountRepository(session);
+
+  try {
+    const growerAccountInsertObject = GrowerAccountInsertObject(req.body);
+    const { wallet, name, phone, email, id } = growerAccountInsertObject;
+    const existingGrowerAccount = await growerAccountRepo.getByFilter({
+      or: [{ id }, { wallet }],
+    });
+    await session.beginTransaction();
+
+    if (existingGrowerAccount.length > 0) {
+      if (existingGrowerAccount[0].wallet === wallet) {
+        await growerAccountRepo.updateInfo({
+          wallet,
+          phone,
+          name,
+          email,
+          updated_at: new Date().toISOString(),
+        });
+      }
+    } else {
+      await growerAccountRepo.create(growerAccountInsertObject);
+    }
+    await session.commitTransaction();
+
+    res.status(204).send();
+    res.end();
+  } catch (error) {
+    if (session.isTransactionInProgress()) {
+      await session.rollbackTransaction();
+    }
+    next(error);
+  }
+};
+
 module.exports = {
   growerAccountHandlerGet,
   growerAccountHandlerPost,
   growerAccountHandlerPatch,
   growerAccountHandlerSingleGet,
+  growerAccountHandlerPut,
 };

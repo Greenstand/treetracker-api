@@ -1,0 +1,2 @@
+ALTER TABLE grower_account
+DROP CONSTRAINT wallet_name_unique;

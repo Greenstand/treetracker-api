@@ -271,6 +271,7 @@ const treeHandlerSingleTagPatch = async function (req, res, next) {
       tree_id: req.params.tree_id,
       tag_id: req.params.tag_id,
       ...req.body,
+      updated_at: new Date().toISOString(),
     });
     await session.commitTransaction();
     res.status(204).send();
