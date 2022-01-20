@@ -1,3 +1,10 @@
+## [1.9.1](https://github.com/Greenstand/treetracker-api/compare/v1.9.0...v1.9.1) (2022-01-20)
+
+
+### Bug Fixes
+
+* use geography not geometry for distances in meters ([6058061](https://github.com/Greenstand/treetracker-api/commit/6058061a12c532afadc7f665e1e7eb5a4c2a3a83))
+
 # [1.9.0](https://github.com/Greenstand/treetracker-api/compare/v1.8.2...v1.9.0) (2022-01-20)
 
 
