@@ -1,0 +1,1 @@
+DROP TABLE tree_tag;

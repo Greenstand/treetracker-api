@@ -1,0 +1,1 @@
+ALTER TABLE capture ALTER COLUMN status TYPE varchar;

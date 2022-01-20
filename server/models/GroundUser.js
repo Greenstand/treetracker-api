@@ -1,4 +1,6 @@
-const Planter = ({
+const { PaginationQueryOptions } = require('./helper');
+
+const GroundUser = ({
   id,
   first_name,
   last_name,
@@ -8,7 +10,7 @@ const Planter = ({
   pwd_reset_required,
   image_url,
   person_id,
-  ordanization_id,
+  organization_id,
   image_rotation,
 }) => {
   return Object.freeze({
@@ -21,26 +23,17 @@ const Planter = ({
     pwd_reset_required,
     image_url,
     person_id,
-    ordanization_id,
+    organization_id,
     image_rotation,
   });
 };
 
-const QueryOptions = ({ limit = undefined, offset = undefined }) => {
-  return Object.entries({ limit, offset })
-    .filter((entry) => entry[1] !== undefined)
-    .reduce((result, item) => {
-      result[item[0]] = item[1];
-      return result;
-    }, {});
-};
-
-const getPlanters = (planterRepo) => async (filterCriteria, url) => {
+const getGroundUsers = (groundUserRepo) => async (filterCriteria, url) => {
   const organization_id = filterCriteria?.organization_id;
   const filter = { ...filterCriteria };
   delete filter.limit;
   delete filter.offset;
-  let options = { ...QueryOptions({ ...filterCriteria }) };
+  let options = { ...PaginationQueryOptions({ ...filterCriteria }) };
 
   if (!filterCriteria?.limit && !organization_id) {
     options = { ...options, limit: 100, offset: 0 };
@@ -55,7 +48,7 @@ const getPlanters = (planterRepo) => async (filterCriteria, url) => {
   let prev = '';
 
   if (options.limit) {
-    query = `${query  }limit=${  options.limit  }&`;
+    query = `${query}limit=${options.limit}&`;
   }
 
   if (options.offset || options.offset === 0) {
@@ -65,12 +58,15 @@ const getPlanters = (planterRepo) => async (filterCriteria, url) => {
     }
   }
 
-  const planters = organization_id
-    ? await planterRepo.getPlantersByOrganization(organization_id, options)
-    : await planterRepo.getByFilter(filter, options);
+  const groundUsers = organization_id
+    ? await groundUserRepo.getGroundUsersByOrganization(
+        organization_id,
+        options,
+      )
+    : await groundUserRepo.getByFilter(filter, options);
 
   return {
-    planters: planters.map((row) => Planter(row)),
+    ground_users: groundUsers.map((row) => GroundUser(row)),
     links: {
       prev,
       next,
@@ -79,7 +75,6 @@ const getPlanters = (planterRepo) => async (filterCriteria, url) => {
 };
 
 module.exports = {
-  getPlanters,
-  QueryOptions,
-  Planter,
+  getGroundUsers,
+  GroundUser,
 };

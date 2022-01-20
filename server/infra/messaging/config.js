@@ -8,11 +8,16 @@ module.exports = {
             timeout: 3000,
           },
         },
-        exchanges: ['capture-data'],
-        queues: ['capture-data:events'],
+        queues: [
+          process.env.CAPTURE_CREATED_QUEUE,
+          process.env.TREE_CREATED_QUEUE,
+        ],
         publications: {
           'capture-created': {
-            exchange: 'capture-data',
+            queue: process.env.CAPTURE_CREATED_QUEUE,
+          },
+          'tree-created': {
+            queue: process.env.TREE_CREATED_QUEUE,
           },
         },
       },

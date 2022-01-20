@@ -1,10 +1,17 @@
 {
   "id": "a15cd26a-3727-11ec-8d3d-0242ac130003",
-  "location": "POINT(50 50)",
+  "latest_capture_id": "06a7eccc-f188-4040-96e6-15d631f39a31",
+  "gps_accuracy": 10,
   "lat": 50,
   "lon": 50,
-  "status": "alive",
-  "created_at": "2021-05-04 11:24:43",
-  "updated_at": "2021-05-04 11:24:43",
-  "image_url": "http://xxx"
+  "image_url": "http://xxx",
+  "species_id": "510f36e4-06c4-496d-a17e-4e0e32bd44af",
+  "morphology": "morhpology",
+  "age": 12,
+  "attributes": [
+    {
+      "key": "key",
+      "value": "value"
+    }
+  ]
 }

@@ -1,0 +1,1 @@
+ALTER TABLE tree ALTER COLUMN status TYPE varchar;

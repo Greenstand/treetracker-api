@@ -1,92 +1,115 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable prefer-destructuring */
 const { raiseEvent, DomainEvent } = require('./DomainEvent');
+const { PaginationQueryOptions } = require('./helper');
 const { Repository } = require('./Repository');
 
 const Capture = ({
   id,
   reference_id,
+  tree_id,
+  image_url,
+  lat,
+  lon,
+  estimated_geometric_location,
+  gps_accuracy,
+  grower_photo_url,
+  grower_username,
+  morphology,
+  age,
+  note,
+  attributes,
+  domain_specific_data,
+  created_at,
+  updated_at,
+  estimated_geographic_location,
+  device_configuration_id,
+  session_id,
+  status,
+  grower_id,
+  planting_organization_id,
+  species_id,
+}) =>
+  Object.freeze({
+    id,
+    reference_id,
+    tree_id,
+    image_url,
+    lat,
+    lon,
+    estimated_geometric_location,
+    gps_accuracy,
+    grower_photo_url,
+    grower_username,
+    morphology,
+    age,
+    note,
+    attributes,
+    domain_specific_data,
+    created_at,
+    updated_at,
+    estimated_geographic_location,
+    device_configuration_id,
+    session_id,
+    status,
+    grower_id,
+    planting_organization_id,
+    species_id,
+  });
+
+const captureInsertObject = ({
+  id,
+  reference_id = null,
+  tree_id = null,
   image_url,
   lat,
   lon,
   gps_accuracy,
-  device_identifier,
-  planter_id,
-  planter_username,
-  planter_photo_url,
+  grower_photo_url,
+  grower_username,
+  species_id = null,
+  morphology = null,
+  age = null,
+  note = null,
   attributes,
-  status,
-  note,
-  morphology,
-  age,
-  created_at,
-  updated_at,
+  domain_specific_data = null,
+  device_configuration_id,
+  session_id,
+  grower_id,
+  planting_organization_id,
 }) =>
   Object.freeze({
     id,
     reference_id,
+    tree_id,
     image_url,
     lat,
     lon,
     gps_accuracy,
-    device_identifier,
-    planter_id,
-    planter_username,
-    planter_photo_url,
-    attributes,
-    status,
-    note,
+    grower_photo_url,
+    grower_username,
+    species_id,
     morphology,
     age,
-    created_at,
-    updated_at,
-  });
-
-const captureFromRequest = ({
-  id,
-  reference_id,
-  image_url,
-  estimated_geometric_location,
-  lat,
-  lon,
-  planter_id,
-  planter_photo_url,
-  planter_username,
-  device_identifier,
-  attributes,
-  status,
-  note,
-  morphology,
-  age,
-  created_at,
-  updated_at,
-}) =>
-  Object.freeze({
-    id,
-    reference_id,
-    image_url,
-    estimated_geometric_location,
-    lat,
-    lon,
-    planter_id,
-    planter_photo_url,
-    planter_username,
-    device_identifier,
-    attributes,
-    status,
     note,
-    morphology,
-    age,
-    created_at,
-    updated_at,
+    domain_specific_data,
+    device_configuration_id,
+    session_id,
+    grower_id,
+    planting_organization_id,
+    point: `POINT( ${lon} ${lat} )`,
+    status: 'active',
+    attributes: attributes ? { entries: attributes } : null,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
   });
 
 const CaptureCreated = ({
   id,
   lat,
   lon,
-  field_user_id,
-  field_username,
+  grower_id,
+  grower_username,
   attributes,
   created_at,
 }) =>
@@ -95,8 +118,8 @@ const CaptureCreated = ({
     type: 'CaptureCreated',
     lat,
     lon,
-    field_user_id,
-    field_username,
+    grower_id,
+    grower_username,
     attributes,
     created_at,
   });
@@ -104,34 +127,19 @@ const CaptureCreated = ({
 const createCapture = (captureRepositoryImpl, eventRepositoryImpl) => async (
   inputCapture,
 ) => {
-  // json wrap the 'attributes' array for storage in jsonb (storing array not suppported in jsonb)
-  const newCapture = {
-    ...inputCapture,
-    status: 'approved',
-    attributes: { entries: inputCapture.attributes },
-  };
   const captureRepository = new Repository(captureRepositoryImpl);
-  const capture = await captureRepository.add(newCapture);
+  await captureRepository.add(inputCapture);
   const captureCreated = CaptureCreated({
-    ...capture,
+    ...inputCapture,
   });
 
   const raiseCaptureEvent = raiseEvent(eventRepositoryImpl);
   const domainEvent = await raiseCaptureEvent(DomainEvent(captureCreated));
-  return { entity: capture, raisedEvents: [domainEvent] };
+  return { raisedEvents: { domainEvent } };
 };
 
-const FilterCriteria = ({ tree_id = undefined }) => {
-  return Object.entries({ tree_id })
-    .filter((entry) => entry[1] !== undefined)
-    .reduce((result, item) => {
-      result[item[0]] = item[1];
-      return result;
-    }, {});
-};
-
-const QueryOptions = ({ limit = undefined, offset = undefined }) => {
-  return Object.entries({ limit, offset })
+const FilterCriteria = ({ tree_id = undefined, id = undefined }) => {
+  return Object.entries({ tree_id, id })
     .filter((entry) => entry[1] !== undefined)
     .reduce((result, item) => {
       result[item[0]] = item[1];
@@ -146,7 +154,7 @@ const getCaptures = (captureRepositoryImpl) => async (
   let options = { limit: 1000, offset: 0 };
   if (filterCriteria !== undefined) {
     filter = FilterCriteria({ ...filterCriteria });
-    options = { ...options, ...QueryOptions({ ...filterCriteria }) };
+    options = { ...options, ...PaginationQueryOptions({ ...filterCriteria }) };
   }
   // console.log('CAPTURE MODEL getCaptures', filterCriteria, filter, options);
   const captureRepository = new Repository(captureRepositoryImpl);
@@ -173,14 +181,10 @@ const applyVerification = (captureRepositoryImpl) => async (
   }
 };
 
-const updateCapture = (captureRepositoryImpl) => async (update_object) => {
-  return captureRepositoryImpl.update(update_object);
-};
-
 module.exports = {
-  captureFromRequest,
+  captureInsertObject,
   createCapture,
   getCaptures,
   applyVerification,
-  updateCapture,
+  Capture,
 };
