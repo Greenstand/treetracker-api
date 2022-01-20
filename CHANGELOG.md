@@ -1,3 +1,24 @@
+# [1.9.0](https://github.com/Greenstand/treetracker-api/compare/v1.8.2...v1.9.0) (2022-01-20)
+
+
+### Bug Fixes
+
+* add get grower account by id ([527b369](https://github.com/Greenstand/treetracker-api/commit/527b36930b2da508669b4c4139061b1d721e0195))
+* change public property of tag to isPublic ([5d56719](https://github.com/Greenstand/treetracker-api/commit/5d567194be31b5c4045a73a1706e2b55fc30029d))
+* rabbitmq integration ([41a83c3](https://github.com/Greenstand/treetracker-api/commit/41a83c32a7830ffb37f42689f63b9f2b00f390ed))
+* refactor planter routes to groundUser ([958e8f7](https://github.com/Greenstand/treetracker-api/commit/958e8f7c98ef3419e5645c828f6474ca94906e96))
+* refactor planter routes to groundUser ([381eadb](https://github.com/Greenstand/treetracker-api/commit/381eadb8682b1178fb7d9e83dad7de095ea834ff))
+* soft delete implementation ([b3c378f](https://github.com/Greenstand/treetracker-api/commit/b3c378fd42835cf949c9b0d82808ebee9d6981cc))
+
+
+### Features
+
+* add grower_accounts endpoints ([8723ded](https://github.com/Greenstand/treetracker-api/commit/8723ded4da1e34ff03c2483e2dd226116acef02e))
+* add id to /grower_accounts post request payload ([29d08b1](https://github.com/Greenstand/treetracker-api/commit/29d08b15b60d6f08a51173edc4aa5ec971850811))
+* add tag name unique constraint ([431469f](https://github.com/Greenstand/treetracker-api/commit/431469f2c7bac761503fb3704518e5ac46c572d9))
+* add updated tree/tag routes ([6bc8379](https://github.com/Greenstand/treetracker-api/commit/6bc83791da9a3576b2cbbb586bb7652bfbe6f84c))
+* database schema updates and capture/tag routes updates ([3193c79](https://github.com/Greenstand/treetracker-api/commit/3193c79d1fa9458a153c99c724cd0478fb1c01d2))
+
 ## [1.8.2](https://github.com/Greenstand/treetracker-api/compare/v1.8.1...v1.8.2) (2021-12-28)
 
 
