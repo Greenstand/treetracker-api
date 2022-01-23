@@ -45,13 +45,6 @@ describe('GET /trees/potential_matches', () => {
       `/trees/potential_matches?capture_id=${capture1.id}`,
     );
     expect(response.body).to.have.property('matches');
-    console.log(
-      '====================================================================================',
-    );
-    console.log('matches', response.body.matches);
-    console.log(
-      '====================================================================================',
-    );
     //    expect(response.body.matches[0].id).eq(1);
     expect(response.body.matches.map((m) => m.id)).to.have.members([tree1.id]);
   });
