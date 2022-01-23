@@ -1,0 +1,1 @@
+ALTER TABLE tree ADD COLUMN attributes jsonb;

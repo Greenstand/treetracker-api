@@ -1,0 +1,1 @@
+ALTER TABLE capture DROP COLUMN session_id;

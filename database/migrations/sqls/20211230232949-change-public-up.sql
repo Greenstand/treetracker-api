@@ -1,0 +1,1 @@
+ALTER TABLE tag RENAME "public" TO "isPublic";

@@ -6,7 +6,6 @@ function parsePoint(json) {
       json[key] = knex.raw(`ST_PointFromText('${json[key]}', 4326)`);
     }
   }
-  console.error('j:', json);
   return json;
 }
 
@@ -23,4 +22,5 @@ module.exports = {
   async delCapture(id) {
     await knex('capture').where('id', id).del();
   },
+  knex,
 };

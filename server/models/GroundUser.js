@@ -1,3 +1,5 @@
+const { PaginationQueryOptions } = require('./helper');
+
 const GroundUser = ({
   id,
   first_name,
@@ -26,21 +28,12 @@ const GroundUser = ({
   });
 };
 
-const QueryOptions = ({ limit = undefined, offset = undefined }) => {
-  return Object.entries({ limit, offset })
-    .filter((entry) => entry[1] !== undefined)
-    .reduce((result, item) => {
-      result[item[0]] = item[1];
-      return result;
-    }, {});
-};
-
 const getGroundUsers = (groundUserRepo) => async (filterCriteria, url) => {
   const organization_id = filterCriteria?.organization_id;
   const filter = { ...filterCriteria };
   delete filter.limit;
   delete filter.offset;
-  let options = { ...QueryOptions({ ...filterCriteria }) };
+  let options = { ...PaginationQueryOptions({ ...filterCriteria }) };
 
   if (!filterCriteria?.limit && !organization_id) {
     options = { ...options, limit: 100, offset: 0 };
@@ -83,6 +76,5 @@ const getGroundUsers = (groundUserRepo) => async (filterCriteria, url) => {
 
 module.exports = {
   getGroundUsers,
-  QueryOptions,
   GroundUser,
 };

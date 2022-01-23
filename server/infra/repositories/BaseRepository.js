@@ -97,7 +97,6 @@ class BaseRepository {
   }
 
   async update(object) {
-    console.log(JSON.stringify(object));
     const result = await this._session
       .getDB()(this._tableName)
       .update(object)

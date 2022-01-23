@@ -1,0 +1,1 @@
+ALTER TABLE tree DROP COLUMN attributes;

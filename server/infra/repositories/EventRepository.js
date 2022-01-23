@@ -10,6 +10,16 @@ class EventRepository extends BaseRepository {
   async add(domainEvent) {
     return super.create(domainEvent);
   }
+
+  async getDomainEvent(payloadId) {
+    const data = await this._session
+      .getDB()
+      .raw(`select * from domain_event where payload ->> 'id' = ?;`, [
+        payloadId,
+      ]);
+
+    return data.rows[0];
+  }
 }
 
 module.exports = EventRepository;

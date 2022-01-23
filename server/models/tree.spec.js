@@ -7,11 +7,12 @@ chai.use(sinonChai);
 chai.use(assertArrays);
 const { expect } = chai;
 
-const { treeFromRequest, createTree } = require('./tree.js');
+const { treeInsertObject, createTree } = require('./tree.js');
 const TreeRepository = require('../infra/repositories/TreeRepository');
+const EventRepository = require('../infra/repositories/EventRepository');
 
-describe('executing treeFromRequest function', () => {
-  const tree = treeFromRequest({
+describe('executing treeInsertObject function', () => {
+  const tree = treeInsertObject({
     capture_id: 'fde165f6-5ebe-4ef6-aa46-fc0e391c1b78',
     image_url: 'http://test',
     lat: 10.15,
@@ -30,21 +31,21 @@ describe('executing treeFromRequest function', () => {
       'image_url',
       'lat',
       'lon',
-      'location',
       'gps_accuracy',
-      'species_id',
       'morphology',
       'age',
       'status',
-      'estimated_geographic_location',
+      'attributes',
+      'species_id',
       'created_at',
       'updated_at',
+      'point',
     ]);
   });
 });
 
 describe('executing createTree function', () => {
-  const tree = treeFromRequest({
+  const tree = treeInsertObject({
     capture_id: 'fde165f6-5ebe-4ef6-aa46-fc0e391c1b78',
     image_url: 'http://test',
     lat: 10.15,
@@ -52,12 +53,15 @@ describe('executing createTree function', () => {
   });
 
   const repository = new TreeRepository();
+  const eventRepository = new EventRepository();
   const stub = sinon.stub(repository, 'add');
-  const executeCreateTree = createTree(repository);
+  const eventStub = sinon.stub(eventRepository, 'add');
+  const executeCreateTree = createTree(repository, eventRepository);
 
   it('should add tree to the repository', async () => {
     await executeCreateTree(tree);
     expect(stub).calledWith(tree);
     stub.restore();
+    eventStub.restore();
   });
 });

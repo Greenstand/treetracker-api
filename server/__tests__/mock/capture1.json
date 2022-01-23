@@ -1,13 +1,14 @@
 {
   "id": "c02a5ae6-3727-11ec-8d3d-0242ac130003",
-  "location": "POINT(50 50)",
   "reference_id": 1,
   "lat": 50,
   "lon": 50,
-  "planter_id": 1,
-  "planter_username": "x",
-  "status": "approved",
+  "grower_id": "78db0c5d-ede7-48c3-95e7-e9bef87ed641",
+  "device_configuration_id": "6091cf22-9774-40c3-986c-ef555069ae2a",
+  "session_id": "f97a0338-1d6a-4f19-a067-a7f0b573e3cd",
+  "grower_username": "x",
   "created_at": "2021-05-04 11:24:43",
   "updated_at": "2021-05-04 11:24:43",
-  "image_url": "http://xxx"
+  "image_url": "http://xxx",
+  "planting_organization_id": "3876b7df-0002-4bc7-adfa-097db2080311"
 }
