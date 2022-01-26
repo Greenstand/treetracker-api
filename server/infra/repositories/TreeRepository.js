@@ -65,8 +65,8 @@ class TreeRepository extends BaseRepository {
       FROM
         capture t2
       LEFT JOIN tree t1 ON
-        ST_DWithin(t1.estimated_geographic_location,
-        t2.estimated_geographic_location,
+        ST_DWithin(t1.estimated_geometric_location,
+        t2.estimated_geometric_location,
         :distance)
       WHERE
         t1.id IS NOT NULL

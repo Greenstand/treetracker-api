@@ -9,6 +9,7 @@ const { expect } = chai;
 
 const { treeInsertObject, createTree } = require('./tree.js');
 const TreeRepository = require('../infra/repositories/TreeRepository');
+const EventRepository = require('../infra/repositories/EventRepository');
 
 describe('executing treeInsertObject function', () => {
   const tree = treeInsertObject({
@@ -30,12 +31,15 @@ describe('executing treeInsertObject function', () => {
       'image_url',
       'lat',
       'lon',
-      'species_id',
+      'gps_accuracy',
       'morphology',
       'age',
       'status',
+      'attributes',
+      'species_id',
       'created_at',
       'updated_at',
+      'point',
     ]);
   });
 });
@@ -49,12 +53,15 @@ describe('executing createTree function', () => {
   });
 
   const repository = new TreeRepository();
+  const eventRepository = new EventRepository();
   const stub = sinon.stub(repository, 'add');
-  const executeCreateTree = createTree(repository);
+  const eventStub = sinon.stub(eventRepository, 'add');
+  const executeCreateTree = createTree(repository, eventRepository);
 
   it('should add tree to the repository', async () => {
     await executeCreateTree(tree);
     expect(stub).calledWith(tree);
     stub.restore();
+    eventStub.restore();
   });
 });
