@@ -1,3 +1,10 @@
+## [1.9.3](https://github.com/Greenstand/treetracker-api/compare/v1.9.2...v1.9.3) (2022-01-26)
+
+
+### Bug Fixes
+
+* seal secrets with correct namespace ([bd85a1a](https://github.com/Greenstand/treetracker-api/commit/bd85a1a42f84cb1f43dfbe13be2f8a49af342de6))
+
 ## [1.9.2](https://github.com/Greenstand/treetracker-api/compare/v1.9.1...v1.9.2) (2022-01-26)
 
 
