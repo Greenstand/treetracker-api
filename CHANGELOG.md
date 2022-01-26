@@ -1,3 +1,14 @@
+## [1.9.2](https://github.com/Greenstand/treetracker-api/compare/v1.9.1...v1.9.2) (2022-01-26)
+
+
+### Bug Fixes
+
+* change to filter by deleted ([f8e8132](https://github.com/Greenstand/treetracker-api/commit/f8e81323d61608df7006d686c09ca6667830a0bd))
+* modify package.json so that any test failure fails the test script ([512b1e6](https://github.com/Greenstand/treetracker-api/commit/512b1e64f3478d27ca32449270eb76607b058949))
+* modify package.json so that any test failure fails the test script ([1fad477](https://github.com/Greenstand/treetracker-api/commit/1fad4770a79a455fef41716c65882868befaf7ad))
+* object was not closed ([97ce16b](https://github.com/Greenstand/treetracker-api/commit/97ce16b02bc7a1a3b1b04588207cb54d07fa72e4))
+* update sealed secrets for test env ([8130e41](https://github.com/Greenstand/treetracker-api/commit/8130e41bfc98cbf208d58ff59a082ab4adf6c88e))
+
 ## [1.9.1](https://github.com/Greenstand/treetracker-api/compare/v1.9.0...v1.9.1) (2022-01-20)
 
 
