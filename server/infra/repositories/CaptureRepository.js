@@ -16,7 +16,7 @@ class CaptureRepository extends BaseRepository {
     return this._session
       .getDB()
       .where({ ...filterCriteria})
-      .whereNot(status: 'deleted' })
+      .whereNot({status: 'deleted' })
       .select('*')
       .from('capture')
       .orderBy('created_at', 'desc')
