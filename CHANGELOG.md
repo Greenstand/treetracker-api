@@ -1,3 +1,10 @@
+## [1.9.5](https://github.com/Greenstand/treetracker-api/compare/v1.9.4...v1.9.5) (2022-01-27)
+
+
+### Bug Fixes
+
+* add overal for production deployment ([0f46254](https://github.com/Greenstand/treetracker-api/commit/0f46254c50d27b7531e6cae8d38fc6cec4dcc3dc))
+
 ## [1.9.4](https://github.com/Greenstand/treetracker-api/compare/v1.9.3...v1.9.4) (2022-01-26)
 
 
