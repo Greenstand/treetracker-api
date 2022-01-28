@@ -35,6 +35,7 @@ const capturePostSchema = Joi.object({
   species_id: Joi.string().uuid(),
   morphology: Joi.string(),
   age: Joi.number().integer(),
+  captured_at: Joi.date().required(),
   attributes: Joi.array()
     .items(
       Joi.object({

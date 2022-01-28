@@ -9,14 +9,23 @@ class CaptureRepository extends BaseRepository {
 
   async getByFilter(filterCriteria, options) {
     console.log('PG REPOSITORY DB getByFilter', filterCriteria, options);
-    // const query = Object.keys(filterCriteria).length
-    //   ? filterCriteria
-    //   : `id` > 10;
 
-    const captures = await this._session
+    let where = this._session
       .getDB()
-      .where({ ...filterCriteria })
-      .whereNot({ status: 'deleted' })
+      .whereNot({status: 'deleted' });
+
+    // TODO: this logic should be moved to the model
+    // see https://github.com/Greenstand/treetracker-api/issues/50
+    if (typeof (filterCriteria?.tree_associated) !== undefined) {
+      if (filterCriteria.tree_associated === "true") {
+        where.whereNotNull('tree_id');
+      } else if (filterCriteria.tree_associated === "false") {
+        where.whereNull('tree_id');
+      }
+      delete filterCriteria.tree_associated;
+    }
+
+    return where.where({ ...filterCriteria})
       .select('*')
       .from('capture')
       .orderBy('created_at', 'desc')
@@ -52,17 +61,17 @@ class CaptureRepository extends BaseRepository {
         note,
         attributes,
         domain_specific_data,
-        created_at,
-        updated_at,
         device_configuration_id,
         session_id,
         status,
         grower_id,
         planting_organization_id,
         estimated_geometric_location,
-        estimated_geographic_location
+        estimated_geographic_location,
+        captured_at,
+        updated_at
       )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ST_PointFromText(?, 4326), ?);`,
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ST_PointFromText(?, 4326), ST_PointFromText(?, 4326), ?, now());`,
       [
         capture.id,
         capture.reference_id,
@@ -79,8 +88,6 @@ class CaptureRepository extends BaseRepository {
         capture.note,
         capture.attributes,
         capture.domain_specific_data,
-        capture.created_at,
-        capture.updated_at,
         capture.device_configuration_id,
         capture.session_id,
         capture.status,
@@ -88,6 +95,7 @@ class CaptureRepository extends BaseRepository {
         capture.planting_organization_id,
         capture.point,
         capture.point,
+        capture.captured_at
       ],
     );
   }

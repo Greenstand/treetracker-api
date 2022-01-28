@@ -14,6 +14,8 @@ module.exports = {
     await knex('tree').insert(parsePoint(json)).returning('*');
   },
   async addCapture(json) {
+    console.log(parsePoint(json));
+    //exit
     await knex('capture').insert(parsePoint(json)).returning('*');
   },
   async delTree(id) {
