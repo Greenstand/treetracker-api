@@ -138,7 +138,8 @@ const createCapture = (captureRepositoryImpl, eventRepositoryImpl) => async (
   return { raisedEvents: { domainEvent } };
 };
 
-const FilterCriteria = ({ tree_id = undefined, id = undefined }) => {
+const FilterCriteria = ({ tree_id = null, id = undefined }) => {
+  // make tree_id null by default to exclude captures that have already been matched unless looking for particular tree
   return Object.entries({ tree_id, id })
     .filter((entry) => entry[1] !== undefined)
     .reduce((result, item) => {
@@ -151,17 +152,27 @@ const getCaptures = (captureRepositoryImpl) => async (
   filterCriteria = undefined,
 ) => {
   let filter = {};
-  let options = { limit: 1000, offset: 0 };
+  let options = { limit: 100, offset: 0 };
   if (filterCriteria !== undefined) {
     filter = FilterCriteria({ ...filterCriteria });
-    options = { ...options, ...PaginationQueryOptions({ ...filterCriteria }) };
+    options = {
+      ...options,
+      ...PaginationQueryOptions({ ...filterCriteria }),
+    };
   }
   // console.log('CAPTURE MODEL getCaptures', filterCriteria, filter, options);
   const captureRepository = new Repository(captureRepositoryImpl);
-  const captures = await captureRepository.getByFilter(filter, options);
-  return captures.map((row) => {
-    return Capture({ ...row });
-  });
+  const { captures, count } = await captureRepository.getByFilter(
+    filter,
+    options,
+  );
+
+  return {
+    captures: captures.map((row) => {
+      return Capture({ ...row });
+    }),
+    count,
+  };
 };
 
 const applyVerification = (captureRepositoryImpl) => async (

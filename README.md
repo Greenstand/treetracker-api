@@ -1,9 +1,9 @@
 # Name of this microservice
- 
+
 Description of this microservice
 
 # Getting Started
-  
+
 ## Project Setup
 
 Open terminal and navigate to a folder to install this project:
@@ -12,17 +12,17 @@ Open terminal and navigate to a folder to install this project:
 git clone https://github.com/Greenstand/treetracker-repository-name.git
 
 ```
-Install all necessary dependencies: 
+Install all necessary dependencies:
 
 ```bash
 npm install
 ```
 ### Database Setup
 
-To run a local db, please install postgres. 
+To run a local db, please install postgres.
 Here are some resources to get started on local database set up and migration:
 * https://postgresapp.com
-* pgAdmin and DBeaver are great GUI options to use for navigating your local db 
+* pgAdmin and DBeaver are great GUI options to use for navigating your local db
 * https://www.postgresql.org/docs/9.1/app-pgdump.html
 
 We need a user to connect to the database. We can either use the default postgres user, or create a new user. We then need to create a database associated with that user.
@@ -76,7 +76,7 @@ The Express-routers work like the controller role in MVC, they receive the reque
 
 * **Service layer**
 
-Both service layer and model layer are where all the business logic is located. Comparing to the Model , `service` object don't have state (stateless).  
+Both service layer and model layer are where all the business logic is located. Comparing to the Model , `service` object don't have state (stateless).
 
 Please put business logic code into service object when it is hard to put them into the `Model` object.
 
@@ -84,7 +84,7 @@ Because we didn't use Factory or dependency injection to create object, so servi
 
 * **Model layer**
 
-The business model, major business logic is here. They are real object, in the perspective of object oriented programming: they have states, they have the method to do stuff. 
+The business model, major business logic is here. They are real object, in the perspective of object oriented programming: they have states, they have the method to do stuff.
 
 There are more discussion about this, check below selection.
 
@@ -119,6 +119,17 @@ Run tests:
 ```bash
 npm run test-integration
 ```
+
+# How to seed to add data for user testing and development
+In order to develop the tool we need some data to work with.  These seeding files are set up to NOT remove data from the tables and only add more data.
+
+- insert growers first using existing stakeholder ids for organization_id, then export the growers table to get their valid ids
+- insert captures using the new grower_ids from the exported data, then export the captures data to get their valid ids
+- insert trees using the new captures ids from the exported data
+
+To avoid duplicating records, ignore seed files by moving them into the database/seeds/ignore_seed folder otherwise all seed files within database/seeds will run in ascending order
+
+Data for the seeding functions are in the database/seeds/data folder and are named by table and numbered in the order that they were inserted
 
 ## Database seeding test
 In order to efficiently run our integration tests, we rely on automated database seeding/clearing functions to mock database entries. To test these functions, run:
@@ -157,4 +168,4 @@ This command would run a API server locally, and seed some basic data into DB (t
 
 Create your local git branch and rebase it from the shared master branch. Please make sure to rebuild your local database schemas using the migrations (as illustrated in the Database Setup section above) to capture any latest updates/changes.
 
-When you are ready to submit a pull request from your local branch, please rebase your branch off of the shared master branch again to integrate any new updates in the codebase before submitting. Any developers joining the project should feel free to review any outstanding pull requests and assign themselves to any open tickets on the Issues list. 
+When you are ready to submit a pull request from your local branch, please rebase your branch off of the shared master branch again to integrate any new updates in the codebase before submitting. Any developers joining the project should feel free to review any outstanding pull requests and assign themselves to any open tickets on the Issues list.

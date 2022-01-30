@@ -1,4 +1,4 @@
-const { knex } = require('./knex');
+const knex = require('../../../database/connection');
 
 class Session {
   constructor() {

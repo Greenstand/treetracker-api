@@ -131,8 +131,9 @@ const treeHandlerGetPotentialMatches = async (req, res) => {
   // get the captures for each match and add as .captures
   const matches = await Promise.all(
     potentialTrees.map(async (tree) => {
+      const { captures } = await getCapturesByTreeId(tree.id);
       // eslint-disable-next-line no-param-reassign
-      tree.captures = await getCapturesByTreeId(tree.id);
+      tree.captures = captures;
       return tree;
     }),
   );

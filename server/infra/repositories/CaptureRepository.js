@@ -13,15 +13,25 @@ class CaptureRepository extends BaseRepository {
     //   ? filterCriteria
     //   : `id` > 10;
 
-    return this._session
+    const captures = await this._session
       .getDB()
-      .where({ ...filterCriteria})
-      .whereNot({status: 'deleted' })
+      .where({ ...filterCriteria })
+      .whereNot({ status: 'deleted' })
       .select('*')
       .from('capture')
       .orderBy('created_at', 'desc')
-      .limit(options.limit)
-      .offset(options.offset);
+      .limit(Number(options.limit))
+      .offset(Number(options.offset));
+
+    const { count } = await this._session
+      .getDB()
+      .where({ ...filterCriteria })
+      .whereNot({ status: 'deleted' })
+      .count('*')
+      .from('capture')
+      .first();
+
+    return { captures, count: Number(count) };
   }
 
   async add(capture) {
