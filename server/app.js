@@ -5,7 +5,7 @@ const log = require('loglevel');
 const HttpError = require('./utils/HttpError');
 const { errorHandler } = require('./handlers/utils');
 const helper = require('./handlers/utils');
-const router = require('./routes.js');
+const router = require('./routes');
 const registerEventHandlers = require('./services/EventHandlers');
 
 const app = express();

@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable prefer-destructuring */
 const log = require('loglevel');
-const { Repository } = require('./Repository.js');
+const { Repository } = require('./Repository');
 const HttpError = require('../utils/HttpError');
 const { PaginationQueryOptions } = require('./helper');
 const { raiseEvent, DomainEvent } = require('./DomainEvent');

@@ -8,15 +8,13 @@ class CaptureRepository extends BaseRepository {
   }
 
   async getByFilter(filterCriteria, options) {
-    console.log('PG REPOSITORY DB getByFilter', filterCriteria, options);
-
-    let where = this._session
+    const where = this._session
       .getDB()
       .whereNot({status: 'deleted' });
 
     // TODO: this logic should be moved to the model
     // see https://github.com/Greenstand/treetracker-api/issues/50
-    if (typeof (filterCriteria?.tree_associated) !== undefined) {
+    if (typeof (filterCriteria?.tree_associated) !== "undefined") {
       if (filterCriteria.tree_associated === "true") {
         where.whereNotNull('tree_id');
       } else if (filterCriteria.tree_associated === "false") {
