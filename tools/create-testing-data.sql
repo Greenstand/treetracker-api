@@ -1,10 +1,10 @@
 
 INSERT INTO treetracker.capture
 (
-reference_id, 
-image_url, 
+reference_id,
+image_url,
 lat,
-lon, 
+lon,
 gps_accuracy,
 estimated_geometric_location,
 grower_account_id,
@@ -16,9 +16,11 @@ session_id,
 created_at,
 updated_at,
 estimated_geographic_location,
-status)
-SELECT 
-id, 
+status
+)
+
+SELECT
+id,
 image_url,
 lat,
 lon,
@@ -57,7 +59,8 @@ created_at,
 updated_at,
 estimated_geographic_location
 )
-SELECT 
+
+SELECT
 id,
 image_url,
 lat,

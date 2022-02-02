@@ -1,4 +1,4 @@
-const { knex } = require('../infra/database/knex');
+const knex = require('../../database/connection');
 
 function parsePoint(json) {
   for (const key in json) {
