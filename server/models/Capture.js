@@ -29,6 +29,7 @@ const Capture = ({
   grower_id,
   planting_organization_id,
   species_id,
+  captured_at,
 }) =>
   Object.freeze({
     id,
@@ -55,6 +56,7 @@ const Capture = ({
     grower_id,
     planting_organization_id,
     species_id,
+    captured_at,
   });
 
 const captureInsertObject = ({
@@ -77,6 +79,7 @@ const captureInsertObject = ({
   session_id,
   grower_id,
   planting_organization_id,
+  captured_at,
 }) =>
   Object.freeze({
     id,
@@ -102,6 +105,7 @@ const captureInsertObject = ({
     attributes: attributes ? { entries: attributes } : null,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
+    captured_at,
   });
 
 const CaptureCreated = ({
@@ -111,7 +115,7 @@ const CaptureCreated = ({
   grower_id,
   grower_username,
   attributes,
-  created_at,
+  captured_at,
 }) =>
   Object.freeze({
     id,
@@ -121,7 +125,7 @@ const CaptureCreated = ({
     grower_id,
     grower_username,
     attributes,
-    created_at,
+    captured_at,
   });
 
 const createCapture = (captureRepositoryImpl, eventRepositoryImpl) => async (
@@ -138,13 +142,14 @@ const createCapture = (captureRepositoryImpl, eventRepositoryImpl) => async (
   return { raisedEvents: { domainEvent } };
 };
 
-const FilterCriteria = ({ tree_id = undefined, id = undefined }) => {
-  return Object.entries({ tree_id, id })
+const FilterCriteria = ({ tree_id = undefined, id = undefined, tree_associated = undefined  }) => {
+  const filter = Object.entries({ tree_id, id, tree_associated })
     .filter((entry) => entry[1] !== undefined)
     .reduce((result, item) => {
       result[item[0]] = item[1];
       return result;
     }, {});
+  return filter;
 };
 
 const getCaptures = (captureRepositoryImpl) => async (

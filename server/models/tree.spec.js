@@ -7,7 +7,7 @@ chai.use(sinonChai);
 chai.use(assertArrays);
 const { expect } = chai;
 
-const { treeInsertObject, createTree } = require('./tree.js');
+const { treeInsertObject, createTree } = require('./tree');
 const TreeRepository = require('../infra/repositories/TreeRepository');
 const EventRepository = require('../infra/repositories/EventRepository');
 
