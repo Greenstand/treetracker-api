@@ -156,17 +156,27 @@ const getCaptures = (captureRepositoryImpl) => async (
   filterCriteria = undefined,
 ) => {
   let filter = {};
-  let options = { limit: 1000, offset: 0 };
+  let options = { limit: 100, offset: 0 };
   if (filterCriteria !== undefined) {
     filter = FilterCriteria({ ...filterCriteria });
-    options = { ...options, ...PaginationQueryOptions({ ...filterCriteria }) };
+    options = {
+      ...options,
+      ...PaginationQueryOptions({ ...filterCriteria }),
+    };
   }
   // console.log('CAPTURE MODEL getCaptures', filterCriteria, filter, options);
   const captureRepository = new Repository(captureRepositoryImpl);
-  const captures = await captureRepository.getByFilter(filter, options);
-  return captures.map((row) => {
-    return Capture({ ...row });
-  });
+  const { captures, count } = await captureRepository.getByFilter(
+    filter,
+    options,
+  );
+
+  return {
+    captures: captures.map((row) => {
+      return Capture({ ...row });
+    }),
+    count,
+  };
 };
 
 const applyVerification = (captureRepositoryImpl) => async (

@@ -27,8 +27,18 @@ class CaptureRepository extends BaseRepository {
       .select('*')
       .from('capture')
       .orderBy('created_at', 'desc')
-      .limit(options.limit)
-      .offset(options.offset);
+      .limit(Number(options.limit))
+      .offset(Number(options.offset));
+
+    const { count } = await this._session
+      .getDB()
+      .where({ ...filterCriteria })
+      .whereNot({ status: 'deleted' })
+      .count('*')
+      .from('capture')
+      .first();
+
+    return { captures, count: Number(count) };
   }
 
   async add(capture) {

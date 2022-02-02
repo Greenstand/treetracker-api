@@ -48,11 +48,7 @@ const capturePostSchema = Joi.object({
 }).unknown(false);
 
 const capturePatchSchema = Joi.object({
-  tree_id: Joi.string().valid(null),
-  species_id: Joi.string().uuid(),
-  morphology: Joi.string(),
-  age: Joi.number().integer(),
-  status: Joi.string().valid('active', 'deleted'),
+  tree_id: Joi.string(),
 }).unknown(false);
 
 const captureIdParamSchema = Joi.object({
