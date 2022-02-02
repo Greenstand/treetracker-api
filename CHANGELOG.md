@@ -1,3 +1,16 @@
+# [1.10.0](https://github.com/Greenstand/treetracker-api/compare/v1.9.5...v1.10.0) (2022-02-02)
+
+
+### Bug Fixes
+
+* integration test fix ([f1e24f9](https://github.com/Greenstand/treetracker-api/commit/f1e24f979affe3927ac5d3b6c299735050398a45))
+* lint ([811472c](https://github.com/Greenstand/treetracker-api/commit/811472c901433b96a9d91c74dca0746f467a1fc6))
+
+
+### Features
+
+* implement tree_associated query param on capture, update integration tests, some cleanup ([5beb6be](https://github.com/Greenstand/treetracker-api/commit/5beb6bede41292ba00b748684984165487715093))
+
 ## [1.9.5](https://github.com/Greenstand/treetracker-api/compare/v1.9.4...v1.9.5) (2022-01-27)
 
 
