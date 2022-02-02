@@ -1,6 +1,5 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable prefer-destructuring */
-const { exist } = require('joi');
 const { raiseEvent, DomainEvent } = require('./DomainEvent');
 const { PaginationQueryOptions } = require('./helper');
 const { Repository } = require('./Repository');
@@ -144,7 +143,7 @@ const createCapture = (captureRepositoryImpl, eventRepositoryImpl) => async (
 };
 
 const FilterCriteria = ({ tree_id = undefined, id = undefined, tree_associated = undefined  }) => {
-  let filter = Object.entries({ tree_id, id, tree_associated })
+  const filter = Object.entries({ tree_id, id, tree_associated })
     .filter((entry) => entry[1] !== undefined)
     .reduce((result, item) => {
       result[item[0]] = item[1];
