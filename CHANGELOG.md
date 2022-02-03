@@ -1,3 +1,10 @@
+## [1.11.1](https://github.com/Greenstand/treetracker-api/compare/v1.11.0...v1.11.1) (2022-02-03)
+
+
+### Bug Fixes
+
+* add Authorization header to CORS ([c154c84](https://github.com/Greenstand/treetracker-api/commit/c154c84be92c37efe8c11416c3c02c7d54e2e579))
+
 # [1.11.0](https://github.com/Greenstand/treetracker-api/compare/v1.10.0...v1.11.0) (2022-02-03)
 
 
