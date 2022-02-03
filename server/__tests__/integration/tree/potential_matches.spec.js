@@ -22,7 +22,6 @@ describe('GET /trees/potential_matches', () => {
 
   after(async () => {
     await knex('grower_account')
-      .where({ ...grower_account2 })
       .del();
   });
 

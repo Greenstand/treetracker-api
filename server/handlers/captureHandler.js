@@ -49,6 +49,7 @@ const capturePostSchema = Joi.object({
 
 const capturePatchSchema = Joi.object({
   tree_id: Joi.string(),
+  status: Joi.string()
 }).unknown(false);
 
 const captureIdParamSchema = Joi.object({
