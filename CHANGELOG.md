@@ -1,3 +1,19 @@
+# [1.11.0](https://github.com/Greenstand/treetracker-api/compare/v1.10.0...v1.11.0) (2022-02-03)
+
+
+### Bug Fixes
+
+* fix integration tests ([f8008a6](https://github.com/Greenstand/treetracker-api/commit/f8008a6f55cc19c7358f81b3fb7e68db0ed564eb))
+* fix linter error ([dfe65d4](https://github.com/Greenstand/treetracker-api/commit/dfe65d474167a6887d27b02808381683b9aba0ca))
+* integration test fix ([7d3de21](https://github.com/Greenstand/treetracker-api/commit/7d3de218ff18f5fb62ac1c9a646cf76300735fc8))
+* lint ([6b6f855](https://github.com/Greenstand/treetracker-api/commit/6b6f855fd8b11b9b1b3c86b6af84b0580b23a8f5))
+
+
+### Features
+
+* implement tree_associated query param on capture, update integration tests, some cleanup ([412abfb](https://github.com/Greenstand/treetracker-api/commit/412abfbb096293d31ff99c885f1bca8db72bbbbe))
+* limit capture-match request to one capture at a time and fix PATCH handler validation ([cd2b044](https://github.com/Greenstand/treetracker-api/commit/cd2b0449b607310db81e8ed1486e63065b8ace87))
+
 # [1.10.0](https://github.com/Greenstand/treetracker-api/compare/v1.9.5...v1.10.0) (2022-02-02)
 
 
