@@ -15,7 +15,7 @@ const {
   captureHandlerSingleTagGet,
   captureHandlerSingleTagPatch,
   captureHandlerSingleTagDelete,
-} = require('./handlers/captureHandler.js');
+} = require('./handlers/captureHandler');
 const {
   treeHandlerPost,
   treeHandlerGet,
@@ -27,7 +27,7 @@ const {
   treeHandlerSingleTagGet,
   treeHandlerSingleTagPatch,
   treeHandlerSingleTagDelete,
-} = require('./handlers/treeHandler.js');
+} = require('./handlers/treeHandler');
 const {
   growerAccountHandlerGet,
   growerAccountHandlerPost,
@@ -41,7 +41,7 @@ const {
   tagHandlerSingleGet,
   tagHandlerPatch,
 } = require('./handlers/tagHandler');
-const { groundUserHandlerGet } = require('./handlers/groundUserHandler.js');
+const { groundUserHandlerGet } = require('./handlers/groundUserHandler');
 
 router
   .route('/trees')

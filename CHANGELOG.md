@@ -1,3 +1,71 @@
+## [1.11.1](https://github.com/Greenstand/treetracker-api/compare/v1.11.0...v1.11.1) (2022-02-03)
+
+
+### Bug Fixes
+
+* add Authorization header to CORS ([c154c84](https://github.com/Greenstand/treetracker-api/commit/c154c84be92c37efe8c11416c3c02c7d54e2e579))
+
+# [1.11.0](https://github.com/Greenstand/treetracker-api/compare/v1.10.0...v1.11.0) (2022-02-03)
+
+
+### Bug Fixes
+
+* fix integration tests ([f8008a6](https://github.com/Greenstand/treetracker-api/commit/f8008a6f55cc19c7358f81b3fb7e68db0ed564eb))
+* fix linter error ([dfe65d4](https://github.com/Greenstand/treetracker-api/commit/dfe65d474167a6887d27b02808381683b9aba0ca))
+* integration test fix ([7d3de21](https://github.com/Greenstand/treetracker-api/commit/7d3de218ff18f5fb62ac1c9a646cf76300735fc8))
+* lint ([6b6f855](https://github.com/Greenstand/treetracker-api/commit/6b6f855fd8b11b9b1b3c86b6af84b0580b23a8f5))
+
+
+### Features
+
+* implement tree_associated query param on capture, update integration tests, some cleanup ([412abfb](https://github.com/Greenstand/treetracker-api/commit/412abfbb096293d31ff99c885f1bca8db72bbbbe))
+* limit capture-match request to one capture at a time and fix PATCH handler validation ([cd2b044](https://github.com/Greenstand/treetracker-api/commit/cd2b0449b607310db81e8ed1486e63065b8ace87))
+
+# [1.10.0](https://github.com/Greenstand/treetracker-api/compare/v1.9.5...v1.10.0) (2022-02-02)
+
+
+### Bug Fixes
+
+* integration test fix ([f1e24f9](https://github.com/Greenstand/treetracker-api/commit/f1e24f979affe3927ac5d3b6c299735050398a45))
+* lint ([811472c](https://github.com/Greenstand/treetracker-api/commit/811472c901433b96a9d91c74dca0746f467a1fc6))
+
+
+### Features
+
+* implement tree_associated query param on capture, update integration tests, some cleanup ([5beb6be](https://github.com/Greenstand/treetracker-api/commit/5beb6bede41292ba00b748684984165487715093))
+
+## [1.9.5](https://github.com/Greenstand/treetracker-api/compare/v1.9.4...v1.9.5) (2022-01-27)
+
+
+### Bug Fixes
+
+* add overal for production deployment ([0f46254](https://github.com/Greenstand/treetracker-api/commit/0f46254c50d27b7531e6cae8d38fc6cec4dcc3dc))
+
+## [1.9.4](https://github.com/Greenstand/treetracker-api/compare/v1.9.3...v1.9.4) (2022-01-26)
+
+
+### Bug Fixes
+
+* force release ([b06f1f6](https://github.com/Greenstand/treetracker-api/commit/b06f1f6167820fa4c2414b78559b06361a672587))
+
+## [1.9.3](https://github.com/Greenstand/treetracker-api/compare/v1.9.2...v1.9.3) (2022-01-26)
+
+
+### Bug Fixes
+
+* seal secrets with correct namespace ([bd85a1a](https://github.com/Greenstand/treetracker-api/commit/bd85a1a42f84cb1f43dfbe13be2f8a49af342de6))
+
+## [1.9.2](https://github.com/Greenstand/treetracker-api/compare/v1.9.1...v1.9.2) (2022-01-26)
+
+
+### Bug Fixes
+
+* change to filter by deleted ([f8e8132](https://github.com/Greenstand/treetracker-api/commit/f8e81323d61608df7006d686c09ca6667830a0bd))
+* modify package.json so that any test failure fails the test script ([512b1e6](https://github.com/Greenstand/treetracker-api/commit/512b1e64f3478d27ca32449270eb76607b058949))
+* modify package.json so that any test failure fails the test script ([1fad477](https://github.com/Greenstand/treetracker-api/commit/1fad4770a79a455fef41716c65882868befaf7ad))
+* object was not closed ([97ce16b](https://github.com/Greenstand/treetracker-api/commit/97ce16b02bc7a1a3b1b04588207cb54d07fa72e4))
+* update sealed secrets for test env ([8130e41](https://github.com/Greenstand/treetracker-api/commit/8130e41bfc98cbf208d58ff59a082ab4adf6c88e))
+
 ## [1.9.1](https://github.com/Greenstand/treetracker-api/compare/v1.9.0...v1.9.1) (2022-01-20)
 
 

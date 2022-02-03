@@ -4,7 +4,7 @@
   "gps_accuracy": 10,
   "lat": 50,
   "lon": 50,
-  "image_url": "http://xxx",
+  "image_url": "https://treetracker-dev-images.s3.eu-central-1.amazonaws.com/2020.05.15.16.18.46_37.42138089_-121.87534965_92b10ff4-4d37-43e9-8dd7-ed79e23d1102_IMG_20200511_150539_503676129060555307.jpg",
   "species_id": "510f36e4-06c4-496d-a17e-4e0e32bd44af",
   "morphology": "morhpology",
   "age": 12,

@@ -1,4 +1,4 @@
-name: Deploy Service to Test Env
+name: Deploy Service to Prod Env
 
 on:
   workflow_dispatch:
@@ -12,7 +12,7 @@ env:
 
 jobs:
   deploy-test:
-    name: Deploy latest to test environment, requires approval
+    name: Deploy latest to prod environment, requires approval
     runs-on: ubuntu-latest
     if: |
       github.repository == "Greenstand/${{ github.event.repository.name }}"
@@ -34,12 +34,12 @@ jobs:
       - name: Install doctl for kubernetes
         uses: digitalocean/action-doctl@v2
         with:
-          token: ${{ secrets.TEST_DIGITALOCEAN_TOKEN }}
+          token: ${{ secrets.DIGITALOCEAN_PRODUCTION_TOKEN }}
       - name: Save DigitalOcean kubeconfig
-        run: doctl kubernetes cluster kubeconfig save ${{ secrets.TEST_CLUSTER_NAME }}
+        run: doctl kubernetes cluster kubeconfig save ${{ secrets.PRODUCTION_CLUSTER_NAME }}
       - name: Delete completed migration jobs prior to deployment
         run: kubectl -n ${{ secrets.K8S_NAMESPACE }} delete job --ignore-not-found=true  database-migration-job
       - name: Update kubernetes resources
-        run: kustomize build deployment/overlays/test | kubectl apply -n ${{ secrets.K8S_NAMESPACE }} --wait -f -
+        run: kustomize build deployment/overlays/production | kubectl apply -n ${{ secrets.K8S_NAMESPACE }} --wait -f -
       - name: Attempt to wait for migration job to complete
         run: kubectl wait -n ${{ secrets.K8S_NAMESPACE }} --for=condition=complete --timeout=45s job/database-migration-job
