@@ -23,7 +23,7 @@ class CaptureRepository extends BaseRepository {
       delete filterCriteria.tree_associated;
     }
 
-    return where.where({ ...filterCriteria})
+    const captures = await where.where({ ...filterCriteria})
       .select('*')
       .from('capture')
       .orderBy('created_at', 'desc')
