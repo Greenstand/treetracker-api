@@ -1,3 +1,10 @@
+## [1.11.5](https://github.com/Greenstand/treetracker-api/compare/v1.11.4...v1.11.5) (2022-02-04)
+
+
+### Bug Fixes
+
+* update database migration sealed secret ([407cc93](https://github.com/Greenstand/treetracker-api/commit/407cc93d782bb7c0da18ced3dee8f14aee0e5d2c))
+
 ## [1.11.4](https://github.com/Greenstand/treetracker-api/compare/v1.11.3...v1.11.4) (2022-02-04)
 
 
