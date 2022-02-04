@@ -1,3 +1,10 @@
+## [1.11.2](https://github.com/Greenstand/treetracker-api/compare/v1.11.1...v1.11.2) (2022-02-04)
+
+
+### Bug Fixes
+
+* return count with tree_associated filter applied ([865fb74](https://github.com/Greenstand/treetracker-api/commit/865fb74bf3a6b14854f49e0e11404ccef372dcaa))
+
 ## [1.11.1](https://github.com/Greenstand/treetracker-api/compare/v1.11.0...v1.11.1) (2022-02-03)
 
 
