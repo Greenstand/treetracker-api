@@ -1,3 +1,10 @@
+## [1.11.3](https://github.com/Greenstand/treetracker-api/compare/v1.11.2...v1.11.3) (2022-02-04)
+
+
+### Bug Fixes
+
+* remove timeout for service ([fb70d04](https://github.com/Greenstand/treetracker-api/commit/fb70d04d1df253c7e55778e9282472fe2119cce4))
+
 ## [1.11.2](https://github.com/Greenstand/treetracker-api/compare/v1.11.1...v1.11.2) (2022-02-04)
 
 
