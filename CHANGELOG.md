@@ -1,3 +1,10 @@
+## [1.11.4](https://github.com/Greenstand/treetracker-api/compare/v1.11.3...v1.11.4) (2022-02-04)
+
+
+### Bug Fixes
+
+* use geographic location for potential matches ([4ba3d70](https://github.com/Greenstand/treetracker-api/commit/4ba3d707ba930d442d72af5ab9a27fd8104e225d))
+
 ## [1.11.3](https://github.com/Greenstand/treetracker-api/compare/v1.11.2...v1.11.3) (2022-02-04)
 
 
