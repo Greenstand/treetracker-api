@@ -29,6 +29,7 @@ describe('GET /trees/potential_matches', () => {
     created_at: '2021-05-04 11:24:43',
     updated_at: '2021-05-04 11:24:43',
     estimated_geometric_location: 'POINT(50 50)',
+    estimated_geographic_location: 'POINT(50 50)',
     latest_capture_id: uuid.v4(),
   };
 
@@ -41,6 +42,7 @@ describe('GET /trees/potential_matches', () => {
     await utils.addCapture({
       ...capture1,
       estimated_geometric_location: 'POINT(50 50)',
+      estimated_geographic_location: 'POINT(50 50)',
       updated_at: '2021-05-04 11:24:43',
     });
     const response = await request(app).get(

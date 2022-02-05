@@ -23,6 +23,8 @@ class CaptureRepository extends BaseRepository {
       delete filterCriteria.tree_associated;
     }
 
+    const countWhere = where.clone();
+
     const captures = await where.where({ ...filterCriteria})
       .select('*')
       .from('capture')
@@ -30,10 +32,7 @@ class CaptureRepository extends BaseRepository {
       .limit(Number(options.limit))
       .offset(Number(options.offset));
 
-    const { count } = await this._session
-      .getDB()
-      .where({ ...filterCriteria })
-      .whereNot({ status: 'deleted' })
+    const { count } = await countWhere
       .count('*')
       .from('capture')
       .first();

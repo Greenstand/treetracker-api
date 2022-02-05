@@ -1,3 +1,31 @@
+## [1.11.5](https://github.com/Greenstand/treetracker-api/compare/v1.11.4...v1.11.5) (2022-02-04)
+
+
+### Bug Fixes
+
+* update database migration sealed secret ([407cc93](https://github.com/Greenstand/treetracker-api/commit/407cc93d782bb7c0da18ced3dee8f14aee0e5d2c))
+
+## [1.11.4](https://github.com/Greenstand/treetracker-api/compare/v1.11.3...v1.11.4) (2022-02-04)
+
+
+### Bug Fixes
+
+* use geographic location for potential matches ([4ba3d70](https://github.com/Greenstand/treetracker-api/commit/4ba3d707ba930d442d72af5ab9a27fd8104e225d))
+
+## [1.11.3](https://github.com/Greenstand/treetracker-api/compare/v1.11.2...v1.11.3) (2022-02-04)
+
+
+### Bug Fixes
+
+* remove timeout for service ([fb70d04](https://github.com/Greenstand/treetracker-api/commit/fb70d04d1df253c7e55778e9282472fe2119cce4))
+
+## [1.11.2](https://github.com/Greenstand/treetracker-api/compare/v1.11.1...v1.11.2) (2022-02-04)
+
+
+### Bug Fixes
+
+* return count with tree_associated filter applied ([865fb74](https://github.com/Greenstand/treetracker-api/commit/865fb74bf3a6b14854f49e0e11404ccef372dcaa))
+
 ## [1.11.1](https://github.com/Greenstand/treetracker-api/compare/v1.11.0...v1.11.1) (2022-02-03)
 
 

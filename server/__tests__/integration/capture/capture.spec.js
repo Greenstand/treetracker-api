@@ -162,12 +162,14 @@ describe('/captures', () => {
     it('should get only captures with tree associated', async () => {
       const result = await request(app).get(`/captures?tree_associated=true`).expect(200);
       expect(result.body.captures.length).to.eql(1);
+      expect(result.body.count).to.eql(1);
       expect(result.body.captures[0].id).to.eql("c02a5ae6-3727-11ec-8d3d-0242ac130003");
     });
 
     it('should get only captures without tree associated', async () => {
       const result = await request(app).get(`/captures?tree_associated=false`).expect(200);
       expect(result.body.captures.length).to.eql(1);
+      expect(result.body.count).to.eql(1);
       expect(result.body.captures[0].id).to.eql("d2c69205-b13f-4ab6-bb5e-33dc504fa0c2");
     });
 
