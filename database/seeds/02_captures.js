@@ -1,4 +1,4 @@
-const captures = require('../data/Captures-2.json');
+const captures = require('./data/Captures-1.json');
 
 exports.seed = function (knex) {
   // Deletes ALL existing entries

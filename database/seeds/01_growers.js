@@ -1,4 +1,4 @@
-const growers = require('../data/Grower_Accounts.json');
+const growers = require('./data/Grower_Accounts-1.json');
 
 exports.seed = function (knex) {
   // return knex('grower_account')
