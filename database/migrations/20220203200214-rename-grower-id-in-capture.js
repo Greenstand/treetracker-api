@@ -1,10 +1,9 @@
-'use strict';
-
 let dbm;
 let type;
 let seed;
 const fs = require('fs');
 const path = require('path');
+
 let Promise;
 
 /**
@@ -19,7 +18,7 @@ exports.setup = function(options, seedLink) {
 };
 
 exports.up = function(db) {
-  let filePath = path.join(__dirname, 'sqls', '20220203200214-rename-grower-id-in-capture-up.sql');
+  const filePath = path.join(__dirname, 'sqls', '20220203200214-rename-grower-id-in-capture-up.sql');
   return new Promise( function( resolve, reject ) {
     fs.readFile(filePath, {encoding: 'utf-8'}, function(err,data){
       if (err) return reject(err);
@@ -34,7 +33,7 @@ exports.up = function(db) {
 };
 
 exports.down = function(db) {
-  let filePath = path.join(__dirname, 'sqls', '20220203200214-rename-grower-id-in-capture-down.sql');
+  const filePath = path.join(__dirname, 'sqls', '20220203200214-rename-grower-id-in-capture-down.sql');
   return new Promise( function( resolve, reject ) {
     fs.readFile(filePath, {encoding: 'utf-8'}, function(err,data){
       if (err) return reject(err);
