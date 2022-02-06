@@ -1,12 +1,12 @@
-const captures = require('./data/Captures.json');
+const captures = require('./data/Captures-1.json');
 
 exports.seed = function (knex) {
-  // Deletes ALL existing entries
+  // // Deletes ALL existing entries
   // return (
   //   knex('capture')
   //     // .del()
   //     .then(function () {
-  //       // Inserts seed entries
+  // // Inserts seed entries
   return knex('capture').insert(captures);
   //     })
   // );
