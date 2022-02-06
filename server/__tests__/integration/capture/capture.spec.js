@@ -15,7 +15,7 @@ const { knex, addCapture } = require('../../utils');
 
 describe('/captures', () => {
   const captureUpdates = {
-   // tree_id: null,
+    // tree_id: null,
     species_id: '12e2c0f6-b7df-43e3-8899-674e90b292d9',
     morphology: 'yyggollohhprom',
     age: 44,
@@ -23,35 +23,34 @@ describe('/captures', () => {
 
   const modCapture = {
     ...capture2,
-    attributes: { entries: attributes.attributes }
+    attributes: { entries: attributes.attributes },
   };
 
   const updatedModCapture = { ...modCapture, ...captureUpdates };
+
   before(async () => {
-    await knex('grower_account').insert({
-      ...grower_account1,
-      status: 'active',
-    });
-    await knex('grower_account').insert({
-      ...grower_account2,
-      status: 'active',
-    });
+    const growerAccount1 = await knex('grower_account')
+      .insert({
+        ...grower_account1,
+        status: 'active',
+      })
+      .returning('id');
+    const growerAccount2 = await knex('grower_account')
+      .insert({
+        ...grower_account2,
+        status: 'active',
+      })
+      .returning('id');
+
+    capture1.grower_id = growerAccount1[0];
+    capture2.grower_id = growerAccount2[0];
   });
 
-
   after(async () => {
-
-    await knex('capture_tag')
-      .del();
-
-    await knex('tag')
-      .del();
-  
-    await knex('capture')
-      .del();
-
-    await knex('grower_account')
-      .del();
+    await knex('capture_tag').del();
+    await knex('tag').del();
+    await knex('capture').del();
+    await knex('grower_account').del();
   });
 
   describe('POST', () => {
@@ -59,7 +58,7 @@ describe('/captures', () => {
       await addCapture({
         ...capture1,
         estimated_geometric_location: 'POINT(50 50)',
-        updated_at: "2022-02-01 11:11:11"
+        updated_at: '2022-02-01 11:11:11',
       });
       // await addCapture({
       //   ...capture2,
@@ -93,28 +92,33 @@ describe('/captures', () => {
         .expect(204);
     });
 
-    after(async () => {      
+    it('should confirm number of sent capture created events', async () => {
+      const numOfEmittedEvents = await knex('domain_event')
+        .count()
+        .where({ status: 'sent' });
+      expect(+numOfEmittedEvents[0].count).to.eql(2);
+    });
+
+    after(async () => {
       await knex('capture').del();
       await knex('domain_event').del();
     });
   });
 
   describe('PATCH', () => {
-
     before(async () => {
       await addCapture({
         ...capture2,
         estimated_geometric_location: 'POINT(50 50)',
-        updated_at: "2022-01-01T11:11:11.000Z",
-        attributes: { entries:  attributes.attributes }
+        updated_at: '2022-01-01T11:11:11.000Z',
+        attributes: { entries: attributes.attributes },
       });
-    }); 
+    });
 
     it('should update a capture', async () => {
-
       const updates = {
-        tree_id: tree1.id
-      }
+        tree_id: tree1.id,
+      };
 
       await request(app)
         .patch(`/captures/${capture2.id}`)
@@ -130,25 +134,24 @@ describe('/captures', () => {
       expect(result.body).to.include({ ...updates });
     });
 
-    after(async () => {      
+    after(async () => {
       await knex('capture').del();
     });
   });
 
   describe('GET', () => {
-
     before(async () => {
       await addCapture({
         ...capture1,
         estimated_geometric_location: 'POINT(50 50)',
-        updated_at: "2022-02-01 11:11:11",
-        attributes: { entries:  attributes.attributes }
+        updated_at: '2022-02-01 11:11:11',
+        attributes: { entries: attributes.attributes },
       });
       await addCapture({
         ...capture2,
         estimated_geometric_location: 'POINT(50 50)',
-        updated_at: "2022-02-01 11:11:11",
-        attributes: { entries:  attributes.attributes }
+        updated_at: '2022-02-01 11:11:11',
+        attributes: { entries: attributes.attributes },
       });
     });
 
@@ -160,17 +163,25 @@ describe('/captures', () => {
     });
 
     it('should get only captures with tree associated', async () => {
-      const result = await request(app).get(`/captures?tree_associated=true`).expect(200);
+      const result = await request(app)
+        .get(`/captures?tree_associated=true`)
+        .expect(200);
       expect(result.body.captures.length).to.eql(1);
       expect(result.body.count).to.eql(1);
-      expect(result.body.captures[0].id).to.eql("c02a5ae6-3727-11ec-8d3d-0242ac130003");
+      expect(result.body.captures[0].id).to.eql(
+        'c02a5ae6-3727-11ec-8d3d-0242ac130003',
+      );
     });
 
     it('should get only captures without tree associated', async () => {
-      const result = await request(app).get(`/captures?tree_associated=false`).expect(200);
+      const result = await request(app)
+        .get(`/captures?tree_associated=false`)
+        .expect(200);
       expect(result.body.captures.length).to.eql(1);
       expect(result.body.count).to.eql(1);
-      expect(result.body.captures[0].id).to.eql("d2c69205-b13f-4ab6-bb5e-33dc504fa0c2");
+      expect(result.body.captures[0].id).to.eql(
+        'd2c69205-b13f-4ab6-bb5e-33dc504fa0c2',
+      );
     });
 
     it('should delete a capture', async () => {
@@ -179,17 +190,16 @@ describe('/captures', () => {
         .send({ status: 'deleted' })
         .set('Accept', 'application/json')
         .expect(204);
-      
+
       const result = await request(app).get(`/captures`).expect(200);
       const copy = { ...updatedModCapture };
       expect(result.body.captures.length).to.eql(1);
     });
 
-    after(async () => {      
-      const result = await knex('capture').del();
+    after(async () => {
+      await knex('capture').del();
     });
   });
-
 
   describe('/captures/capture_id/tags', () => {
     const captureId = capture2.id;
@@ -198,23 +208,20 @@ describe('/captures', () => {
       await addCapture({
         ...capture1,
         estimated_geometric_location: 'POINT(50 50)',
-        updated_at: "2022-02-01 11:11:11"
+        updated_at: '2022-02-01 11:11:11',
       });
       await addCapture({
         ...capture2,
         estimated_geometric_location: 'POINT(50 50)',
-        updated_at: "2022-02-01 11:11:11"
+        updated_at: '2022-02-01 11:11:11',
       });
       await knex('tag').insert(tag2);
     });
 
     after(async () => {
-      await knex('capture_tag')
-        .del();
-      await knex('tag')
-        .del();
-      await knex('capture')
-        .del();
+      await knex('capture_tag').del();
+      await knex('tag').del();
+      await knex('capture').del();
     });
 
     it('should attach tag(s) to a capture', async () => {
@@ -258,7 +265,23 @@ describe('/captures', () => {
       ]);
     });
 
-    it('should get a single tag attached to a capture', async () => {
+    it('should delete a single tag attached to a capture', async () => {
+      await request(app)
+        .delete(`/captures/${captureId}/tags/${tag2.id}`)
+        .expect(204);
+
+      const result = await request(app)
+        .get(`/captures/${captureId}/tags/${tag2.id}`)
+        .expect(200);
+      expect(result.body).to.be.empty;
+    });
+
+    it('should update a single tag attached to a capture', async () => {
+      await request(app)
+        .patch(`/captures/${captureId}/tags/${tag2.id}`)
+        .send({ status: 'active' })
+        .expect(204);
+
       const result = await request(app)
         .get(`/captures/${captureId}/tags/${tag2.id}`)
         .expect(200);
@@ -277,33 +300,6 @@ describe('/captures', () => {
         'created_at',
         'updated_at',
       ]);
-    });
-
-    it('should update a single tag attached to a capture', async () => {
-      const result = await request(app)
-        .patch(`/captures/${captureId}/tags/${tag2.id}`)
-        .send({ status: 'deleted' })
-        .expect(204);
-    });
-
-    it('should get a single tag attached to a capture', async () => {
-      const result = await request(app)
-        .get(`/captures/${captureId}/tags/${tag2.id}`)
-        .expect(200);
-      expect(result.body).to.be.empty;
-    });
-
-    it('should delete a single tag attached to a capture', async () => {
-      const result = await request(app)
-        .delete(`/captures/${captureId}/tags/${tag2.id}`)
-        .expect(204);
-    });
-
-    it('should get a single tag attached to a capture', async () => {
-      const result = await request(app)
-        .get(`/captures/${captureId}/tags/${tag2.id}`)
-        .expect(200);
-      expect(result.body).to.be.empty;
     });
   });
 });

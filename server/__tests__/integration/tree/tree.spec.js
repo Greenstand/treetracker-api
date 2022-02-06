@@ -21,9 +21,7 @@ describe('/trees', () => {
 
   const updatedModTree = { ...modTree, ...treeUpdates };
   after(async () => {
-    await knex('tree')
-      .where({ ...updatedModTree })
-      .del();
+    await knex('tree').del();
   });
 
   describe('POST', () => {
@@ -63,11 +61,16 @@ describe('/trees', () => {
         .expect(204);
     });
 
+    it('should confirm number of sent capture created events', async () => {
+      const numOfEmittedEvents = await knex('domain_event')
+        .count()
+        .where({ status: 'sent' });
+      expect(+numOfEmittedEvents[0].count).to.eql(2);
+    });
+
     after(async () => {
       await delTree(tree1.id);
-
-      const result = await knex('domain_event').where({ status: 'sent' }).del();
-      expect(result).to.eql(2);
+      await knex('domain_event').del();
     });
   });
 
@@ -78,18 +81,16 @@ describe('/trees', () => {
         .send(treeUpdates)
         .set('Accept', 'application/json')
         .expect(204);
-    });
-  });
 
-  describe('GET', () => {
-    it('should get a single tree', async () => {
       const copy = { ...updatedModTree };
       const result = await request(app).get(`/trees/${tree2.id}`).expect(200);
       expect(result.body.attributes.entries).to.eql(copy.attributes.entries);
       delete copy.attributes;
       expect(result.body).to.include({ ...copy });
     });
+  });
 
+  describe('GET', () => {
     it('should get trees', async () => {
       const result = await request(app).get(`/trees`).expect(200);
       const copy = { ...updatedModTree };
@@ -105,9 +106,7 @@ describe('/trees', () => {
         .send({ status: 'deleted' })
         .set('Accept', 'application/json')
         .expect(204);
-    });
 
-    it('should get trees --should be empty', async () => {
       const result = await request(app).get(`/trees`).expect(200);
       expect(result.body.length).to.eql(0);
     });
@@ -168,7 +167,21 @@ describe('/trees', () => {
       ]);
     });
 
-    it('should get a single tag attached to a tree', async () => {
+    it('should delete a single tag attached to a tree', async () => {
+      await request(app).delete(`/trees/${treeId}/tags/${tag2.id}`).expect(204);
+
+      const result = await request(app)
+        .get(`/trees/${treeId}/tags/${tag2.id}`)
+        .expect(200);
+      expect(result.body).to.be.empty;
+    });
+
+    it('should update a single tag attached to a tree', async () => {
+      await request(app)
+        .patch(`/trees/${treeId}/tags/${tag2.id}`)
+        .send({ status: 'active' })
+        .expect(204);
+
       const result = await request(app)
         .get(`/trees/${treeId}/tags/${tag2.id}`)
         .expect(200);
@@ -188,33 +201,6 @@ describe('/trees', () => {
         'created_at',
         'updated_at',
       ]);
-    });
-
-    it('should update a single tag attached to a tree', async () => {
-      const result = await request(app)
-        .patch(`/trees/${treeId}/tags/${tag2.id}`)
-        .send({ status: 'deleted' })
-        .expect(204);
-    });
-
-    it('should get a single tag attached to a tree', async () => {
-      const result = await request(app)
-        .get(`/trees/${treeId}/tags/${tag2.id}`)
-        .expect(200);
-      expect(result.body).to.be.empty;
-    });
-
-    it('should delete a single tag attached to a tree', async () => {
-      const result = await request(app)
-        .delete(`/trees/${treeId}/tags/${tag2.id}`)
-        .expect(204);
-    });
-
-    it('should get a single tag attached to a tree', async () => {
-      const result = await request(app)
-        .get(`/trees/${treeId}/tags/${tag2.id}`)
-        .expect(200);
-      expect(result.body).to.be.empty;
     });
   });
 });

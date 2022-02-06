@@ -8,7 +8,8 @@ const { knex } = require('../../utils');
 describe('/grower_account', () => {
   const growerAccountUpdates = {
     person_id: 'df9541b7-4bf4-4c8b-8711-f42f66bc50cc',
-    name: 'name',
+    first_name: 'name',
+    last_name: 'name2',
     email: 'name@email.com',
     phone: '1234567',
     image_url: 'https://www.himage.com',
@@ -16,15 +17,7 @@ describe('/grower_account', () => {
   };
 
   after(async () => {
-    await knex('grower_account')
-      .where({
-        ...grower_account1,
-        ...growerAccountUpdates,
-        name: grower_account2.name,
-        email: grower_account2.email,
-        phone: grower_account2.phone,
-      })
-      .del();
+    await knex('grower_account').del();
   });
 
   describe('POST', () => {
@@ -36,7 +29,7 @@ describe('/grower_account', () => {
         .expect(204);
     });
 
-    it('should not error out if duplicate id is sent', async () => {
+    it('should not error out if duplicate wallet is sent', async () => {
       await request(app)
         .post(`/grower_accounts`)
         .send(grower_account1)
@@ -46,17 +39,18 @@ describe('/grower_account', () => {
   });
 
   describe('PATCH', () => {
+    before(async () => {
+      const growerAccount = await knex('grower_account').select('id');
+      grower_account1.id = growerAccount[0].id;
+    });
+
     it('should uodate a grower account', async () => {
       await request(app)
         .patch(`/grower_accounts/${grower_account1.id}`)
         .send(growerAccountUpdates)
         .set('Accept', 'application/json')
         .expect(204);
-    });
-  });
 
-  describe('GET', () => {
-    it('should get a single grower account', async () => {
       const result = await request(app)
         .get(`/grower_accounts/${grower_account1.id}`)
         .expect(200);
@@ -65,7 +59,9 @@ describe('/grower_account', () => {
         ...growerAccountUpdates,
       });
     });
+  });
 
+  describe('GET', () => {
     it('should get grower account', async () => {
       const result = await request(app).get(`/grower_accounts`).expect(200);
       expect(result.body.grower_accounts.length).to.eql(1);
@@ -82,9 +78,7 @@ describe('/grower_account', () => {
         .send({ status: 'deleted' })
         .set('Accept', 'application/json')
         .expect(204);
-    });
 
-    it('should get grower account --should be empty', async () => {
       const result = await request(app).get(`/grower_accounts`).expect(200);
       expect(result.body.grower_accounts.length).to.eql(0);
       expect(result.body.links).to.have.keys(['prev', 'next']);
@@ -93,21 +87,17 @@ describe('/grower_account', () => {
 
   describe('PUT', () => {
     it('should update a grower account with the same wallet', async () => {
-      await request(app)
-        .put(`/grower_accounts`)
-        .send(grower_account2)
-        .set('Accept', 'application/json')
-        .expect(204);
-    });
-
-    it('should get a single grower account-- result should include "put updated" values', async () => {
       const result = await request(app)
-        .get(`/grower_accounts/${grower_account1.id}`)
+        .put(`/grower_accounts`)
+        .send({ ...grower_account2, wallet: grower_account1.wallet })
+        .set('Accept', 'application/json')
         .expect(200);
+
       expect(result.body).to.include({
         ...grower_account1,
         ...growerAccountUpdates,
-        name: grower_account2.name,
+        first_name: grower_account2.first_name,
+        last_name: grower_account2.last_name,
         email: grower_account2.email,
         phone: grower_account2.phone,
       });
