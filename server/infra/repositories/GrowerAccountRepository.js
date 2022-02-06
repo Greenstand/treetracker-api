@@ -8,11 +8,12 @@ class GrowerAccountRepository extends BaseRepository {
   }
 
   async updateInfo(object) {
-    await this._session
+    const result = await this._session
       .getDB()(this._tableName)
       .update(object)
       .where('wallet', object.wallet)
       .returning('*');
+    return result[0];
   }
 }
 

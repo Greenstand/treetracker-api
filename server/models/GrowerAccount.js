@@ -6,7 +6,8 @@ const GrowerAccount = ({
   wallet,
   person_id,
   organization_id,
-  name,
+  first_name,
+  last_name,
   email,
   phone,
   image_url,
@@ -21,7 +22,8 @@ const GrowerAccount = ({
     wallet,
     person_id,
     organization_id,
-    name,
+    first_name,
+    last_name,
     email,
     phone,
     image_url,
@@ -36,7 +38,8 @@ const PropertiesToUpdate = ({
   grower_account_id = undefined,
   person_id = undefined,
   organization_id = undefined,
-  name = undefined,
+  first_name = undefined,
+  last_name = undefined,
   email = undefined,
   phone = undefined,
   image_url = undefined,
@@ -49,7 +52,8 @@ const PropertiesToUpdate = ({
     id,
     person_id,
     organization_id,
-    name,
+    first_name,
+    last_name,
     email,
     phone,
     image_url,
@@ -67,13 +71,18 @@ const PropertiesToUpdate = ({
 const GrowerAccountInsertObject = (requestBody) =>
   Object.freeze({
     ...GrowerAccount(requestBody),
+    id: uuid(),
     status: 'active',
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   });
 
-const FilterCriteria = ({ organization_id = undefined, id = undefined }) => {
-  return Object.entries({ organization_id, id })
+const FilterCriteria = ({
+  organization_id = undefined,
+  id = undefined,
+  wallet = undefined,
+}) => {
+  return Object.entries({ organization_id, id, wallet })
     .filter((entry) => entry[1] !== undefined)
     .reduce((result, item) => {
       result[item[0]] = item[1];

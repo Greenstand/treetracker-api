@@ -14,27 +14,27 @@ const growerAccountGetQuerySchema = Joi.object({
   offset: Joi.number().integer().greater(-1),
   organization_id: Joi.string().uuid(),
   id: Joi.string().uuid(),
+  wallet: Joi.string(),
 }).unknown(false);
 
 const growerAccountPostQuerySchema = Joi.object({
-  id: Joi.string().uuid().required(),
   wallet: Joi.string().required(),
   person_id: Joi.string().uuid(),
   organization_id: Joi.string().uuid(),
-  name: Joi.string().required(),
-  email: Joi.string().email(),
-  phone: Joi.string(),
+  first_name: Joi.string().required(),
+  last_name: Joi.string().required(),
+  email: Joi.string().email().allow(null),
+  phone: Joi.string().allow(null),
   image_url: Joi.string().uri().required(),
   image_rotation: Joi.number().integer(),
   first_registration_at: Joi.date().iso().required(),
-})
-  .unknown(false)
-  .or('email', 'phone');
+}).unknown(false);
 
 const growerAccountPatchQuerySchema = Joi.object({
   person_id: Joi.string().uuid(),
   organization_id: Joi.string().uuid(),
-  name: Joi.string(),
+  first_name: Joi.string(),
+  last_name: Joi.string(),
   email: Joi.string().email(),
   phone: Joi.string(),
   image_url: Joi.string().uri(),
@@ -67,20 +67,17 @@ const growerAccountHandlerPost = async function (req, res, next) {
     abortEarly: false,
   });
 
+  if (!req.body.phone && !req.body.email) {
+    throw new HttpError(422, 'Either phone or email is required');
+  }
+
   const session = new Session();
   const growerAccountRepo = new GrowerAccountRepository(session);
 
   try {
     const growerAccountInsertObject = GrowerAccountInsertObject(req.body);
     const existingGrowerAccount = await growerAccountRepo.getByFilter({
-      or: [
-        {
-          id: growerAccountInsertObject.id,
-        },
-        {
-          wallet: growerAccountInsertObject.wallet,
-        },
-      ],
+      wallet: growerAccountInsertObject.wallet,
     });
 
     if (existingGrowerAccount.length === 0) {
@@ -147,33 +144,43 @@ const growerAccountHandlerPut = async function (req, res, next) {
     abortEarly: false,
   });
 
+  if (!req.body.phone && !req.body.email) {
+    throw new HttpError(422, 'Either phone or email is required');
+  }
+
   const session = new Session();
   const growerAccountRepo = new GrowerAccountRepository(session);
 
   try {
     const growerAccountInsertObject = GrowerAccountInsertObject(req.body);
-    const { wallet, name, phone, email, id } = growerAccountInsertObject;
+    const {
+      wallet,
+      first_name,
+      last_name,
+      phone,
+      email,
+    } = growerAccountInsertObject;
     const existingGrowerAccount = await growerAccountRepo.getByFilter({
-      or: [{ id }, { wallet }],
+      wallet,
     });
+    let growerAccount = {};
     await session.beginTransaction();
 
     if (existingGrowerAccount.length > 0) {
-      if (existingGrowerAccount[0].wallet === wallet) {
-        await growerAccountRepo.updateInfo({
-          wallet,
-          phone,
-          name,
-          email,
-          updated_at: new Date().toISOString(),
-        });
-      }
+      growerAccount = await growerAccountRepo.updateInfo({
+        wallet,
+        phone,
+        first_name,
+        last_name,
+        email,
+        updated_at: new Date().toISOString(),
+      });
     } else {
-      await growerAccountRepo.create(growerAccountInsertObject);
+      growerAccount = await growerAccountRepo.create(growerAccountInsertObject);
     }
     await session.commitTransaction();
 
-    res.status(204).send();
+    res.status(200).json(growerAccount);
     res.end();
   } catch (error) {
     if (session.isTransactionInProgress()) {
