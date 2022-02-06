@@ -142,14 +142,27 @@ const createCapture = (captureRepositoryImpl, eventRepositoryImpl) => async (
   return { raisedEvents: { domainEvent } };
 };
 
-const FilterCriteria = ({ tree_id = undefined, id = undefined, tree_associated = undefined  }) => {
-  const filter = Object.entries({ tree_id, id, tree_associated })
+const FilterCriteria = ({
+  tree_id = undefined,
+  id = undefined,
+  tree_associated = undefined,
+}) => {
+  const parameters = Object.entries({ tree_id, id })
     .filter((entry) => entry[1] !== undefined)
     .reduce((result, item) => {
       result[item[0]] = item[1];
       return result;
     }, {});
-  return filter;
+
+  const whereNulls = [];
+  const whereNotNulls = [];
+
+  if (tree_associated === 'true') {
+    whereNotNulls.push('tree_id');
+  } else if (tree_associated === 'false') {
+    whereNulls.push('tree_id');
+  }
+  return { parameters, whereNulls, whereNotNulls };
 };
 
 const getCaptures = (captureRepositoryImpl) => async (

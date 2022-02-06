@@ -8,23 +8,24 @@ class CaptureRepository extends BaseRepository {
   }
 
   async getByFilter(filterCriteria, options) {
-    const where = this._session
-      .getDB()
-      .whereNot({status: 'deleted' });
-
-    // TODO: this logic should be moved to the model
-    // see https://github.com/Greenstand/treetracker-api/issues/50
-    if (typeof (filterCriteria?.tree_associated) !== "undefined") {
-      if (filterCriteria.tree_associated === "true") {
-        where.whereNotNull('tree_id');
-      } else if (filterCriteria.tree_associated === "false") {
-        where.whereNull('tree_id');
+    const whereBuilder = function (object, builder) {
+      const result = builder;
+      const { parameters, whereNulls, whereNotNulls } = { ...object };
+      result.whereNot({ status: 'deleted' });
+      result.where(parameters);
+      for (const whereNot of whereNotNulls) {
+        result.whereNotNull(whereNot);
       }
-      delete filterCriteria.tree_associated;
-    }
 
-    const captures = await where.where({ ...filterCriteria})
+      for (const whereNull of whereNulls) {
+        result.whereNull(whereNull);
+      }
+    };
+
+    const captures = await this._session
+      .getDB()
       .select('*')
+      .where((builder) => whereBuilder(filterCriteria, builder))
       .from('capture')
       .orderBy('created_at', 'desc')
       .limit(Number(options.limit))
@@ -32,9 +33,8 @@ class CaptureRepository extends BaseRepository {
 
     const { count } = await this._session
       .getDB()
-      .where({ ...filterCriteria })
-      .whereNot({ status: 'deleted' })
       .count('*')
+      .where((builder) => whereBuilder(filterCriteria, builder))
       .from('capture')
       .first();
 
@@ -93,7 +93,7 @@ class CaptureRepository extends BaseRepository {
         capture.planting_organization_id,
         capture.point,
         capture.point,
-        capture.captured_at
+        capture.captured_at,
       ],
     );
   }
