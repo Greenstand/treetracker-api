@@ -22,8 +22,9 @@ class CaptureRepository extends BaseRepository {
       }
     };
 
-    const captures = await this._session
-      .getDB()
+    const knex = this._session.getDB();
+
+    const captures = await knex
       .select('*')
       .where((builder) => whereBuilder(filterCriteria, builder))
       .from('capture')
@@ -31,8 +32,7 @@ class CaptureRepository extends BaseRepository {
       .limit(Number(options.limit))
       .offset(Number(options.offset));
 
-    const { count } = await this._session
-      .getDB()
+    const { count } = await knex
       .count('*')
       .where((builder) => whereBuilder(filterCriteria, builder))
       .from('capture')
