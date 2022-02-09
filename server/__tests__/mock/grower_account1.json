@@ -1,7 +1,6 @@
 {
   "id": "4996d96c-2d2a-44ef-897a-66bbb1c1530c",
-  "wallet_id": "7cd597cf-a0bf-4a6c-99f3-564c47c46445",
-  "wallet": "wallet",
+  "wallet": "wallet1",
   "organization_id": "36dbe2d3-b4a9-4a87-ab1d-9d3e5743149c",
   "name": "firstName lastName",
   "image_url": "https://imageurl.com",
