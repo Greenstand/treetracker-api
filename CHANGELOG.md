@@ -1,3 +1,13 @@
+## [1.11.6](https://github.com/Greenstand/treetracker-api/compare/v1.11.5...v1.11.6) (2022-02-09)
+
+
+### Bug Fixes
+
+* allow for null values, populate and add constraint ([5bdfcde](https://github.com/Greenstand/treetracker-api/commit/5bdfcdeaf531e5aaaa053713cc60d567e360c6bc))
+* fix lint errors related to db-migrate files ([6f8e0f5](https://github.com/Greenstand/treetracker-api/commit/6f8e0f5df763dd020b300767c0518907f9370cc5))
+* replace var with let in db-migrate js files ([41df75d](https://github.com/Greenstand/treetracker-api/commit/41df75de92ef8a0ee523a0cd176f320f12b75364))
+* update mock data to reflect changed/dropped attributes ([8ac36d7](https://github.com/Greenstand/treetracker-api/commit/8ac36d74333c4581aa5d24145f33771faf39e101))
+
 ## [1.11.5](https://github.com/Greenstand/treetracker-api/compare/v1.11.4...v1.11.5) (2022-02-04)
 
 
