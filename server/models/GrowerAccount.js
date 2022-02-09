@@ -3,7 +3,6 @@ const { PaginationQueryOptions } = require('./helper');
 
 const GrowerAccount = ({
   id,
-  wallet_id,
   wallet,
   person_id,
   organization_id,
@@ -19,7 +18,6 @@ const GrowerAccount = ({
 }) =>
   Object.freeze({
     id,
-    wallet_id,
     wallet,
     person_id,
     organization_id,
