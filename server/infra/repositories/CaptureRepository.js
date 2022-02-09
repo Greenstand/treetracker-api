@@ -12,7 +12,6 @@ class CaptureRepository extends BaseRepository {
       const result = builder;
       const { parameters, whereNulls, whereNotNulls } = { ...object };
       result.whereNot({ status: 'deleted' });
-      result.where(parameters);
       for (const whereNot of whereNotNulls) {
         result.whereNotNull(whereNot);
       }
@@ -20,6 +19,18 @@ class CaptureRepository extends BaseRepository {
       for (const whereNull of whereNulls) {
         result.whereNull(whereNull);
       }
+
+      const filterObject = { ...parameters };
+
+      if (filterObject.captured_at_start_date) {
+        result.where('created_at', '>=', filterObject.captured_at_start_date);
+        delete filterObject.captured_at_start_date;
+      }
+      if (filterObject.captured_at_end_date) {
+        result.where('created_at', '<=', filterObject.captured_at_end_date);
+        delete filterObject.captured_at_end_date;
+      }
+      result.where(filterObject);
     };
 
     const knex = this._session.getDB();

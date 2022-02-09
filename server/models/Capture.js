@@ -144,10 +144,17 @@ const createCapture = (captureRepositoryImpl, eventRepositoryImpl) => async (
 
 const FilterCriteria = ({
   tree_id = undefined,
-  id = undefined,
   tree_associated = undefined,
+  organization_id = undefined,
+  captured_at_start_date = undefined,
+  captured_at_end_date = undefined,
 }) => {
-  const parameters = Object.entries({ tree_id, id })
+  const parameters = Object.entries({
+    tree_id,
+    planting_organization_id: organization_id,
+    captured_at_start_date,
+    captured_at_end_date,
+  })
     .filter((entry) => entry[1] !== undefined)
     .reduce((result, item) => {
       result[item[0]] = item[1];
