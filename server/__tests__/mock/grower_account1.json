@@ -1,5 +1,10 @@
 {
+<<<<<<< HEAD
   "wallet": "wallet",
+=======
+  "id": "4996d96c-2d2a-44ef-897a-66bbb1c1530c",
+  "wallet": "wallet1",
+>>>>>>> f7e8989be1b4e51a6c7071d964164152900da13b
   "organization_id": "36dbe2d3-b4a9-4a87-ab1d-9d3e5743149c",
   "first_name": "firstName",
   "last_name": "lastName",

@@ -4,9 +4,12 @@
   "tree_id": "f7647dc6-e2c0-407c-be9d-b831734598d7",
   "lat": 50,
   "lon": 50,
+<<<<<<< HEAD
+=======
+  "grower_account_id": "4996d96c-2d2a-44ef-897a-66bbb1c1530c",
+>>>>>>> f7e8989be1b4e51a6c7071d964164152900da13b
   "device_configuration_id": "6091cf22-9774-40c3-986c-ef555069ae2a",
   "session_id": "f97a0338-1d6a-4f19-a067-a7f0b573e3cd",
-  "grower_username": "x",
   "image_url": "http://xxx",
   "planting_organization_id": "3876b7df-0002-4bc7-adfa-097db2080311",
   "captured_at": "2022-01-01 11:11:11"
