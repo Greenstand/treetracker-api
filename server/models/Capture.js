@@ -10,8 +10,6 @@ const Capture = ({
   image_url,
   lat,
   lon,
-  grower_photo_url,
-  grower_username,
   created_at,
   status,
   captured_at,
@@ -21,8 +19,6 @@ const Capture = ({
   Object.freeze({
     id,
     image_url,
-    grower_photo_url,
-    grower_username,
     planting_organization_id,
     created_at,
     latitude: lat,
@@ -30,7 +26,7 @@ const Capture = ({
     ...(tree_id !== undefined && { tree_associated: !!tree_id }),
     tree_id,
     status,
-    tags: tag_array,
+    tags: tag_array ? tag_array : [],
     captured_at,
   });
 
@@ -117,7 +113,7 @@ const FilterCriteria = ({
   planting_organization_id = undefined,
   captured_at_start_date = undefined,
   captured_at_end_date = undefined,
-  grower_id = undefined,
+  grower_account_id = undefined,
   species_id = undefined,
 }) => {
   const parameters = Object.entries({
@@ -125,7 +121,7 @@ const FilterCriteria = ({
     planting_organization_id,
     captured_at_start_date,
     captured_at_end_date,
-    grower_id,
+    grower_account_id,
     species_id,
   })
     .filter((entry) => entry[1] !== undefined)

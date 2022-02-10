@@ -53,14 +53,12 @@ class CaptureRepository extends BaseRepository {
         image_url,
         lat,
         lon,
-        grower_photo_url,
-        grower_username,
         created_at,
         status,
         captured_at, 
         t.tag_array
           FROM capture
-          LEFY JOIN (
+          LEFT JOIN (
               SELECT ct.capture_id, array_agg(t.name) AS tag_array
               FROM capture_tag ct
               JOIN tag t  ON t.id = ct.tag_id

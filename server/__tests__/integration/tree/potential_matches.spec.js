@@ -16,7 +16,7 @@ describe('GET /trees/potential_matches', () => {
       })
       .returning('id');
 
-    capture1.grower_id = growerAccount1[0];
+    capture1.grower_account_id = growerAccount1[0];
   });
 
   afterEach(async () => {

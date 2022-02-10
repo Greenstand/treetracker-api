@@ -72,7 +72,7 @@ paths:
             type: string
             format: uuid
           in: query
-          name: grower_id
+          name: grower_account_id
         - schema:
             type: string
             format: uuid
@@ -121,16 +121,9 @@ paths:
                   type: number
                 lon:
                   type: number
-                grower_id:
+                grower_account_id:
                   type: string
                   format: uuid
-                grower_photo_url:
-                  type: string
-                  minLength: 1
-                grower_username:
-                  type: string
-                  minLength: 1
-                  description: 'username is either phone number or email, whichever was supplied'
                 planting_organization_id:
                   type: string
                   format: uuid
@@ -184,9 +177,7 @@ paths:
                 - image_url
                 - lat
                 - lon
-                - grower_id
-                - grower_photo_url
-                - grower_username
+                - grower_account_id
                 - planting_organization_id
                 - session_id
                 - gps_accuracy
@@ -644,9 +635,6 @@ components:
           type: number
         lon:
           type: number
-        grower_username:
-          type: string
-          minLength: 1
         planting_organization_id:
           type: string
           format: uuid
@@ -663,8 +651,6 @@ components:
         captured_at:
           type: string
           format: date-time
-        grower_photo_url:
-          type: string
         tags:
           type: array
           items:
@@ -676,7 +662,6 @@ components:
         - image_url
         - lat
         - lon
-        - grower_username
         - status
         - created_at
         - captured_at

@@ -42,8 +42,8 @@ describe('/captures', () => {
       })
       .returning('id');
 
-    capture1.grower_id = growerAccount1[0];
-    capture2.grower_id = growerAccount2[0];
+    capture1.grower_account_id = growerAccount1[0];
+    capture2.grower_account_id = growerAccount2[0];
   });
 
   after(async () => {
