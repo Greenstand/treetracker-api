@@ -7,10 +7,10 @@ class CaptureRepository extends BaseRepository {
     this._session = session;
   }
 
-  async getByFilter(filterCriteria, options) {
+  async getByFilter(filterCriteria, options = {}) {
     const whereBuilder = function (object, builder) {
       const result = builder;
-      const { parameters, whereNulls, whereNotNulls } = { ...object };
+      const { parameters, whereNulls = [], whereNotNulls = [] } = { ...object };
       result.whereNot({ status: 'deleted' });
       for (const whereNot of whereNotNulls) {
         result.whereNotNull(whereNot);
@@ -23,11 +23,19 @@ class CaptureRepository extends BaseRepository {
       const filterObject = { ...parameters };
 
       if (filterObject.captured_at_start_date) {
-        result.where('created_at', '>=', filterObject.captured_at_start_date);
+        result.where(
+          'capture.captured_at',
+          '>=',
+          filterObject.captured_at_start_date,
+        );
         delete filterObject.captured_at_start_date;
       }
       if (filterObject.captured_at_end_date) {
-        result.where('created_at', '<=', filterObject.captured_at_end_date);
+        result.where(
+          'capture.captured_at',
+          '<=',
+          filterObject.captured_at_end_date,
+        );
         delete filterObject.captured_at_end_date;
       }
       result.where(filterObject);
@@ -35,13 +43,44 @@ class CaptureRepository extends BaseRepository {
 
     const knex = this._session.getDB();
 
-    const captures = await knex
-      .select('*')
+    let promise = knex
+      .select(
+        knex.raw(
+          `
+        id,
+        tree_id,
+        planting_organization_id,
+        image_url,
+        lat,
+        lon,
+        grower_photo_url,
+        grower_username,
+        created_at,
+        status,
+        captured_at, 
+        t.tag_array
+          FROM capture
+          LEFY JOIN (
+              SELECT ct.capture_id, array_agg(t.name) AS tag_array
+              FROM capture_tag ct
+              JOIN tag t  ON t.id = ct.tag_id
+              GROUP BY ct.capture_id
+            ) t ON id = t.capture_id
+        `,
+        ),
+      )
       .where((builder) => whereBuilder(filterCriteria, builder))
-      .from('capture')
-      .orderBy('created_at', 'desc')
-      .limit(Number(options.limit))
-      .offset(Number(options.offset));
+      .orderBy('created_at', 'desc');
+
+    const { limit, offset } = options;
+    if (limit) {
+      promise = promise.limit(limit);
+    }
+    if (offset) {
+      promise = promise.offset(offset);
+    }
+
+    const captures = await promise;
 
     const { count } = await knex
       .count('*')

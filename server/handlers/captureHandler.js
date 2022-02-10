@@ -50,9 +50,13 @@ const capturePostSchema = Joi.object({
 const captureGetQuerySchema = Joi.object({
   tree_id: Joi.string().uuid(),
   tree_associated: Joi.boolean(),
-  organization_id: Joi.string().uuid(),
+  planting_organization_id: Joi.string().uuid(),
   captured_at_start_date: Joi.date().iso(),
   captured_at_end_date: Joi.date().iso(),
+  grower_id: Joi.string().uuid(),
+  species_id: Joi.string().uuid(),
+  offset: Joi.number().integer().greater(-1),
+  limit: Joi.number().integer().greater(0),
 });
 
 const capturePatchSchema = Joi.object({
@@ -169,7 +173,13 @@ const captureHandlerSingleGet = async function (req, res) {
   const session = new Session();
   const captureRepo = new CaptureRepository(session);
 
-  const capture = (await captureRepo.getById(req.params.capture_id)) || {};
+  const {
+    captures: [capture = {}],
+  } = await captureRepo.getByFilter({
+    parameters: {
+      id: req.params.capture_id,
+    },
+  });
 
   res.send(Capture(capture));
 };

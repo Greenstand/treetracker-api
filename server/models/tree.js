@@ -50,8 +50,6 @@ const Tree = ({
   species_id,
   created_at,
   updated_at,
-  estimated_geometric_location,
-  estimated_geographic_location,
 }) => {
   return Object.freeze({
     id,
@@ -67,8 +65,6 @@ const Tree = ({
     species_id,
     created_at,
     updated_at,
-    estimated_geometric_location,
-    estimated_geographic_location,
   });
 };
 
