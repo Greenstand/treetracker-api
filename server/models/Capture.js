@@ -26,7 +26,7 @@ const Capture = ({
     ...(tree_id !== undefined && { tree_associated: !!tree_id }),
     tree_id,
     status,
-    tags: tag_array ? tag_array : [],
+    tags: tag_array || [],
     captured_at,
   });
 
