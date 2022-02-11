@@ -1,18 +1,27 @@
-const captures = require('./data/20220210_Captures.json');
-
+const uuid = require('uuid');
+const captures = require('./data/20220210-Captures.json');
 
 exports.seed = function (knex) {
   // takes the ~ 20,000 captures and splits them into batches of 1000 for seeding
-  const batches = []
+  const batches = [];
   for (let i = 0; i < captures.length; i += 1000) {
     const batch = captures.slice(i, i + 1000);
     batches.push(batch);
   }
 
-  return Promise.all(batches.map((batch, i) => {
-    // console.log(i, batch.length)
-    return knex('capture').insert(batch)
-  }));
+  return Promise.all(
+    batches.map((batch) => {
+      // add session_id and device_configuration_id to each
+      for (let i = 0; i < batch.length; i += 1) {
+        const item = batch[i];
+        item.session_id = uuid.v4();
+        item.device_configuration_id = uuid.v4();
+      }
+
+      // console.log(i, batch.length)
+      return knex('capture').insert(batch);
+    }),
+  );
 };
 
 /* EXAMPLE DATA */
@@ -47,3 +56,6 @@ exports.seed = function (knex) {
 //     session_id:  // -------- NOT NULL
 //   },
 // ];
+
+// DELETE FROM treetracker.capture
+// WHERE session_id is null ;
