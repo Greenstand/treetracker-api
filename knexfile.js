@@ -20,6 +20,7 @@ module.exports = {
     seeds: {
       directory: path.join(__dirname, 'database', 'seeds'),
     },
+    debug: process.env.NODE_LOG_LEVEL === 'debug',
   },
 
   test: {

@@ -74,10 +74,10 @@ paths:
           in: query
           name: grower_account_id
         - schema:
-            type: string
+            type: array
             format: uuid
           in: query
-          name: planting_organization_id
+          name: organization_ids
           description: 'filter by planting organization, respecting organizational hierarchy.'
         - schema:
             type: string
@@ -94,6 +94,15 @@ paths:
             format: date-time
           in: query
           name: captured_at_end_date
+        - schema:
+            type: string
+          in: query
+          name: order_by
+          description: one of captured_at or created_at
+        - schema:
+            type: string
+          in: query
+          name: order
     post:
       summary: ''
       operationId: post-captures

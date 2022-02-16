@@ -53,6 +53,8 @@ const captureGetQuerySchema = Joi.object({
   captured_at_end_date: Joi.date().iso(),
   grower_account_id: Joi.string().uuid(),
   species_id: Joi.string().uuid(),
+  order_by: Joi.string().valid('captured_at', 'created_at'),
+  order: Joi.string().valid('asc', 'desc'),
   offset: Joi.number().integer().greater(-1),
   limit: Joi.number().integer().greater(0),
 });

@@ -115,6 +115,8 @@ const FilterCriteria = ({
   grower_account_id = undefined,
   species_id = undefined,
   organization_ids = [],
+  order_by = undefined,
+  order = 'desc',
 }) => {
   const parameters = Object.entries({
     tree_id,
@@ -145,7 +147,13 @@ const FilterCriteria = ({
   } else if (tree_associated === 'false') {
     whereNulls.push('tree_id');
   }
-  return { parameters, whereNulls, whereNotNulls, whereIns };
+  return {
+    parameters,
+    whereNulls,
+    whereNotNulls,
+    whereIns,
+    sort: { order_by, order },
+  };
 };
 
 const getCaptures = (captureRepositoryImpl) => async (

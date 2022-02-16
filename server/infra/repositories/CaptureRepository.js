@@ -76,8 +76,12 @@ class CaptureRepository extends BaseRepository {
         `,
         ),
       )
-      .where((builder) => whereBuilder(filterCriteria, builder))
-      .orderBy('created_at', 'desc');
+      .where((builder) => whereBuilder(filterCriteria, builder));
+
+    promise = promise.orderBy(
+      filterCriteria?.sort?.order_by || 'created_at',
+      filterCriteria?.sort?.order || 'desc',
+    );
 
     const { limit, offset } = options;
     if (limit) {
