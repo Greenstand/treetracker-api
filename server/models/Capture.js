@@ -116,7 +116,7 @@ const FilterCriteria = ({
   species_id = undefined,
   organization_ids = [],
   order_by = undefined,
-  order = 'desc',
+  order = 'desc', //
 }) => {
   const parameters = Object.entries({
     tree_id,
