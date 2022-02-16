@@ -14,7 +14,7 @@
     "eslint:fix": "npm run eslint -- --fix",
     "test": "npm run test-unit && npm run test-integration && npm run test-repository",
     "test-unit": "NODE_ENV=test mocha -r dotenv/config --env dotenv_config_path=.env.test --exit ./server/models/**/*.spec.js ./server/routes/**/*.spec.js",
-    "test-repository": "NODE_ENV=test mocha -r dotenv/config --exit  ./server/infra/repositories/**/*.spec.js",
+    "test-repository": "NODE_ENV=test mocha -r dotenv/config --env dotenv_config_path=.env.test --exit  ./server/infra/repositories/**/*.spec.js",
     "server": "nodemon server/server.js",
     "test-seedDB": "NODE_ENV=test mocha -r dotenv/config --env dotenv_config_path=.env.test --timeout 10000  './**/*.spec.js'",
     "test-integration": "NODE_ENV=test mocha -r dotenv/config --env dotenv_config_path=.env.test --exit --timeout 20000 --recursive './server/__tests__/'",

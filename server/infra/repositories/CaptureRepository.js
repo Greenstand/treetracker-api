@@ -10,7 +10,12 @@ class CaptureRepository extends BaseRepository {
   async getByFilter(filterCriteria, options = {}) {
     const whereBuilder = function (object, builder) {
       const result = builder;
-      const { parameters, whereNulls = [], whereNotNulls = [] } = { ...object };
+      const {
+        parameters,
+        whereNulls = [],
+        whereNotNulls = [],
+        whereIns = [],
+      } = { ...object };
       result.whereNot({ status: 'deleted' });
       for (const whereNot of whereNotNulls) {
         result.whereNotNull(whereNot);
@@ -18,6 +23,10 @@ class CaptureRepository extends BaseRepository {
 
       for (const whereNull of whereNulls) {
         result.whereNull(whereNull);
+      }
+
+      for (const whereIn of whereIns) {
+        result.whereIn(whereIn.field, whereIn.values);
       }
 
       const filterObject = { ...parameters };
