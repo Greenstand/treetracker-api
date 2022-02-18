@@ -1,3 +1,21 @@
+# [1.12.0](https://github.com/Greenstand/treetracker-api/compare/v1.11.6...v1.12.0) (2022-02-18)
+
+
+### Bug Fixes
+
+* capture filterCriteria object to handle null/notnull ([ab72e76](https://github.com/Greenstand/treetracker-api/commit/ab72e76a07526db28d34e91ca2441570df685ca2))
+* linting ([1a4cd45](https://github.com/Greenstand/treetracker-api/commit/1a4cd450d23f096ed3765f8ca9e7cde44b071f6a))
+* update code to match new migrations ([000807e](https://github.com/Greenstand/treetracker-api/commit/000807e4aa7c03a7de115c42975e1a9e7a0c1223))
+* update grower-account endpoints ([5fe687b](https://github.com/Greenstand/treetracker-api/commit/5fe687b5f1acc92b2e487158be167390c59aca57))
+
+
+### Features
+
+* add /grower_accounts/put endpoint ([5c6ae70](https://github.com/Greenstand/treetracker-api/commit/5c6ae70a4148010f4618ebeab84486a3136a066e))
+* add date range and organization id filters ([0cc008e](https://github.com/Greenstand/treetracker-api/commit/0cc008e8f554eaf433cb327839b33275f978aaa7))
+* add order by query parameters for /captures ([12ef65c](https://github.com/Greenstand/treetracker-api/commit/12ef65c60912278195779e12ba02ccdacdd2ba6b))
+* add organization_ids array query parameter for /captures ([d8a04ea](https://github.com/Greenstand/treetracker-api/commit/d8a04ead92959e6bbca41e20e06ede5fa6b9c4f8))
+
 ## [1.11.6](https://github.com/Greenstand/treetracker-api/compare/v1.11.5...v1.11.6) (2022-02-09)
 
 
