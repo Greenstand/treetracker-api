@@ -6,52 +6,27 @@ const { Repository } = require('./Repository');
 
 const Capture = ({
   id,
-  reference_id,
-  tree_id,
+  tree_id = undefined,
   image_url,
   lat,
   lon,
-  estimated_geometric_location,
-  gps_accuracy,
-  morphology,
-  age,
-  note,
-  attributes,
-  domain_specific_data,
   created_at,
-  updated_at,
-  estimated_geographic_location,
-  device_configuration_id,
-  session_id,
   status,
-  grower_account_id,
-  planting_organization_id,
-  species_id,
   captured_at,
+  planting_organization_id,
+  tag_array,
 }) =>
   Object.freeze({
     id,
-    reference_id,
-    tree_id,
     image_url,
-    lat,
-    lon,
-    estimated_geometric_location,
-    gps_accuracy,
-    morphology,
-    age,
-    note,
-    attributes,
-    domain_specific_data,
-    created_at,
-    updated_at,
-    estimated_geographic_location,
-    device_configuration_id,
-    session_id,
-    status,
-    grower_account_id,
     planting_organization_id,
-    species_id,
+    created_at,
+    latitude: lat,
+    longitude: lon,
+    ...(tree_id !== undefined && { tree_associated: !!tree_id }),
+    tree_id,
+    status,
+    tags: tag_array || undefined,
     captured_at,
   });
 
@@ -132,14 +107,53 @@ const createCapture = (captureRepositoryImpl, eventRepositoryImpl) => async (
   return { raisedEvents: { domainEvent } };
 };
 
-const FilterCriteria = ({ tree_id = undefined, id = undefined, tree_associated = undefined  }) => {
-  const filter = Object.entries({ tree_id, id, tree_associated })
+const FilterCriteria = ({
+  tree_id = undefined,
+  tree_associated = undefined,
+  captured_at_start_date = undefined,
+  captured_at_end_date = undefined,
+  grower_account_id = undefined,
+  species_id = undefined,
+  organization_ids = [],
+  order_by = undefined,
+  order = 'desc', //
+}) => {
+  const parameters = Object.entries({
+    tree_id,
+    captured_at_start_date,
+    captured_at_end_date,
+    grower_account_id,
+    species_id,
+  })
     .filter((entry) => entry[1] !== undefined)
     .reduce((result, item) => {
       result[item[0]] = item[1];
       return result;
     }, {});
-  return filter;
+
+  const whereNulls = [];
+  const whereNotNulls = [];
+  const whereIns = [];
+
+  if (organization_ids.length) {
+    whereIns.push({
+      field: 'planting_organization_id',
+      values: [...organization_ids],
+    });
+  }
+
+  if (tree_associated === 'true') {
+    whereNotNulls.push('tree_id');
+  } else if (tree_associated === 'false') {
+    whereNulls.push('tree_id');
+  }
+  return {
+    parameters,
+    whereNulls,
+    whereNotNulls,
+    whereIns,
+    sort: { order_by, order },
+  };
 };
 
 const getCaptures = (captureRepositoryImpl) => async (

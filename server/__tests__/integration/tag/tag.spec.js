@@ -10,9 +10,7 @@ describe('/tag', () => {
   };
 
   after(async () => {
-    await knex('tag')
-      .where({ ...tag1, ...tagUpdates })
-      .del();
+    await knex('tag').del();
   });
 
   describe('POST', () => {

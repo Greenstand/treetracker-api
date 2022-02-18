@@ -7,33 +7,95 @@ class CaptureRepository extends BaseRepository {
     this._session = session;
   }
 
-  async getByFilter(filterCriteria, options) {
-    const where = this._session
-      .getDB()
-      .whereNot({status: 'deleted' });
-
-    // TODO: this logic should be moved to the model
-    // see https://github.com/Greenstand/treetracker-api/issues/50
-    if (typeof (filterCriteria?.tree_associated) !== "undefined") {
-      if (filterCriteria.tree_associated === "true") {
-        where.whereNotNull('tree_id');
-      } else if (filterCriteria.tree_associated === "false") {
-        where.whereNull('tree_id');
+  async getByFilter(filterCriteria, options = {}) {
+    const whereBuilder = function (object, builder) {
+      const result = builder;
+      const {
+        parameters,
+        whereNulls = [],
+        whereNotNulls = [],
+        whereIns = [],
+      } = { ...object };
+      result.whereNot({ status: 'deleted' });
+      for (const whereNot of whereNotNulls) {
+        result.whereNotNull(whereNot);
       }
-      delete filterCriteria.tree_associated;
+
+      for (const whereNull of whereNulls) {
+        result.whereNull(whereNull);
+      }
+
+      for (const whereIn of whereIns) {
+        result.whereIn(whereIn.field, whereIn.values);
+      }
+
+      const filterObject = { ...parameters };
+
+      if (filterObject.captured_at_start_date) {
+        result.where(
+          'capture.captured_at',
+          '>=',
+          filterObject.captured_at_start_date,
+        );
+        delete filterObject.captured_at_start_date;
+      }
+      if (filterObject.captured_at_end_date) {
+        result.where(
+          'capture.captured_at',
+          '<=',
+          filterObject.captured_at_end_date,
+        );
+        delete filterObject.captured_at_end_date;
+      }
+      result.where(filterObject);
+    };
+
+    const knex = this._session.getDB();
+
+    let promise = knex
+      .select(
+        knex.raw(
+          `
+        id,
+        tree_id,
+        planting_organization_id,
+        image_url,
+        lat,
+        lon,
+        created_at,
+        status,
+        captured_at, 
+        t.tag_array
+          FROM capture
+          LEFT JOIN (
+              SELECT ct.capture_id, array_agg(t.name) AS tag_array
+              FROM capture_tag ct
+              JOIN tag t  ON t.id = ct.tag_id
+              GROUP BY ct.capture_id
+            ) t ON id = t.capture_id
+        `,
+        ),
+      )
+      .where((builder) => whereBuilder(filterCriteria, builder));
+
+    promise = promise.orderBy(
+      filterCriteria?.sort?.order_by || 'created_at',
+      filterCriteria?.sort?.order || 'desc',
+    );
+
+    const { limit, offset } = options;
+    if (limit) {
+      promise = promise.limit(limit);
+    }
+    if (offset) {
+      promise = promise.offset(offset);
     }
 
-    const countWhere = where.clone();
+    const captures = await promise;
 
-    const captures = await where.where({ ...filterCriteria})
-      .select('*')
-      .from('capture')
-      .orderBy('created_at', 'desc')
-      .limit(Number(options.limit))
-      .offset(Number(options.offset));
-
-    const { count } = await countWhere
+    const { count } = await knex
       .count('*')
+      .where((builder) => whereBuilder(filterCriteria, builder))
       .from('capture')
       .first();
 
@@ -88,7 +150,7 @@ class CaptureRepository extends BaseRepository {
         capture.planting_organization_id,
         capture.point,
         capture.point,
-        capture.captured_at
+        capture.captured_at,
       ],
     );
   }

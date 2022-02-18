@@ -24,44 +24,7 @@ paths:
                     uniqueItems: true
                     minItems: 1
                     items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                          minLength: 1
-                          format: uuid
-                          example: daebb6d6-b7cc-4e15-8783-fb56739cf14e
-                        image_url:
-                          type: string
-                          minLength: 1
-                          format: uuid
-                        user_photo_url:
-                          type: string
-                          minLength: 1
-                        created_at:
-                          type: string
-                          minLength: 1
-                        latitude:
-                          type: number
-                        longitude:
-                          type: number
-                        tree_associated:
-                          type: boolean
-                        status:
-                          type: boolean
-                        tags:
-                          type: array
-                          items:
-                            type: string
-                      required:
-                        - id
-                        - image_url
-                        - user_photo_url
-                        - created_at
-                        - latitude
-                        - longitude
-                        - tree_associated
-                        - status
+                      $ref: '#/components/schemas/capture'
                 required:
                   - captures
               examples:
@@ -101,22 +64,45 @@ paths:
           description: filter by weather or not returned captures have been associated with a tree
           allowEmptyValue: true
         - schema:
-            type: integer
+            type: string
+            format: uuid
           in: query
           name: tree_id
         - schema:
             type: string
+            format: uuid
           in: query
-          name: planter_id
+          name: grower_account_id
         - schema:
-            type: string
+            type: array
+            format: uuid
           in: query
-          name: planting_organization_id
+          name: organization_ids
           description: 'filter by planting organization, respecting organizational hierarchy.'
         - schema:
             type: string
+            format: uuid
           in: query
           name: species_id
+        - schema:
+            type: string
+            format: date-time
+          in: query
+          name: captured_at_start_date
+        - schema:
+            type: string
+            format: date-time
+          in: query
+          name: captured_at_end_date
+        - schema:
+            type: string
+          in: query
+          name: order_by
+          description: one of captured_at or created_at
+        - schema:
+            type: string
+          in: query
+          name: order
     post:
       summary: ''
       operationId: post-captures
@@ -135,7 +121,8 @@ paths:
                 reference_id:
                   type: number
                 tree_id:
-                  type: number
+                  type: string
+                  format: uuid
                 image_url:
                   type: string
                   minLength: 1
@@ -143,19 +130,15 @@ paths:
                   type: number
                 lon:
                   type: number
-                ground_user_id:
-                  type: number
-                ground_user_photo_url:
+                grower_account_id:
                   type: string
-                  minLength: 1
-                ground_username:
-                  type: string
-                  minLength: 1
-                  description: 'username is either phone number or email, whichever was supplied'
+                  format: uuid
                 planting_organization_id:
-                  type: number
+                  type: string
+                  format: uuid
                 species_id:
-                  type: number
+                  type: string
+                  format: uuid
                 morphology:
                   type: string
                   minLength: 1
@@ -185,14 +168,30 @@ paths:
                           - value
                   required:
                     - entries
+                session_id:
+                  type: string
+                  format: uuid
+                gps_accuracy:
+                  type: number
+                device_configuration_id:
+                  type: string
+                  format: uuid
+                captured_at:
+                  type: string
+                  format: date-time
+                domain_specific_data:
+                  type: object
               required:
                 - reference_id
                 - image_url
                 - lat
                 - lon
-                - ground_user_id
-                - ground_user_photo_url
-                - ground_username
+                - grower_account_id
+                - planting_organization_id
+                - session_id
+                - gps_accuracy
+                - device_configuration_id
+                - captured_at
       description: Create a verified capture
   '/captures/{capture_id}':
     parameters:
@@ -205,8 +204,8 @@ paths:
       summary: ''
       operationId: patch-captures-capture_id
       responses:
-        '200':
-          description: OK
+        '204':
+          description: No Content
       description: Update capture with tree id associating this specific capture with a known unique tree.
       requestBody:
         content:
@@ -219,6 +218,11 @@ paths:
                   type: string
                   minLength: 1
                   format: uuid
+                status:
+                  type: string
+                  enum:
+                    - active
+                    - deleted
               required:
                 - tree_id
             examples:
@@ -245,14 +249,35 @@ paths:
     get:
       summary: Your GET endpoint
       tags: []
-      responses: {}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/capture_tags'
       operationId: get-captures-capture_id-tags
     post:
       summary: ''
       operationId: post-captures-capture_id-tags
       responses:
-        '200':
-          description: OK
+        '204':
+          description: No Content
+      description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tags:
+                  type: array
+                  minItems: 1
+                  items:
+                    type: string
+                    format: uuid
   '/captures/{capture_id}/tags/{tag_id}':
     parameters:
       - schema:
@@ -268,7 +293,13 @@ paths:
     get:
       summary: Your GET endpoint
       tags: []
-      responses: {}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capture_tags'
       operationId: get-captures-capture_id-tags-tag_id
     delete:
       summary: ''
@@ -280,16 +311,16 @@ paths:
       summary: ''
       operationId: patch-captures-capture_id-tags-tag_id
       responses:
-        '200':
-          description: OK
+        '204':
+          description: No Content
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
-                public:
-                  type: boolean
+                status:
+                  type: string
   /trees:
     get:
       summary: Your GET endpoint
@@ -304,7 +335,8 @@ paths:
                 properties:
                   trees:
                     type: array
-                    items: {}
+                    items:
+                      $ref: '#/components/schemas/tree'
               examples:
                 example:
                   value:
@@ -371,9 +403,24 @@ paths:
                   type: number
                 species_id:
                   type: string
+                  format: uuid
                 morphology:
                   type: string
                 age:
+                  type: number
+                attributes:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      key:
+                        type: string
+                      value:
+                        type: string
+                    required:
+                      - key
+                      - value
+                gps_accuracy:
                   type: number
               required:
                 - id
@@ -587,10 +634,9 @@ components:
           type: string
           minLength: 1
           format: uuid
-        reference_id:
-          type: number
         tree_id:
-          type: number
+          type: string
+          format: uuid
         image_url:
           type: string
           minLength: 1
@@ -598,67 +644,36 @@ components:
           type: number
         lon:
           type: number
-        user_id:
-          type: number
-        user_photo_url:
-          type: string
-          minLength: 1
-        username:
-          type: string
-          minLength: 1
         planting_organization_id:
-          type: number
-        species_id:
-          type: number
-        morphology:
           type: string
-        age:
-          type: number
-        note:
-          type: string
-        attributes:
-          type: object
-          required:
-            - entries
-          properties:
-            entries:
-              type: array
-              uniqueItems: true
-              minItems: 1
-              items:
-                type: object
-                properties:
-                  key:
-                    type: string
-                    minLength: 1
-                  value:
-                    type: string
-                required:
-                  - key
-                  - value
-        domain_specific_data:
-          type: object
+          format: uuid
         status:
           type: string
           minLength: 1
+          enum:
+            - active
+            - deleted
         created_at:
           type: string
           minLength: 1
-        updated_at:
+          format: date-time
+        captured_at:
           type: string
-          minLength: 1
+          format: date-time
+        tags:
+          type: array
+          items:
+            type: string
+        tree_associated:
+          type: boolean
       required:
         - id
-        - reference_id
         - image_url
         - lat
         - lon
-        - user_id
-        - user_photo_url
-        - username
         - status
         - created_at
-        - updated_at
+        - captured_at
     tree:
       description: A unique tree tracked by Greenstand platform.
       type: object
@@ -705,6 +720,7 @@ components:
           type: number
         species_id:
           type: string
+          format: uuid
         morphology:
           type: string
         age:
@@ -718,6 +734,12 @@ components:
         updated_at:
           type: string
           minLength: 1
+        gps_accuracy:
+          type: number
+        attributes:
+          type: array
+          items:
+            type: object
       required:
         - id
         - latest_capture_id
@@ -732,7 +754,69 @@ components:
           type: string
         name:
           type: string
-        public:
+        isPublic:
           type: boolean
-        active:
-          type: boolean
+        status:
+          type: string
+    capture_tags:
+      title: capture_tags
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        capture_id:
+          type: string
+          format: uuid
+        tag_id:
+          type: string
+          format: uuid
+        tag_name:
+          type: string
+        status:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - capture_id
+        - tag_id
+        - tag_name
+        - status
+        - created_at
+        - updated_at
+    tree_tags:
+      title: tree_tags
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        tree_id:
+          type: string
+          format: uuid
+        tag_id:
+          type: string
+          format: uuid
+        tag_name:
+          type: string
+        status:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - tree_id
+        - tag_id
+        - tag_name
+        - status
+        - created_at
+        - updated_at

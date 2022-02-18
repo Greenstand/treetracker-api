@@ -1,8 +1,8 @@
 {
-  "id": "4996d96c-2d2a-44ef-897a-66bbb1c1530c",
-  "wallet": "wallet1",
+  "wallet": "wallet",
   "organization_id": "36dbe2d3-b4a9-4a87-ab1d-9d3e5743149c",
-  "name": "firstName lastName",
+  "first_name": "firstName",
+  "last_name": "lastName",
   "image_url": "https://imageurl.com",
   "first_registration_at": "2021-12-18T13:04:07.371Z",
   "email": "email@email.com",

@@ -6,13 +6,17 @@ const utils = require('../../utils');
 const tree1 = require('../../mock/tree1.json');
 const capture1 = require('../../mock/capture1.json');
 const grower_account1 = require('../../mock/grower_account1.json');
-const grower_account2 = require('../../mock/grower_account2.json');
 
 describe('GET /trees/potential_matches', () => {
   const { knex } = utils;
   before(async () => {
-    await knex('grower_account').insert({ ...grower_account1 });
-    await knex('grower_account').insert({ ...grower_account2 });
+    const growerAccount1 = await knex('grower_account')
+      .insert({
+        ...grower_account1,
+      })
+      .returning('id');
+
+    capture1.grower_account_id = growerAccount1[0];
   });
 
   afterEach(async () => {
@@ -21,8 +25,7 @@ describe('GET /trees/potential_matches', () => {
   });
 
   after(async () => {
-    await knex('grower_account')
-      .del();
+    await knex('grower_account').del();
   });
 
   const extraInfo = {
@@ -63,7 +66,7 @@ describe('GET /trees/potential_matches', () => {
       ...capture1,
       tree_id: tree1.id,
       estimated_geometric_location: 'POINT(50 50)',
-      updated_at: '2021-05-04 11:24:43'
+      updated_at: '2021-05-04 11:24:43',
     });
     const response = await request(app).get(
       `/trees/potential_matches?capture_id=${capture1.id}`,
@@ -84,7 +87,7 @@ describe('GET /trees/potential_matches', () => {
     await utils.addCapture({
       ...capture1,
       estimated_geometric_location: 'POINT(50 50)',
-      updated_at: '2021-05-04 11:24:43'
+      updated_at: '2021-05-04 11:24:43',
     });
     const response = await request(app).get(
       `/trees/potential_matches?capture_id=${capture1.id}`,

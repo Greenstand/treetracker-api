@@ -3,8 +3,6 @@ const expect = require('expect-runtime');
 
 const connection = process.env.DATABASE_URL;
 
-console.log('connection --->', connection);
-console.log('__dirname --->', __dirname);
 expect(connection).to.match(/^postgresql:\//);
 
 module.exports = {
@@ -22,6 +20,7 @@ module.exports = {
     seeds: {
       directory: path.join(__dirname, 'database', 'seeds'),
     },
+    debug: process.env.NODE_LOG_LEVEL === 'debug',
   },
 
   test: {

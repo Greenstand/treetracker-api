@@ -33,7 +33,7 @@ const capturePostSchema = Joi.object({
   species_id: Joi.string().uuid(),
   morphology: Joi.string(),
   age: Joi.number().integer(),
-  captured_at: Joi.date().required(),
+  captured_at: Joi.date().iso().required(),
   attributes: Joi.array()
     .items(
       Joi.object({
@@ -45,9 +45,23 @@ const capturePostSchema = Joi.object({
   domain_specific_data: Joi.object(),
 }).unknown(false);
 
+const captureGetQuerySchema = Joi.object({
+  tree_id: Joi.string().uuid(),
+  tree_associated: Joi.boolean(),
+  organization_ids: Joi.array().items(Joi.string().uuid()),
+  captured_at_start_date: Joi.date().iso(),
+  captured_at_end_date: Joi.date().iso(),
+  grower_account_id: Joi.string().uuid(),
+  species_id: Joi.string().uuid(),
+  order_by: Joi.string().valid('captured_at', 'created_at'),
+  order: Joi.string().valid('asc', 'desc'),
+  offset: Joi.number().integer().greater(-1),
+  limit: Joi.number().integer().greater(0),
+});
+
 const capturePatchSchema = Joi.object({
   tree_id: Joi.string(),
-  status: Joi.string()
+  status: Joi.string(),
 }).unknown(false);
 
 const captureIdParamSchema = Joi.object({
@@ -68,6 +82,9 @@ const captureTagPatchSchema = Joi.object({
 }).unknown(false);
 
 const captureHandlerGet = async function (req, res) {
+  await captureGetQuerySchema.validateAsync(req.query, {
+    abortEarly: false,
+  });
   const session = new Session(false);
   const captureRepo = new CaptureRepository(session);
   const executeGetCaptures = getCaptures(captureRepo);
@@ -156,7 +173,13 @@ const captureHandlerSingleGet = async function (req, res) {
   const session = new Session();
   const captureRepo = new CaptureRepository(session);
 
-  const capture = (await captureRepo.getById(req.params.capture_id)) || {};
+  const {
+    captures: [capture = {}],
+  } = await captureRepo.getByFilter({
+    parameters: {
+      id: req.params.capture_id,
+    },
+  });
 
   res.send(Capture(capture));
 };
@@ -249,6 +272,7 @@ const captureHandlerSingleTagPatch = async function (req, res, next) {
       capture_id: req.params.capture_id,
       tag_id: req.params.tag_id,
       ...req.body,
+      updated_at: new Date().toISOString(),
     });
     await session.commitTransaction();
     res.status(204).send();
