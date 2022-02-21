@@ -8,6 +8,6 @@
   "email": "email@email.com",
   "phone": "12345",
   "image_rotation": 14,
-  "lat": 14,
-  "lon": 14
+  "lat": "14",
+  "lon": "14"
 }
