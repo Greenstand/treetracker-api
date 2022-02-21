@@ -61,12 +61,11 @@ describe('/trees', () => {
         .expect(204);
 
       // added a timer to confirm this because the function call in the API is not 'awaited'
-      setTimeout(async () => {
-        const numOfEmittedEvents = await knex('domain_event')
-          .count()
-          .where({ status: 'sent' });
-        expect(+numOfEmittedEvents[0].count).to.eql(2);
-      }, 5000);
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      const numOfEmittedEvents = await knex('domain_event')
+        .count()
+        .where({ status: 'sent' });
+      expect(+numOfEmittedEvents[0].count).to.eql(2);
     });
 
     after(async () => {
