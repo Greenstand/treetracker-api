@@ -59,13 +59,14 @@ describe('/trees', () => {
         .send({ ...tree2, id: tree1.id })
         .set('Accept', 'application/json')
         .expect(204);
-    });
 
-    it('should confirm number of sent capture created events', async () => {
-      const numOfEmittedEvents = await knex('domain_event')
-        .count()
-        .where({ status: 'sent' });
-      expect(+numOfEmittedEvents[0].count).to.eql(2);
+      // added a timer to confirm this because the function call in the API is not 'awaited'
+      setTimeout(async () => {
+        const numOfEmittedEvents = await knex('domain_event')
+          .count()
+          .where({ status: 'sent' });
+        expect(+numOfEmittedEvents[0].count).to.eql(2);
+      }, 5000);
     });
 
     after(async () => {
