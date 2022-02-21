@@ -100,6 +100,8 @@ describe('/grower_account', () => {
         last_name: grower_account2.last_name,
         email: grower_account2.email,
         phone: grower_account2.phone,
+        lat: grower_account2.lat,
+        lon: grower_account2.lon,
       });
     });
   });

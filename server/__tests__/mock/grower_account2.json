@@ -7,5 +7,7 @@
   "first_registration_at": "2021-12-18T13:04:07.371Z",
   "email": "email@email.com",
   "phone": "12345",
-  "image_rotation": 14
+  "image_rotation": 14,
+  "lat": 14,
+  "lon": 14
 }
