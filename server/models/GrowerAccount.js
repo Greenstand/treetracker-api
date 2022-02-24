@@ -1,5 +1,6 @@
 const { v4: uuid } = require('uuid');
 const { PaginationQueryOptions } = require('./helper');
+const knex = require('../../database/connection');
 
 const GrowerAccount = ({
   id,
@@ -10,6 +11,9 @@ const GrowerAccount = ({
   last_name,
   email,
   phone,
+  lat,
+  lon,
+  location,
   image_url,
   image_rotation,
   status,
@@ -25,6 +29,9 @@ const GrowerAccount = ({
     first_name,
     last_name,
     email,
+    lat,
+    lon,
+    location,
     phone,
     image_url,
     image_rotation,
@@ -73,6 +80,9 @@ const GrowerAccountInsertObject = (requestBody) =>
     ...GrowerAccount(requestBody),
     id: uuid(),
     status: 'active',
+    location: knex.raw(
+      `ST_PointFromText('POINT( ${requestBody.lon} ${requestBody.lat}) ', 4326)`,
+    ),
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   });

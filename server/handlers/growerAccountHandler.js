@@ -18,11 +18,13 @@ const growerAccountGetQuerySchema = Joi.object({
 }).unknown(false);
 
 const growerAccountPostQuerySchema = Joi.object({
-  wallet: Joi.string().required(),
+  wallet: Joi.string().required(), //
   person_id: Joi.string().uuid(),
   organization_id: Joi.string().uuid(),
   first_name: Joi.string().required(),
   last_name: Joi.string().required(),
+  lat: Joi.number().required().min(-90).max(90),
+  lon: Joi.number().required().min(-180).max(180),
   email: Joi.string().email().allow(null),
   phone: Joi.string().allow(null),
   image_url: Joi.string().uri().required(),
@@ -159,6 +161,9 @@ const growerAccountHandlerPut = async function (req, res, next) {
       last_name,
       phone,
       email,
+      location,
+      lat,
+      lon,
     } = growerAccountInsertObject;
     const existingGrowerAccount = await growerAccountRepo.getByFilter({
       wallet,
@@ -172,7 +177,10 @@ const growerAccountHandlerPut = async function (req, res, next) {
         phone,
         first_name,
         last_name,
+        location,
         email,
+        lat,
+        lon,
         updated_at: new Date().toISOString(),
       });
     } else {

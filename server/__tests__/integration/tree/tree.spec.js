@@ -59,9 +59,9 @@ describe('/trees', () => {
         .send({ ...tree2, id: tree1.id })
         .set('Accept', 'application/json')
         .expect(204);
-    });
 
-    it('should confirm number of sent capture created events', async () => {
+      // added a timer to confirm this because the function call in the API is not 'awaited'
+      await new Promise((resolve) => setTimeout(resolve, 2000));
       const numOfEmittedEvents = await knex('domain_event')
         .count()
         .where({ status: 'sent' });
