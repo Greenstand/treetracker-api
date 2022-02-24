@@ -1,3 +1,10 @@
+## [1.12.1](https://github.com/Greenstand/treetracker-api/compare/v1.12.0...v1.12.1) (2022-02-24)
+
+
+### Bug Fixes
+
+* add location, lat and lon to payload for /grower_accounts ([71e1090](https://github.com/Greenstand/treetracker-api/commit/71e1090576d6450e0e1c41f1eaee0e3a334da2ad))
+
 # [1.12.0](https://github.com/Greenstand/treetracker-api/compare/v1.11.6...v1.12.0) (2022-02-18)
 
 
