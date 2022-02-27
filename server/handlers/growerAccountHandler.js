@@ -25,7 +25,7 @@ const growerAccountPostQuerySchema = Joi.object({
   last_name: Joi.string().required(),
   lat: Joi.number().required().min(-90).max(90),
   lon: Joi.number().required().min(-180).max(180),
-  email: Joi.string().email().allow(null),
+  email: Joi.string().allow(null),
   phone: Joi.string().allow(null),
   image_url: Joi.string().uri().required(),
   image_rotation: Joi.number().integer(),
