@@ -1,3 +1,10 @@
+## [1.12.2](https://github.com/Greenstand/treetracker-api/compare/v1.12.1...v1.12.2) (2022-02-27)
+
+
+### Bug Fixes
+
+* remove email string validation on email - mobile entry can be used in other ways ([7ebbc4e](https://github.com/Greenstand/treetracker-api/commit/7ebbc4eea080a000cee1dbc2049870d20a9de93b))
+
 ## [1.12.1](https://github.com/Greenstand/treetracker-api/compare/v1.12.0...v1.12.1) (2022-02-24)
 
 
