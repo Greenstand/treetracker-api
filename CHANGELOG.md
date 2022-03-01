@@ -1,3 +1,10 @@
+## [1.12.5](https://github.com/Greenstand/treetracker-api/compare/v1.12.4...v1.12.5) (2022-03-01)
+
+
+### Bug Fixes
+
+* incorrect name for rabbit mq secret in deployment file ([5c3ec5a](https://github.com/Greenstand/treetracker-api/commit/5c3ec5af48ec48988f7def72e3b6870d04b1f656))
+
 ## [1.12.4](https://github.com/Greenstand/treetracker-api/compare/v1.12.3...v1.12.4) (2022-03-01)
 
 
