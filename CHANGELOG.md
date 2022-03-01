@@ -1,3 +1,10 @@
+## [1.12.4](https://github.com/Greenstand/treetracker-api/compare/v1.12.3...v1.12.4) (2022-03-01)
+
+
+### Bug Fixes
+
+* force deployment ([93c8cd6](https://github.com/Greenstand/treetracker-api/commit/93c8cd66e3499ae06bd1b982801484e652677a60))
+
 ## [1.12.3](https://github.com/Greenstand/treetracker-api/compare/v1.12.2...v1.12.3) (2022-03-01)
 
 
