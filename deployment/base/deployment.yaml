@@ -39,5 +39,5 @@ spec:
             - name: RABBIT_MQ_URL
               valueFrom:
                 secretKeyRef:
-                  name: treetracker-rabbitmq-connection
+                  name: rabbitmq-connection
                   key: messageQueue
