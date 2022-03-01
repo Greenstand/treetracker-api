@@ -1,3 +1,4 @@
+const log = require('loglevel');
 const Broker = require('rascal').BrokerAsPromised;
 const { config } = require('./config');
 
@@ -10,11 +11,11 @@ const publishMessage = async (publicationName, payload, resultHandler) => {
       'capture-data.creation',
     );
     publication.on('success', resultHandler).on('error', (err, messageId) => {
-      console.error(`Error with id ${messageId} ${err.message}`);
+      log.error(`Error with id ${messageId} ${err.message}`);
       throw err;
     });
   } catch (err) {
-    console.error(`Error publishing message ${err}`);
+    log.error(`Error publishing message ${err}`);
   }
 };
 
@@ -32,7 +33,7 @@ const subscribe = async (subscriptionName, eventHandler) => {
       })
       .on('error', console.error);
   } catch (err) {
-    console.error(`Error subscribing to the queue ${queueName}, error: ${err}`);
+    log.error(`Error subscribing to the queue ${queueName}, error: ${err}`);
   }
 };
 
