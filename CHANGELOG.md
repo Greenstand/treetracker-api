@@ -1,3 +1,10 @@
+## [1.12.3](https://github.com/Greenstand/treetracker-api/compare/v1.12.2...v1.12.3) (2022-03-01)
+
+
+### Bug Fixes
+
+* set up rabbitmq credentials ([c8fb50c](https://github.com/Greenstand/treetracker-api/commit/c8fb50cc44ba78c4bd68c61814af14eb62b8717a))
+
 ## [1.12.2](https://github.com/Greenstand/treetracker-api/compare/v1.12.1...v1.12.2) (2022-02-27)
 
 
