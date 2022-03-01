@@ -5,3 +5,4 @@ patchesStrategicMerge:
   - database-migration-connection-sealed-secret.yaml
   - deployment.yaml
   - mapping.yaml
+  - rabbitmq-connection-sealed-secret.yaml
