@@ -1,3 +1,10 @@
+## [1.13.1](https://github.com/Greenstand/treetracker-api/compare/v1.13.0...v1.13.1) (2022-03-02)
+
+
+### Bug Fixes
+
+* fix grower account next/prev ([23a4b4b](https://github.com/Greenstand/treetracker-api/commit/23a4b4b204bb7a3db3a48082b907ced9e40cbef0))
+
 # [1.13.0](https://github.com/Greenstand/treetracker-api/compare/v1.12.6...v1.13.0) (2022-03-02)
 
 
