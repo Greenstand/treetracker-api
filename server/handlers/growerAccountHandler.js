@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const log = require('loglevel');
 const Session = require('../infra/database/Session');
 const GrowerAccountRepository = require('../infra/repositories/GrowerAccountRepository');
 const {
@@ -52,15 +53,55 @@ const growerAccountHandlerGet = async function (req, res) {
   await growerAccountGetQuerySchema.validateAsync(req.query, {
     abortEarly: false,
   });
+  const filter = req.query;
   const session = new Session();
   const growerAccountRepo = new GrowerAccountRepository(session);
 
-  const url = `grower_accounts`;
-
   const executeGetGrowerAccounts = getGrowerAccounts(growerAccountRepo);
-  const result = await executeGetGrowerAccounts(req.query, url);
+  const {
+    grower_accounts,
+    growerAccountsCount,
+  } = await executeGetGrowerAccounts(req.query);
 
-  res.send(result);
+  const defaultRange = { limit: '100', offset: '0' };
+  filter.limit = filter.limit ?? defaultRange.limit;
+  filter.offset = filter.offset ?? defaultRange.offset;
+  log.debug(filter);
+
+  // offset starts from 0, hence the -1
+  const noOfIterations = growerAccountsCount / filter.limit - 1;
+  const currentIteration = filter.offset / filter.limit;
+
+  const queryObject = { ...filter };
+
+  delete queryObject.offset;
+
+  const urlQuery = Object.entries(queryObject)
+    .filter((entry) => entry[1] !== undefined)
+    .reduce((result, item) => {
+      result += `&${item[0]}=${item[1]}`;
+      return result;
+    }, '');
+
+  const url = `grower_accounts`;
+  const urlWithLimitAndOffset = `${url}${urlQuery || ''}&offset=`;
+
+  const nextUrl =
+    currentIteration < noOfIterations
+      ? `${urlWithLimitAndOffset}${+filter.offset + +filter.limit}`
+      : null;
+  let prev = null;
+  if (filter.offset - +filter.limit >= 0) {
+    prev = `${urlWithLimitAndOffset}${+filter.offset - +filter.limit}`;
+  }
+
+  res.send({
+    grower_accounts,
+    links: {
+      prev,
+      next: nextUrl,
+    },
+  });
   res.end();
 };
 

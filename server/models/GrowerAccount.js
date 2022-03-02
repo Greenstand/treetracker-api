@@ -100,33 +100,18 @@ const FilterCriteria = ({
     }, {});
 };
 
-const getGrowerAccounts = (growerAccountRepo) => async (
-  filterCriteria,
-  url,
-) => {
+const getGrowerAccounts = (growerAccountRepo) => async (filterCriteria) => {
   let options = { limit: 100, offset: 0 };
   options = { ...options, ...PaginationQueryOptions({ ...filterCriteria }) };
 
   const filter = { status: 'active', ...FilterCriteria({ ...filterCriteria }) };
 
-  let next = '';
-  let prev = '';
-
-  const query = `${url}?limit=${options.limit}&`;
-
-  next = `${query}offset=${+options.offset + +options.limit}`;
-  if (options.offset - +options.limit >= 0) {
-    prev = `${query}offset=${+options.offset - +options.limit}`;
-  }
-
   const growerAccounts = await growerAccountRepo.getByFilter(filter, options);
+  const growerAccountsCount = await growerAccountRepo.countByFilter(filter);
 
   return {
     grower_accounts: growerAccounts.map((row) => GrowerAccount(row)),
-    links: {
-      prev,
-      next,
-    },
+    growerAccountsCount,
   };
 };
 
