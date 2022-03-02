@@ -1,3 +1,10 @@
+## [1.12.6](https://github.com/Greenstand/treetracker-api/compare/v1.12.5...v1.12.6) (2022-03-02)
+
+
+### Bug Fixes
+
+* use loglevel ([38513a9](https://github.com/Greenstand/treetracker-api/commit/38513a9c1e1a9cb292e580744f5b3f5512bfb510))
+
 ## [1.12.5](https://github.com/Greenstand/treetracker-api/compare/v1.12.4...v1.12.5) (2022-03-01)
 
 
