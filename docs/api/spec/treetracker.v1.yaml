@@ -582,21 +582,86 @@ paths:
       responses:
         '200':
           description: OK
-  /ground_users:
+  /grower_account:
     get:
       summary: Your GET endpoint
       tags: []
-      responses: {}
-      operationId: get-ground_users
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  wallet:
+                    type: string
+                  person_id:
+                    type: string
+                  organization_id:
+                    type: string
+                  first_name:
+                    type: string
+                  last_name:
+                    type: string
+                  email:
+                    type: string
+                  phone:
+                    type: string
+                  lat:
+                    type: string
+                  lon:
+                    type: string
+                  image_url:
+                    type: string
+                  image_rotation:
+                    type: string
+                  status:
+                    type: string
+                  first_registered_at:
+                    type: string
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+      operationId: get-grower_account
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: limit
+          description: number of records to return
+        - schema:
+            type: string
+          in: query
+          name: offset
+          description: offset to start from in returned rows
+        - schema:
+            type: string
+          in: query
+          name: organization_id
+          description: planting organization id
+        - schema:
+            type: string
+          in: query
+          name: id
+          description: primary key
+        - schema:
+            type: string
+          in: query
+          name: wallet
+          description: the wallet (equivalent to handle) of a grower_account
     post:
       summary: ''
-      operationId: post-ground_users
+      operationId: post-grower_account
       responses:
         '200':
           description: OK
     patch:
       summary: ''
-      operationId: patch-ground_users
+      operationId: patch-grower_account
       responses:
         '200':
           description: OK
