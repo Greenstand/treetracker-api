@@ -41,7 +41,6 @@ const {
   tagHandlerSingleGet,
   tagHandlerPatch,
 } = require('./handlers/tagHandler');
-const { groundUserHandlerGet } = require('./handlers/groundUserHandler');
 
 router
   .route('/trees')
@@ -67,11 +66,6 @@ router
   .get(validateRequest, handlerWrapper(treeHandlerSingleTagGet))
   .patch(validateRequest, handlerWrapper(treeHandlerSingleTagPatch))
   .delete(validateRequest, handlerWrapper(treeHandlerSingleTagDelete));
-
-// Legacy Planters Table
-router
-  .route('/ground_users')
-  .get(validateRequest, handlerWrapper(groundUserHandlerGet));
 
 router
   .route('/grower_accounts')
