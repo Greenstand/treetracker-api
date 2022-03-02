@@ -1,3 +1,10 @@
+# [1.13.0](https://github.com/Greenstand/treetracker-api/compare/v1.12.6...v1.13.0) (2022-03-02)
+
+
+### Features
+
+* remove legacy ground_user API endpoint ([a1f74f8](https://github.com/Greenstand/treetracker-api/commit/a1f74f8021553a58bf15955df0c9976310f41d0d))
+
 ## [1.12.6](https://github.com/Greenstand/treetracker-api/compare/v1.12.5...v1.12.6) (2022-03-02)
 
 
