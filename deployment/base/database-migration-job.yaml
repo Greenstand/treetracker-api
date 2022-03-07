@@ -6,6 +6,15 @@ spec:
   backoffLimit: 1 # allow for one re-try of the migration
   template:
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: doks.digitalocean.com/node-pool
+                operator: In
+                values:
+                - microservices-node-pool
       containers:
       - name: migration
         image: greenstand/treetracker-api:TAG
