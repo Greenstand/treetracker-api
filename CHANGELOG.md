@@ -1,3 +1,11 @@
+## [1.13.3](https://github.com/Greenstand/treetracker-api/compare/v1.13.2...v1.13.3) (2022-03-07)
+
+
+### Bug Fixes
+
+* correct the production database sealed secret ([4851bb5](https://github.com/Greenstand/treetracker-api/commit/4851bb5dbc4dd2f792d190177e842977ed515f90))
+* correct the production database sealed secret ([b4305fb](https://github.com/Greenstand/treetracker-api/commit/b4305fb9dd7a1d176d65b751f82db137c4295825))
+
 ## [1.13.2](https://github.com/Greenstand/treetracker-api/compare/v1.13.1...v1.13.2) (2022-03-07)
 
 
