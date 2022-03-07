@@ -1,3 +1,10 @@
+## [1.13.2](https://github.com/Greenstand/treetracker-api/compare/v1.13.1...v1.13.2) (2022-03-07)
+
+
+### Bug Fixes
+
+* added rabbitmq secret to prod ([e2573ed](https://github.com/Greenstand/treetracker-api/commit/e2573ed13697dac9beb991b34b3810c1ac0430e1))
+
 ## [1.13.1](https://github.com/Greenstand/treetracker-api/compare/v1.13.0...v1.13.1) (2022-03-02)
 
 
