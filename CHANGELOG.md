@@ -1,3 +1,10 @@
+## [1.13.4](https://github.com/Greenstand/treetracker-api/compare/v1.13.3...v1.13.4) (2022-03-07)
+
+
+### Bug Fixes
+
+* add affinity for database migration job ([5a71ff5](https://github.com/Greenstand/treetracker-api/commit/5a71ff5359da9310be7b9dd4198a42d657992caf))
+
 ## [1.13.3](https://github.com/Greenstand/treetracker-api/compare/v1.13.2...v1.13.3) (2022-03-07)
 
 
