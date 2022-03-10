@@ -1,3 +1,14 @@
+# [1.14.0](https://github.com/Greenstand/treetracker-api/compare/v1.13.4...v1.14.0) (2022-03-10)
+
+
+### Features
+
+* better seed script, all data in one file and it seeds from it in batches ([4cfa0e9](https://github.com/Greenstand/treetracker-api/commit/4cfa0e9015b1dc6c6b9265bc485c35794c730be8))
+* seed captures and tress from production data ([6ca856a](https://github.com/Greenstand/treetracker-api/commit/6ca856a9615d6f9f770a471d31e0c4825706ae13))
+* seed trees to match new captures ([36a2ca2](https://github.com/Greenstand/treetracker-api/commit/36a2ca2e769f8faf1071cfc8a42a2c931199d486))
+* separate seed files of 1000 captures each ([aa2eef1](https://github.com/Greenstand/treetracker-api/commit/aa2eef1c5acc9905b287e1db2e8a4853e1b35b6f))
+* update capture seed file to batch seed from json file ([fa15082](https://github.com/Greenstand/treetracker-api/commit/fa15082adeefe08c842a412fa2c0d4bc77da4bd2))
+
 ## [1.13.4](https://github.com/Greenstand/treetracker-api/compare/v1.13.3...v1.13.4) (2022-03-07)
 
 
