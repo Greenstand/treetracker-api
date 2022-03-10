@@ -1,13 +1,9 @@
-const trees = require('./data/Trees-1.json');
+const trees = require('./data/20220210-Trees.json');
 
 exports.seed = function (knex) {
-  // Deletes ALL existing entries
-  // return (
-  //   knex('capture')
-  //     // .del()
-  //     .then(function () {
-  //       // Inserts seed entries
-  return knex('tree').insert(trees);
-  //     })
-  // );
+  return knex('tree')
+    .del()
+    .then(function () {
+      return knex('tree').insert(trees);
+    });
 };
