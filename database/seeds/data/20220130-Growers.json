@@ -2,7 +2,7 @@
   {
     "id": "afc83ae4-8ad2-4738-9d84-c2200bb98ebb",
 
-    "wallet": "wallet1",
+    "wallet": "mobile1@test",
     "person_id": null,
     "organization_id": "be80bb66-beb9-45a1-baa3-1a2933afdb40",
     "first_name": "whelsdon0",
@@ -18,7 +18,7 @@
   {
     "id": "ae862177-7c58-4ab4-8c07-e914250f8ce1",
 
-    "wallet": "wallet2",
+    "wallet": "mobile2@test",
     "person_id": null,
     "organization_id": "22b7e221-0929-420b-a399-f0f0a0368be2",
     "first_name": "ckentish1",
@@ -34,7 +34,7 @@
   {
     "id": "cc6f2fe8-9aee-4b03-ace6-21006f028e60",
 
-    "wallet": "wallet3",
+    "wallet": "handle1@test",
     "person_id": null,
     "organization_id": "ed327076-8179-41d4-9f31-215024b822e7",
     "first_name": "alinkleter2",
@@ -50,7 +50,7 @@
   {
     "id": "f6f5d91e-f387-4c5e-9bc9-ced9d9c7cb4a",
 
-    "wallet": "wallet4",
+    "wallet": "handle2@test",
     "person_id": null,
     "organization_id": "eff5e047-fb99-4674-81a3-b43d0baa8a8e",
     "first_name": "sjanaszkiewicz3",
@@ -66,7 +66,7 @@
   {
     "id": "c54bdf67-7d12-4db8-9283-ee1b971dde93",
 
-    "wallet": "wallet5",
+    "wallet": "handle3@test",
     "person_id": null,
     "organization_id": "ce14d9b7-92c3-450b-9779-2bb731c5aefc",
     "first_name": "vayliff4",
@@ -82,7 +82,7 @@
   {
     "id": "5ae1f850-199a-4801-a39c-4dd4770c81e8",
 
-    "wallet": "wallet6",
+    "wallet": "handle4@test",
     "person_id": null,
     "organization_id": "50850238-ef16-4ef4-a51d-07c86cd553b6",
     "first_name": "cmaw5",
@@ -98,7 +98,7 @@
   {
     "id": "6e9b7efd-12bf-494f-83ea-55d9053a8940",
 
-    "wallet": "wallet7",
+    "wallet": "wallet7@test",
     "person_id": null,
     "organization_id": "c7284720-f232-4c42-a977-d50bea58ca4a",
     "first_name": "ftatnell6",
@@ -114,7 +114,7 @@
   {
     "id": "0526bf4b-4d4c-431a-9314-30b2692ea41f",
 
-    "wallet": "wallet8",
+    "wallet": "wallet8@test",
     "person_id": null,
     "organization_id": "2a34fa81-0683-4d25-94b9-24843ceec3c4",
     "first_name": "dmcgonigle7",
@@ -130,7 +130,7 @@
   {
     "id": "d25dbe35-947c-464c-9098-caa19c71d023",
 
-    "wallet": "wallet9",
+    "wallet": "wallet9@test",
     "person_id": null,
     "organization_id": "2a34fa81-0683-4d25-94b9-24843ceec3c4",
     "first_name": "grosina8",
@@ -146,7 +146,7 @@
   {
     "id": "c82cc807-8e35-418b-88ce-fda398cf4e89",
 
-    "wallet": "wallet10",
+    "wallet": "wallet10@test",
     "person_id": null,
     "organization_id": "ed327076-8179-41d4-9f31-215024b822e7",
     "first_name": "kleighton9",
@@ -162,7 +162,7 @@
   {
     "id": "d2ac8a4d-6249-454c-b982-bf27990a19e0",
 
-    "wallet": "wallet11",
+    "wallet": "wallet11@test",
     "person_id": null,
     "organization_id": "ce14d9b7-92c3-450b-9779-2bb731c5aefc",
     "first_name": "imcgrorya",
