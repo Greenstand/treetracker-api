@@ -2,7 +2,7 @@ require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` });
 const path = require('path');
 const expect = require('expect-runtime');
 
-const connection = process.env.DATABASE_URL_SEEDER;
+const connection = process.env.DATABASE_URL;
 
 expect(connection).to.match(/^postgresql:\//);
 
