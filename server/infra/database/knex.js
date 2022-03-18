@@ -20,4 +20,4 @@ log.debug(knexConfig.searchPath);
 
 const knex = require('knex')(knexConfig);
 
-module.exports = { knex };
+module.exports = knex;
