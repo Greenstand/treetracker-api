@@ -1,10 +1,10 @@
 const growers = require('./data/20220130-Growers.json');
-const knex = require('../connection');
+const knexDb = require('../../server/infra/database/knex');
 
 const parsePoint = (json) => {
   const jsonCopy = { ...json };
   if (jsonCopy.lat && jsonCopy.lon) {
-    jsonCopy.location = knex.raw(
+    jsonCopy.location = knexDb.raw(
       `ST_PointFromText('POINT(${jsonCopy.lon} ${jsonCopy.lat})', 4326)`,
     );
   }

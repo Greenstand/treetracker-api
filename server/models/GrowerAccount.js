@@ -55,24 +55,28 @@ const PropertiesToUpdate = ({
 }) => {
   const id = grower_account_id;
   const updated_at = new Date().toISOString();
-  return Object.entries({
-    id,
-    person_id,
-    organization_id,
-    first_name,
-    last_name,
-    email,
-    phone,
-    image_url,
-    image_rotation,
-    status,
-    updated_at,
-  })
-    .filter((entry) => entry[1] !== undefined)
-    .reduce((result, item) => {
-      result[item[0]] = item[1];
-      return result;
-    }, {});
+  return (
+    /* eslint-disable no-param-reassign */
+    Object.entries({
+      id,
+      person_id,
+      organization_id,
+      first_name,
+      last_name,
+      email,
+      phone,
+      image_url,
+      image_rotation,
+      status,
+      updated_at,
+    })
+      .filter((entry) => entry[1] !== undefined)
+      .reduce((result, item) => {
+        const [key, value] = item;
+        result[key] = value;
+        return result;
+      }, {})
+  );
 };
 
 const GrowerAccountInsertObject = (requestBody) =>
@@ -87,6 +91,7 @@ const GrowerAccountInsertObject = (requestBody) =>
     updated_at: new Date().toISOString(),
   });
 
+/* eslint-disable no-param-reassign */
 const FilterCriteria = ({
   organization_id = undefined,
   id = undefined,
@@ -95,7 +100,8 @@ const FilterCriteria = ({
   return Object.entries({ organization_id, id, wallet })
     .filter((entry) => entry[1] !== undefined)
     .reduce((result, item) => {
-      result[item[0]] = item[1];
+      const [key, value] = item;
+      result[key] = value;
       return result;
     }, {});
 };

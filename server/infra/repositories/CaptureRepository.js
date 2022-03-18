@@ -17,17 +17,17 @@ class CaptureRepository extends BaseRepository {
         whereIns = [],
       } = { ...object };
       result.whereNot({ status: 'deleted' });
-      for (const whereNot of whereNotNulls) {
+      whereNotNulls.forEach((whereNot) => {
         result.whereNotNull(whereNot);
-      }
+      });
 
-      for (const whereNull of whereNulls) {
+      whereNulls.forEach((whereNull) => {
         result.whereNull(whereNull);
-      }
+      });
 
-      for (const whereIn of whereIns) {
+      whereIns.forEach((whereIn) => {
         result.whereIn(whereIn.field, whereIn.values);
-      }
+      });
 
       const filterObject = { ...parameters };
 

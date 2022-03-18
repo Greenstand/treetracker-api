@@ -1,6 +1,6 @@
-const request = require('supertest');
+// const request = require('supertest');
 // const { expect } = require('chai');
-const server = require('./app');
+// const server = require('./app');
 
 describe('', () => {
   it('Test header: content-type: application/json', async () => {

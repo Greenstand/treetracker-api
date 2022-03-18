@@ -76,12 +76,14 @@ const growerAccountHandlerGet = async function (req, res) {
 
   delete queryObject.offset;
 
+  /* eslint-disable no-param-reassign */
   const urlQuery = Object.entries(queryObject)
     .filter((entry) => entry[1] !== undefined)
     .reduce((result, item) => {
       result += `&${item[0]}=${item[1]}`;
       return result;
     }, '');
+  /* eslint-enable no-param-reassign */
 
   const url = `grower_accounts`;
   const urlWithLimitAndOffset = `${url}${urlQuery || ''}&offset=`;

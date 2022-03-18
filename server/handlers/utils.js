@@ -29,7 +29,7 @@ exports.handlerWrapper = (fn) =>
     });
   };
 
-exports.errorHandler = (err, req, res, next) => {
+exports.errorHandler = (err, req, res, _next) => {
   log.warn('catch error:', err);
   if (err instanceof HttpError) {
     res.status(err.code).send({

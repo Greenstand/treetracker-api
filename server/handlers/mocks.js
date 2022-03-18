@@ -82,7 +82,7 @@ async function getMockCaptures(req, res) {
   const responseBody = {
     captures: [],
   };
-  for (let step = 0; step < 20; step++) {
+  for (let step = 0; step < 20; step + 1) {
     responseBody.captures.push({
       captureId: uuidv4(step),
       imageUrl: captureImages[randIndex(captureImages)],
@@ -106,7 +106,7 @@ async function getMockPotentialTrees(req, res) {
   };
 
   const captures = [];
-  for (let step = 0; step < 20; step++) {
+  for (let step = 0; step < 20; step + 1) {
     captures.push({
       captureId: uuidv4(step),
       imageUrl: captureImages[randIndex(captureImages)],
@@ -120,7 +120,7 @@ async function getMockPotentialTrees(req, res) {
     });
   }
 
-  for (let step = 0; step < 20; step++) {
+  for (let step = 0; step < 20; step + 1) {
     responseBody.trees.push({
       tree_id: uuidv4(step),
       captures,

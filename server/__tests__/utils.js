@@ -1,12 +1,13 @@
-const knex = require('../../database/connection');
+const knex = require('../infra/database/knex');
 
 function parsePoint(json) {
-  for (const key in json) {
-    if (json[key].match && json[key].match(/^POINT\(.*\)$/)) {
-      json[key] = knex.raw(`ST_PointFromText('${json[key]}', 4326)`);
+  const jsonCopy = { ...json };
+  Object.keys(jsonCopy).forEach((key) => {
+    if (jsonCopy[key].match && jsonCopy[key].match(/^POINT\(.*\)$/)) {
+      jsonCopy[key] = knex.raw(`ST_PointFromText('${jsonCopy[key]}', 4326)`);
     }
-  }
-  return json;
+  });
+  return jsonCopy;
 }
 
 module.exports = {
