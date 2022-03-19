@@ -20,7 +20,7 @@ module.exports = {
     },
     debug: process.env.NODE_LOG_LEVEL === 'debug',
   },
-  test: {
+  usertest: {
     client: 'pg',
     connection,
     searchPath: [process.env.DATABASE_SCHEMA, 'public'],
