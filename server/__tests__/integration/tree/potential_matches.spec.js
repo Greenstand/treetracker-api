@@ -16,7 +16,8 @@ describe('GET /trees/potential_matches', () => {
       })
       .returning('id');
 
-    capture1.grower_account_id = growerAccount1[0];
+    const [captureGrowerAccountId] = growerAccount1;
+    capture1.grower_account_id = captureGrowerAccountId;
   });
 
   afterEach(async () => {
@@ -92,7 +93,6 @@ describe('GET /trees/potential_matches', () => {
     const response = await request(app).get(
       `/trees/potential_matches?capture_id=${capture1.id}`,
     );
-    console.log(response.body);
     expect(response.body).to.have.property('matches');
     expect(response.body.matches.map((m) => m.id)).to.not.have.members([
       tree1.id,

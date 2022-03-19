@@ -14,20 +14,6 @@ const tree1 = require('../../mock/tree1.json');
 const { knex, addCapture } = require('../../utils');
 
 describe('/captures', () => {
-  const captureUpdates = {
-    // tree_id: null,
-    species_id: '12e2c0f6-b7df-43e3-8899-674e90b292d9',
-    morphology: 'yyggollohhprom',
-    age: 44,
-  };
-
-  const modCapture = {
-    ...capture2,
-    attributes: { entries: attributes.attributes },
-  };
-
-  const updatedModCapture = { ...modCapture, ...captureUpdates };
-
   before(async () => {
     const growerAccount1 = await knex('grower_account')
       .insert({
@@ -42,8 +28,10 @@ describe('/captures', () => {
       })
       .returning('id');
 
-    capture1.grower_account_id = growerAccount1[0];
-    capture2.grower_account_id = growerAccount2[0];
+    const [capture1GrowerAccountId] = growerAccount1;
+    const [capture2GrowerAccountId] = growerAccount2;
+    capture1.grower_account_id = capture1GrowerAccountId;
+    capture2.grower_account_id = capture2GrowerAccountId;
   });
 
   after(async () => {
@@ -192,7 +180,6 @@ describe('/captures', () => {
         .expect(204);
 
       const result = await request(app).get(`/captures`).expect(200);
-      const copy = { ...updatedModCapture };
       expect(result.body.captures.length).to.eql(1);
     });
 

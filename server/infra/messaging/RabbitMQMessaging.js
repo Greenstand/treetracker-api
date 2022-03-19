@@ -31,7 +31,7 @@ const subscribe = async (subscriptionName, eventHandler) => {
         eventHandler(content);
         ackOrNack();
       })
-      .on('error', console.error);
+      .on('error', log.error);
   } catch (err) {
     log.error(`Error subscribing to the queue ${queueName}, error: ${err}`);
   }

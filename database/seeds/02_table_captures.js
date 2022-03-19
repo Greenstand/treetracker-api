@@ -13,15 +13,13 @@ exports.seed = function (knex) {
     .del()
     .then(function () {
       return Promise.all(
-        batches.map((batch, index) => {
+        batches.map((batch) => {
           // add session_id and device_configuration_id to each
           for (let i = 0; i < batch.length; i += 1) {
             const item = batch[i];
             item.session_id = uuid.v4();
             item.device_configuration_id = uuid.v4();
           }
-
-          console.log(index, batch.length);
 
           // Inserts seed entries
           return knex('capture').insert(batch);

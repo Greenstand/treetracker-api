@@ -1,13 +1,14 @@
 [
   {
     "id": "afc83ae4-8ad2-4738-9d84-c2200bb98ebb",
-
     "wallet": "mobile1@test",
     "person_id": null,
     "organization_id": "a8567323-88b1-4870-8c48-68d2da3ab356",
     "first_name": "whelsdon0",
     "email": null,
     "phone": null,
+    "lat": 8.416896673444976,
+    "lon": -13.207116069320122,
     "image_url": "http://dummyimage.com/238x100.png/dddddd/000000",
     "image_rotation": 0,
     "status": "active",
@@ -17,13 +18,14 @@
   },
   {
     "id": "ae862177-7c58-4ab4-8c07-e914250f8ce1",
-
     "wallet": "mobile2@test",
     "person_id": null,
     "organization_id": "a8567323-88b1-4870-8c48-68d2da3ab356",
     "first_name": "ckentish1",
     "email": null,
     "phone": null,
+    "lat": 8.493621061304605,
+    "lon": -13.274604415339939,
     "image_url": "http://dummyimage.com/248x100.png/5fa2dd/ffffff",
     "image_rotation": 0,
     "status": "active",
@@ -33,13 +35,14 @@
   },
   {
     "id": "cc6f2fe8-9aee-4b03-ace6-21006f028e60",
-
     "wallet": "handle1@test",
     "person_id": null,
     "organization_id": "ed327076-8179-41d4-9f31-215024b822e7",
     "first_name": "alinkleter2",
     "email": null,
     "phone": null,
+    "lat": 8.474383616604095,
+    "lon": -13.283499768510845,
     "image_url": "http://dummyimage.com/184x100.png/ff4444/ffffff",
     "image_rotation": 0,
     "status": "active",
@@ -49,13 +52,14 @@
   },
   {
     "id": "f6f5d91e-f387-4c5e-9bc9-ced9d9c7cb4a",
-
     "wallet": "handle2@test",
     "person_id": null,
     "organization_id": "eff5e047-fb99-4674-81a3-b43d0baa8a8e",
     "first_name": "sjanaszkiewicz3",
     "email": null,
     "phone": null,
+    "lat": 8.570113915911268,
+    "lon": -13.040375679579535,
     "image_url": "http://dummyimage.com/102x100.png/ff4444/ffffff",
     "image_rotation": 0,
     "status": "active",
@@ -65,13 +69,14 @@
   },
   {
     "id": "c54bdf67-7d12-4db8-9283-ee1b971dde93",
-
     "wallet": "handle3@test",
     "person_id": null,
     "organization_id": "ce14d9b7-92c3-450b-9779-2bb731c5aefc",
     "first_name": "vayliff4",
     "email": null,
     "phone": null,
+    "lat": 8.487670775451818,
+    "lon": -13.235894415339938,
     "image_url": "http://dummyimage.com/153x100.png/dddddd/000000",
     "image_rotation": 0,
     "status": "active",
@@ -88,6 +93,8 @@
     "first_name": "cmaw5",
     "email": null,
     "phone": null,
+    "lat": 8.481704905296343,
+    "lon": -13.246914166701638,
     "image_url": "http://dummyimage.com/172x100.png/cc0000/ffffff",
     "image_rotation": 0,
     "status": "active",
@@ -799,7 +806,7 @@
     "updated_at": "1/24/2022"
   },
   {
-    "id" : "d86b3242-0bd8-4515-b452-e7e3f3af93c2",
+    "id": "d86b3242-0bd8-4515-b452-e7e3f3af93c2",
     "wallet": "walletPayToGrow",
     "person_id": null,
     "organization_id": "e25de784-d8aa-469a-a6b0-702da5a2a980",
@@ -814,7 +821,7 @@
     "updated_at": "1/24/2022"
   },
   {
-    "id" : "ef533151-5bdb-4cee-bd02-49e0986ea432",
+    "id": "ef533151-5bdb-4cee-bd02-49e0986ea432",
     "wallet": "walletPayToGrow2",
     "person_id": null,
     "organization_id": "e25de784-d8aa-469a-a6b0-702da5a2a980",
@@ -829,7 +836,7 @@
     "updated_at": "1/24/2022"
   },
   {
-    "id" : "4996d96c-2d2a-44ef-897a-66bbb1c1530c",
+    "id": "4996d96c-2d2a-44ef-897a-66bbb1c1530c",
     "wallet": "walletPayToGrow3",
     "person_id": null,
     "organization_id": "e25de784-d8aa-469a-a6b0-702da5a2a980",
@@ -844,7 +851,7 @@
     "updated_at": "1/24/2022"
   },
   {
-    "id" : "0637b1d3-c195-459d-bb49-57d0799d5507",
+    "id": "0637b1d3-c195-459d-bb49-57d0799d5507",
     "wallet": "walletPayToGrow4",
     "person_id": null,
     "organization_id": "e25de784-d8aa-469a-a6b0-702da5a2a980",

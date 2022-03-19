@@ -27,6 +27,7 @@ const PropertiesToUpdate = ({
 }) => {
   const id = tag_id;
   const updated_at = new Date().toISOString();
+  /* eslint-disable no-param-reassign */
   return Object.entries({
     id,
     isPublic,
@@ -35,16 +36,19 @@ const PropertiesToUpdate = ({
   })
     .filter((entry) => entry[1] !== undefined)
     .reduce((result, item) => {
-      result[item[0]] = item[1];
+      const [key, value] = item;
+      result[key] = value;
       return result;
     }, {});
 };
 
+/* eslint-disable no-param-reassign */
 const FilterCriteria = ({ name = undefined }) => {
   return Object.entries({ name })
     .filter((entry) => entry[1] !== undefined)
     .reduce((result, item) => {
-      result[item[0]] = item[1];
+      const [key, value] = item;
+      result[key] = value;
       return result;
     }, {});
 };
