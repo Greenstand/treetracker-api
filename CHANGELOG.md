@@ -1,3 +1,12 @@
+## [1.14.1](https://github.com/Greenstand/treetracker-api/compare/v1.14.0...v1.14.1) (2022-03-19)
+
+
+### Bug Fixes
+
+* knex config connection ([d7fe8d0](https://github.com/Greenstand/treetracker-api/commit/d7fe8d05ed1c418a71a39e4a4e24ca81537deb3c))
+* knex imports ([41fcd90](https://github.com/Greenstand/treetracker-api/commit/41fcd902972024e61b4e195a921d746236e3f508))
+* update DATABASE_URL env variable ([e4ee0e3](https://github.com/Greenstand/treetracker-api/commit/e4ee0e3584c4e8ec6d156dba96a79aee9779a72e))
+
 # [1.14.0](https://github.com/Greenstand/treetracker-api/compare/v1.13.4...v1.14.0) (2022-03-10)
 
 
