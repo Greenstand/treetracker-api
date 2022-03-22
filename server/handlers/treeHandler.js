@@ -12,13 +12,13 @@ const { getTreeTags, addTagsToTree } = require('../models/TreeTag');
 const { getCaptures } = require('../models/Capture');
 const { dispatch } = require('../models/DomainEvent');
 
-const Session = require('../infra/database/Session');
-const { publishMessage } = require('../infra/messaging/RabbitMQMessaging');
+const Session = require('../models/Session');
+const { publishMessage } = require('../services/RabbitMQService');
 
-const CaptureRepository = require('../infra/repositories/CaptureRepository');
-const TreeRepository = require('../infra/repositories/TreeRepository');
-const TreeTagRepository = require('../infra/repositories/TreeTagRepository');
-const EventRepository = require('../infra/repositories/EventRepository');
+const CaptureRepository = require('../repositories/CaptureRepository');
+const TreeRepository = require('../repositories/TreeRepository');
+const TreeTagRepository = require('../repositories/TreeTagRepository');
+const EventRepository = require('../repositories/EventRepository');
 
 const treePostSchema = Joi.object({
   id: Joi.string().uuid().required(),

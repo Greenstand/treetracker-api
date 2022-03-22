@@ -10,12 +10,12 @@ const {
 const { getCaptureTags, addTagsToCapture } = require('../models/CaptureTag');
 const { dispatch } = require('../models/DomainEvent');
 
-const Session = require('../infra/database/Session');
-const { publishMessage } = require('../infra/messaging/RabbitMQMessaging');
+const Session = require('../models/Session');
+const { publishMessage } = require('../services/RabbitMQService');
 
-const CaptureRepository = require('../infra/repositories/CaptureRepository');
-const CaptureTagRepository = require('../infra/repositories/CaptureTagRepository');
-const EventRepository = require('../infra/repositories/EventRepository');
+const CaptureRepository = require('../repositories/CaptureRepository');
+const CaptureTagRepository = require('../repositories/CaptureTagRepository');
+const EventRepository = require('../repositories/EventRepository');
 
 const capturePostSchema = Joi.object({
   id: Joi.string().uuid().required(),

@@ -4,7 +4,7 @@ const chai = require('chai');
 const { expect } = chai;
 chai.use(require('chai-like'));
 chai.use(require('chai-things'));
-const app = require('../../../app');
+const app = require('../../../server/app');
 const grower_account1 = require('../../mock/grower_account1.json');
 const grower_account2 = require('../../mock/grower_account2.json');
 const { knex } = require('../../utils');

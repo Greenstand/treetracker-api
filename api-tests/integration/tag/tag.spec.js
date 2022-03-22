@@ -1,6 +1,6 @@
 const request = require('supertest');
 const { expect } = require('chai');
-const app = require('../../../app');
+const app = require('../../../server/app');
 const tag1 = require('../../mock/tag1.json');
 const { knex } = require('../../utils');
 

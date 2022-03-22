@@ -6,7 +6,7 @@ const HttpError = require('./utils/HttpError');
 const { errorHandler } = require('./handlers/utils');
 const helper = require('./handlers/utils');
 const router = require('./routes');
-const registerEventHandlers = require('./services/EventHandlers');
+const registerEventHandlers = require('./services/EventHandlerService');
 
 const app = express();
 

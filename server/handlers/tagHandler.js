@@ -1,8 +1,6 @@
 const Joi = require('joi');
-const Session = require('../infra/database/Session');
-const TagRepository = require('../infra/repositories/TagRepository');
-const { getTags, TagInsertObject, updatetag, Tag } = require('../models/Tag');
-const HttpError = require('../utils/HttpError');
+const TagService = require('../services/TagService');
+const { generatePrevAndNext } = require('../utils/helper');
 
 const tagGetQuerySchema = Joi.object({
   limit: Joi.number().integer().greater(0).less(101),
@@ -27,47 +25,51 @@ const tagHandlerGet = async function (req, res) {
   await tagGetQuerySchema.validateAsync(req.query, {
     abortEarly: false,
   });
-  const session = new Session();
-  const tagRepo = new TagRepository(session);
 
-  const url = `tags`;
+  const filter = { ...req.query };
+  const limitOptions = {};
 
-  const executeGetTags = getTags(tagRepo);
-  const result = await executeGetTags(req.query, url);
+  const defaultRange = { limit: 100, offset: 0 };
+  limitOptions.limit = +filter.limit || defaultRange.limit;
+  limitOptions.offset = +filter.offset || defaultRange.offset;
 
-  res.send(result);
+  delete filter.limit;
+  delete filter.offset;
+
+  const tagService = new TagService();
+  const tags = await tagService.getTags(filter, limitOptions);
+  const count = await tagService.getTagsCount(filter);
+
+  const url = 'tags';
+
+  const links = generatePrevAndNext({
+    url,
+    count,
+    limitOptions,
+    queryObject: { ...filter, ...limitOptions },
+  });
+
+  res.send({
+    tags,
+    links,
+    query: { count, ...limitOptions, ...filter },
+  });
   res.end();
 };
 
-const tagHandlerPost = async function (req, res, next) {
+const tagHandlerPost = async function (req, res) {
   await tagPostQuerySchema.validateAsync(req.body, {
     abortEarly: false,
   });
 
-  const session = new Session();
-  const tagRepo = new TagRepository(session);
+  const tagService = new TagService();
+  const createdTag = await tagService.createTag(req.body);
 
-  try {
-    const tagInsertObject = TagInsertObject(req.body);
-    const tag = await tagRepo.getByFilter({ name: tagInsertObject.name });
-
-    if (tag.length > 0) throw new HttpError(422, 'Tag name already exists');
-    await session.beginTransaction();
-    await tagRepo.create(tagInsertObject);
-
-    await session.commitTransaction();
-
-    res.status(204).send();
-    res.end();
-  } catch (error) {
-    if (session.isTransactionInProgress()) {
-      await session.rollbackTransaction();
-    }
-    next(error);
-  }
+  res.status(201).send({ tag: createdTag });
+  res.end();
 };
 
-const tagHandlerPatch = async function (req, res, next) {
+const tagHandlerPatch = async function (req, res) {
   await TagIdQuerySchema.validateAsync(req.params, {
     abortEarly: false,
   });
@@ -76,23 +78,14 @@ const tagHandlerPatch = async function (req, res, next) {
     abortEarly: false,
   });
 
-  const session = new Session();
-  const tagRepo = new TagRepository(session);
+  const tagService = new TagService();
+  const updatedTag = await tagService.updateTag({
+    ...req.body,
+    id: req.params.tag_id,
+  });
 
-  try {
-    await session.beginTransaction();
-    const executeUpdatetag = updatetag(tagRepo);
-    await executeUpdatetag({ ...req.body, ...req.params });
-    await session.commitTransaction();
-
-    res.status(204).send();
-    res.end();
-  } catch (error) {
-    if (session.isTransactionInProgress()) {
-      await session.rollbackTransaction();
-    }
-    next(error);
-  }
+  res.status(200).send({ tag: updatedTag });
+  res.end();
 };
 
 const tagHandlerSingleGet = async function (req, res) {
@@ -100,12 +93,11 @@ const tagHandlerSingleGet = async function (req, res) {
     abortEarly: false,
   });
 
-  const session = new Session();
-  const tagRepo = new TagRepository(session);
+  const tagService = new TagService();
 
-  const tag = await tagRepo.getById(req.params.tag_id);
+  const tag = await tagService.getTagById(req.params.tag_id);
 
-  res.send(Tag(tag));
+  res.send(tag);
 };
 
 module.exports = {

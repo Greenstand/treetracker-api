@@ -1,6 +1,6 @@
 const log = require('loglevel');
 const Broker = require('rascal').BrokerAsPromised;
-const { config } = require('./config');
+const { config } = require('./config/rabbitMQConfig');
 
 const publishMessage = async (publicationName, payload, resultHandler) => {
   const broker = await Broker.create(config);

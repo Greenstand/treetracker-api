@@ -1,6 +1,6 @@
 const { v4: uuid } = require('uuid');
 const { PaginationQueryOptions } = require('./helper');
-const knex = require('../infra/database/knex');
+const knex = require('../database/knex');
 
 const GrowerAccount = ({
   id,

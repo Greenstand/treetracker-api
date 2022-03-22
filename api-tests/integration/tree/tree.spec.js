@@ -1,7 +1,7 @@
 const request = require('supertest');
 const { expect } = require('chai');
 const uuid = require('uuid');
-const app = require('../../../app');
+const app = require('../../../server/app');
 const tree2 = require('../../mock/tree2.json');
 const tree1 = require('../../mock/tree1.json');
 const domain_event1 = require('../../mock/domain_event1.json');

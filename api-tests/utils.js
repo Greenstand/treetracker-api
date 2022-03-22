@@ -1,4 +1,4 @@
-const knex = require('../infra/database/knex');
+const knex = require('../server/database/knex');
 
 function parsePoint(json) {
   const jsonCopy = { ...json };

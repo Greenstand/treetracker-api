@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 const sinon = require('sinon');
 const Broker = require('rascal').BrokerAsPromised;
 

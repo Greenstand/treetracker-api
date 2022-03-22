@@ -1,7 +1,7 @@
 const Joi = require('joi');
 const log = require('loglevel');
-const Session = require('../infra/database/Session');
-const GrowerAccountRepository = require('../infra/repositories/GrowerAccountRepository');
+const Session = require('../models/Session');
+const GrowerAccountRepository = require('../repositories/GrowerAccountRepository');
 const {
   getGrowerAccounts,
   GrowerAccountInsertObject,

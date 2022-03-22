@@ -2,7 +2,7 @@ const request = require('supertest');
 require('dotenv').config();
 const { expect } = require('chai');
 require('../../setup');
-const app = require('../../../app');
+const app = require('../../../server/app');
 const capture2 = require('../../mock/capture2.json');
 const capture1 = require('../../mock/capture1.json');
 const attributes = require('../../mock/attributes.json');
