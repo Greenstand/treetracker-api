@@ -1,5 +1,9 @@
 const request = require('supertest');
-const { expect } = require('chai');
+const chai = require('chai');
+
+const { expect } = chai;
+chai.use(require('chai-like'));
+chai.use(require('chai-things'));
 const app = require('../../../app');
 const grower_account1 = require('../../mock/grower_account1.json');
 const grower_account2 = require('../../mock/grower_account2.json');
@@ -17,6 +21,7 @@ describe('/grower_account', () => {
   };
 
   after(async () => {
+    await knex('grower_account_org').del();
     await knex('grower_account').del();
   });
 
@@ -25,6 +30,12 @@ describe('/grower_account', () => {
       await request(app)
         .post(`/grower_accounts`)
         .send(grower_account1)
+        .set('Accept', 'application/json')
+        .expect(204);
+
+      await request(app)
+        .post(`/grower_accounts`)
+        .send(grower_account2)
         .set('Accept', 'application/json')
         .expect(204);
     });
@@ -64,12 +75,14 @@ describe('/grower_account', () => {
   describe('GET', () => {
     it('should get grower account', async () => {
       const result = await request(app).get(`/grower_accounts`).expect(200);
-      expect(result.body.grower_accounts.length).to.eql(1);
+      expect(result.body.grower_accounts.length).to.eql(2);
       expect(result.body.links).to.have.keys(['prev', 'next']);
-      expect(result.body.grower_accounts[0]).to.include({
-        ...grower_account1,
-        ...growerAccountUpdates,
-      });
+      expect(result.body.grower_accounts)
+        .to.be.an('array')
+        .that.contains.something.like({
+          ...grower_account1,
+          ...growerAccountUpdates,
+        });
     });
 
     it('should delete a grower account', async () => {
@@ -80,28 +93,28 @@ describe('/grower_account', () => {
         .expect(204);
 
       const result = await request(app).get(`/grower_accounts`).expect(200);
-      expect(result.body.grower_accounts.length).to.eql(0);
+      expect(result.body.grower_accounts.length).to.eql(1);
       expect(result.body.links).to.have.keys(['prev', 'next']);
     });
   });
 
   describe('PUT', () => {
     it('should update a grower account with the same wallet', async () => {
+      delete grower_account1.id;
       const result = await request(app)
         .put(`/grower_accounts`)
-        .send({ ...grower_account2, wallet: grower_account1.wallet })
+        .send({ ...grower_account1, wallet: grower_account2.wallet })
         .set('Accept', 'application/json')
         .expect(200);
 
       expect(result.body).to.include({
-        ...grower_account1,
-        ...growerAccountUpdates,
-        first_name: grower_account2.first_name,
-        last_name: grower_account2.last_name,
-        email: grower_account2.email,
-        phone: grower_account2.phone,
-        lat: grower_account2.lat,
-        lon: grower_account2.lon,
+        ...grower_account2,
+        first_name: grower_account1.first_name,
+        last_name: grower_account1.last_name,
+        email: grower_account1.email,
+        phone: grower_account1.phone,
+        lat: grower_account1.lat,
+        lon: grower_account1.lon,
       });
     });
   });

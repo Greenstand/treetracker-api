@@ -16,6 +16,7 @@ const GrowerAccount = ({
   location,
   image_url,
   image_rotation,
+  organizations = [],
   status,
   first_registration_at,
   created_at,
@@ -35,6 +36,7 @@ const GrowerAccount = ({
     phone,
     image_url,
     image_rotation,
+    organizations,
     status,
     first_registration_at,
     created_at,
@@ -79,9 +81,14 @@ const PropertiesToUpdate = ({
   );
 };
 
-const GrowerAccountInsertObject = (requestBody) =>
-  Object.freeze({
-    ...GrowerAccount(requestBody),
+const GrowerAccountInsertObject = (requestBody) => {
+  const growerAccount = GrowerAccount(requestBody);
+
+  const growerAccountCopy = { ...growerAccount }; // due to object.freeze
+  delete growerAccountCopy.organizations;
+
+  return Object.freeze({
+    ...growerAccountCopy,
     id: uuid(),
     status: 'active',
     location: knex.raw(
@@ -90,6 +97,7 @@ const GrowerAccountInsertObject = (requestBody) =>
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   });
+};
 
 /* eslint-disable no-param-reassign */
 const FilterCriteria = ({
@@ -110,13 +118,19 @@ const getGrowerAccounts = (growerAccountRepo) => async (filterCriteria) => {
   let options = { limit: 100, offset: 0 };
   options = { ...options, ...PaginationQueryOptions({ ...filterCriteria }) };
 
-  const filter = { status: 'active', ...FilterCriteria({ ...filterCriteria }) };
+  const filter = { ...FilterCriteria({ ...filterCriteria }) };
 
   const growerAccounts = await growerAccountRepo.getByFilter(filter, options);
   const growerAccountsCount = await growerAccountRepo.countByFilter(filter);
 
   return {
-    grower_accounts: growerAccounts.map((row) => GrowerAccount(row)),
+    grower_accounts: growerAccounts.map((row) => {
+      const rowCopy = { ...row };
+      if (rowCopy.organizations[0] === null) {
+        rowCopy.organizations = [];
+      }
+      return GrowerAccount(rowCopy);
+    }),
     growerAccountsCount,
   };
 };
