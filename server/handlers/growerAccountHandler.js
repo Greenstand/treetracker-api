@@ -1,14 +1,10 @@
 const Joi = require('joi');
-const log = require('loglevel');
-const Session = require('../models/Session');
-const GrowerAccountRepository = require('../repositories/GrowerAccountRepository');
-const {
-  getGrowerAccounts,
-  GrowerAccountInsertObject,
-  updateGrowerAccount,
-  GrowerAccount,
-} = require('../models/GrowerAccount');
+const GrowerAccountService = require('../services/GrowerAccountService');
 const HttpError = require('../utils/HttpError');
+const {
+  generatePrevAndNext,
+  getFilterAndLimitOptions,
+} = require('../utils/helper');
 
 const growerAccountGetQuerySchema = Joi.object({
   limit: Joi.number().integer().greater(0).less(101),
@@ -53,61 +49,34 @@ const growerAccountHandlerGet = async function (req, res) {
   await growerAccountGetQuerySchema.validateAsync(req.query, {
     abortEarly: false,
   });
-  const filter = req.query;
-  const session = new Session();
-  const growerAccountRepo = new GrowerAccountRepository(session);
 
-  const executeGetGrowerAccounts = getGrowerAccounts(growerAccountRepo);
-  const {
-    grower_accounts,
-    growerAccountsCount,
-  } = await executeGetGrowerAccounts(req.query);
+  const { filter, limitOptions } = getFilterAndLimitOptions(req.query);
 
-  const defaultRange = { limit: '100', offset: '0' };
-  filter.limit = filter.limit ?? defaultRange.limit;
-  filter.offset = filter.offset ?? defaultRange.offset;
-  log.debug(filter);
+  const growerAccountService = new GrowerAccountService();
+  const growerAccounts = await growerAccountService.getGrowerAccounts(
+    filter,
+    limitOptions,
+  );
+  const count = await growerAccountService.getGrowerAccountsCount(filter);
 
-  // offset starts from 0, hence the -1
-  const noOfIterations = growerAccountsCount / filter.limit - 1;
-  const currentIteration = filter.offset / filter.limit;
+  const url = 'grower_accounts';
 
-  const queryObject = { ...filter };
-
-  delete queryObject.offset;
-
-  /* eslint-disable no-param-reassign */
-  const urlQuery = Object.entries(queryObject)
-    .filter((entry) => entry[1] !== undefined)
-    .reduce((result, item) => {
-      result += `&${item[0]}=${item[1]}`;
-      return result;
-    }, '');
-  /* eslint-enable no-param-reassign */
-
-  const url = `grower_accounts`;
-  const urlWithLimitAndOffset = `${url}${urlQuery || ''}&offset=`;
-
-  const nextUrl =
-    currentIteration < noOfIterations
-      ? `${urlWithLimitAndOffset}${+filter.offset + +filter.limit}`
-      : null;
-  let prev = null;
-  if (filter.offset - +filter.limit >= 0) {
-    prev = `${urlWithLimitAndOffset}${+filter.offset - +filter.limit}`;
-  }
+  const links = generatePrevAndNext({
+    url,
+    count,
+    limitOptions,
+    queryObject: { ...filter, ...limitOptions },
+  });
 
   res.send({
-    grower_accounts,
-    links: {
-      prev,
-      next: nextUrl,
-    },
+    growerAccounts,
+    links,
+    query: { count, ...limitOptions, ...filter },
   });
   res.end();
 };
 
-const growerAccountHandlerPost = async function (req, res, next) {
+const growerAccountHandlerPost = async function (req, res) {
   await growerAccountPostQuerySchema.validateAsync(req.body, {
     abortEarly: false,
   });
@@ -116,32 +85,16 @@ const growerAccountHandlerPost = async function (req, res, next) {
     throw new HttpError(422, 'Either phone or email is required');
   }
 
-  const session = new Session();
-  const growerAccountRepo = new GrowerAccountRepository(session);
+  const growerAccountService = new GrowerAccountService();
 
-  try {
-    const growerAccountInsertObject = GrowerAccountInsertObject(req.body);
-    const existingGrowerAccount = await growerAccountRepo.getByFilter({
-      wallet: growerAccountInsertObject.wallet,
-    });
+  const { growerAccount, status } =
+    await growerAccountService.createGrowerAccount(req.body);
 
-    if (existingGrowerAccount.length === 0) {
-      await session.beginTransaction();
-      await growerAccountRepo.create(growerAccountInsertObject);
-      await session.commitTransaction();
-    }
-
-    res.status(204).send();
-    res.end();
-  } catch (error) {
-    if (session.isTransactionInProgress()) {
-      await session.rollbackTransaction();
-    }
-    next(error);
-  }
+  res.status(status).send({ grower_account: growerAccount });
+  res.end();
 };
 
-const growerAccountHandlerPatch = async function (req, res, next) {
+const growerAccountHandlerPatch = async function (req, res) {
   await growerAccountIdQuerySchema.validateAsync(req.params, {
     abortEarly: false,
   });
@@ -150,23 +103,15 @@ const growerAccountHandlerPatch = async function (req, res, next) {
     abortEarly: false,
   });
 
-  const session = new Session();
-  const growerAccountRepo = new GrowerAccountRepository(session);
+  const growerAccountService = new GrowerAccountService();
 
-  try {
-    await session.beginTransaction();
-    const executeUpdateGrowerAccount = updateGrowerAccount(growerAccountRepo);
-    await executeUpdateGrowerAccount({ ...req.body, ...req.params });
-    await session.commitTransaction();
+  const growerAccount = await growerAccountService.updateGrowerAccount({
+    ...req.body,
+    id: req.params.grower_account_id,
+  });
 
-    res.status(204).send();
-    res.end();
-  } catch (error) {
-    if (session.isTransactionInProgress()) {
-      await session.rollbackTransaction();
-    }
-    next(error);
-  }
+  res.send({ growerAccount });
+  res.end();
 };
 
 const growerAccountHandlerSingleGet = async function (req, res) {
@@ -174,17 +119,16 @@ const growerAccountHandlerSingleGet = async function (req, res) {
     abortEarly: false,
   });
 
-  const session = new Session();
-  const growerAccountRepo = new GrowerAccountRepository(session);
+  const growerAccountService = new GrowerAccountService();
 
-  const growerAccount = await growerAccountRepo.getById(
+  const growerAccount = await growerAccountService.getGrowerAccountById(
     req.params.grower_account_id,
   );
 
-  res.send(GrowerAccount(growerAccount));
+  res.send({ grower_account: growerAccount });
 };
 
-const growerAccountHandlerPut = async function (req, res, next) {
+const growerAccountHandlerPut = async function (req, res) {
   await growerAccountPostQuerySchema.validateAsync(req.body, {
     abortEarly: false,
   });
@@ -193,52 +137,13 @@ const growerAccountHandlerPut = async function (req, res, next) {
     throw new HttpError(422, 'Either phone or email is required');
   }
 
-  const session = new Session();
-  const growerAccountRepo = new GrowerAccountRepository(session);
+  const growerAccountService = new GrowerAccountService();
 
-  try {
-    const growerAccountInsertObject = GrowerAccountInsertObject(req.body);
-    const {
-      wallet,
-      first_name,
-      last_name,
-      phone,
-      email,
-      location,
-      lat,
-      lon,
-    } = growerAccountInsertObject;
-    const existingGrowerAccount = await growerAccountRepo.getByFilter({
-      wallet,
-    });
-    let growerAccount = {};
-    await session.beginTransaction();
+  const { growerAccount, status } =
+    await growerAccountService.upsertGrowerAccount(req.body);
 
-    if (existingGrowerAccount.length > 0) {
-      growerAccount = await growerAccountRepo.updateInfo({
-        wallet,
-        phone,
-        first_name,
-        last_name,
-        location,
-        email,
-        lat,
-        lon,
-        updated_at: new Date().toISOString(),
-      });
-    } else {
-      growerAccount = await growerAccountRepo.create(growerAccountInsertObject);
-    }
-    await session.commitTransaction();
-
-    res.status(200).json(growerAccount);
-    res.end();
-  } catch (error) {
-    if (session.isTransactionInProgress()) {
-      await session.rollbackTransaction();
-    }
-    next(error);
-  }
+  res.status(status).send({ growerAccount });
+  res.end();
 };
 
 module.exports = {

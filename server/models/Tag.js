@@ -1,4 +1,5 @@
 const TagRepository = require('../repositories/TagRepository');
+const HttpError = require('../utils/HttpError');
 
 class Tag {
   constructor(session) {
@@ -35,11 +36,17 @@ class Tag {
   }
 
   async createTag(tagToCreate) {
+    const tag = await this.getTags({ name: tagToCreate.name }, undefined, true);
+    if (tag.length > 0) throw new HttpError(422, 'Tag name already exists');
+
     return this._tagRepository.create(tagToCreate);
   }
 
   async updateTag(object) {
-    return this._tagRepository.update(object);
+    return this._tagRepository.update({
+      ...object,
+      updated_at: new Date().toISOString(),
+    });
   }
 }
 

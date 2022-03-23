@@ -1,6 +1,5 @@
 const Session = require('../models/Session');
 const Tag = require('../models/Tag');
-const HttpError = require('../utils/HttpError');
 
 class TagService {
   constructor() {
@@ -22,18 +21,8 @@ class TagService {
 
   async createTag(tagToCreate) {
     try {
-      const tag = await this._tag.getTags(
-        { name: tagToCreate.name },
-        undefined,
-        true,
-      );
-
-      if (tag.length > 0) throw new HttpError(422, 'Tag name already exists');
-
       await this._session.beginTransaction();
-
       const createdTag = await this._tag.createTag(tagToCreate);
-
       await this._session.commitTransaction();
 
       return createdTag;
@@ -46,10 +35,7 @@ class TagService {
   }
 
   async updateTag(object) {
-    return this._tag.updateTag({
-      ...object,
-      updated_at: new Date().toISOString(),
-    });
+    return this._tag.updateTag(object);
   }
 }
 

@@ -18,12 +18,16 @@ class GrowerAccountRepository extends BaseRepository {
           filterObject.organization_id;
       }
 
+      const {getAll} = filterObject;
       delete filterObject.organization_id;
-
-      filterObject['grower_account.status'] = 'active';
+      delete filterObject.getAll;
 
       result.where(filterObject);
-      result.orWhere('grower_account_org.status', 'active');
+
+      if (!getAll) {
+        result.andWhere('grower_account.status', 'active');
+        result.orWhere('grower_account_org.status', 'active');
+      }
     };
 
     let promise = this._session

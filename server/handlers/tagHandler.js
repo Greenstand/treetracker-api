@@ -1,6 +1,9 @@
 const Joi = require('joi');
 const TagService = require('../services/TagService');
-const { generatePrevAndNext } = require('../utils/helper');
+const {
+  generatePrevAndNext,
+  getFilterAndLimitOptions,
+} = require('../utils/helper');
 
 const tagGetQuerySchema = Joi.object({
   limit: Joi.number().integer().greater(0).less(101),
@@ -26,15 +29,7 @@ const tagHandlerGet = async function (req, res) {
     abortEarly: false,
   });
 
-  const filter = { ...req.query };
-  const limitOptions = {};
-
-  const defaultRange = { limit: 100, offset: 0 };
-  limitOptions.limit = +filter.limit || defaultRange.limit;
-  limitOptions.offset = +filter.offset || defaultRange.offset;
-
-  delete filter.limit;
-  delete filter.offset;
+  const { filter, limitOptions } = getFilterAndLimitOptions(req.query);
 
   const tagService = new TagService();
   const tags = await tagService.getTags(filter, limitOptions);

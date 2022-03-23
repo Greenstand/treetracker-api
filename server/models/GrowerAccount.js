@@ -1,28 +1,12 @@
-const { v4: uuid } = require('uuid');
-const { PaginationQueryOptions } = require('./helper');
 const knex = require('../database/knex');
+const GrowerAccountRepository = require('../repositories/GrowerAccountRepository');
 
-const GrowerAccount = ({
-  id,
-  wallet,
-  person_id,
-  organization_id,
-  first_name,
-  last_name,
-  email,
-  phone,
-  lat,
-  lon,
-  location,
-  image_url,
-  image_rotation,
-  organizations = [],
-  status,
-  first_registration_at,
-  created_at,
-  updated_at,
-}) =>
-  Object.freeze({
+class GrowerAccount {
+  constructor(session) {
+    this._growerAccountRepository = new GrowerAccountRepository(session);
+  }
+
+  static GrowerAccount({
     id,
     wallet,
     person_id,
@@ -30,120 +14,127 @@ const GrowerAccount = ({
     first_name,
     last_name,
     email,
+    phone,
     lat,
     lon,
     location,
-    phone,
     image_url,
     image_rotation,
-    organizations,
+    organizations = [],
     status,
     first_registration_at,
     created_at,
     updated_at,
-  });
-
-const PropertiesToUpdate = ({
-  grower_account_id = undefined,
-  person_id = undefined,
-  organization_id = undefined,
-  first_name = undefined,
-  last_name = undefined,
-  email = undefined,
-  phone = undefined,
-  image_url = undefined,
-  status = undefined,
-  image_rotation = undefined,
-}) => {
-  const id = grower_account_id;
-  const updated_at = new Date().toISOString();
-  return (
-    /* eslint-disable no-param-reassign */
-    Object.entries({
+  }) {
+    return Object.freeze({
       id,
+      wallet,
       person_id,
       organization_id,
       first_name,
       last_name,
       email,
+      lat,
+      lon,
+      location,
       phone,
       image_url,
       image_rotation,
+      organizations,
       status,
+      first_registration_at,
+      created_at,
       updated_at,
-    })
-      .filter((entry) => entry[1] !== undefined)
-      .reduce((result, item) => {
-        const [key, value] = item;
-        result[key] = value;
-        return result;
-      }, {})
-  );
-};
+    });
+  }
 
-const GrowerAccountInsertObject = (requestBody) => {
-  const growerAccount = GrowerAccount(requestBody);
+  async getGrowerAccounts(filter, options, getAll) {
+    const growerAccounts = await this._growerAccountRepository.getByFilter(
+      { ...filter, getAll },
+      options,
+    );
 
-  const growerAccountCopy = { ...growerAccount }; // due to object.freeze
-  delete growerAccountCopy.organizations;
-
-  return Object.freeze({
-    ...growerAccountCopy,
-    id: uuid(),
-    status: 'active',
-    location: knex.raw(
-      `ST_PointFromText('POINT( ${requestBody.lon} ${requestBody.lat}) ', 4326)`,
-    ),
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  });
-};
-
-/* eslint-disable no-param-reassign */
-const FilterCriteria = ({
-  organization_id = undefined,
-  id = undefined,
-  wallet = undefined,
-}) => {
-  return Object.entries({ organization_id, id, wallet })
-    .filter((entry) => entry[1] !== undefined)
-    .reduce((result, item) => {
-      const [key, value] = item;
-      result[key] = value;
-      return result;
-    }, {});
-};
-
-const getGrowerAccounts = (growerAccountRepo) => async (filterCriteria) => {
-  let options = { limit: 100, offset: 0 };
-  options = { ...options, ...PaginationQueryOptions({ ...filterCriteria }) };
-
-  const filter = { ...FilterCriteria({ ...filterCriteria }) };
-
-  const growerAccounts = await growerAccountRepo.getByFilter(filter, options);
-  const growerAccountsCount = await growerAccountRepo.countByFilter(filter);
-
-  return {
-    grower_accounts: growerAccounts.map((row) => {
+    return growerAccounts.map((row) => {
       const rowCopy = { ...row };
       if (rowCopy.organizations[0] === null) {
         rowCopy.organizations = [];
       }
-      return GrowerAccount(rowCopy);
-    }),
-    growerAccountsCount,
-  };
-};
+      return this.constructor.GrowerAccount(rowCopy);
+    });
+  }
 
-const updateGrowerAccount = (growerAccountRepo) => async (updateObject) => {
-  const properties = { ...PropertiesToUpdate({ ...updateObject }) };
+  async getGrowerAccountsCount(filter) {
+    return this._growerAccountRepository.countByFilter(filter);
+  }
 
-  await growerAccountRepo.update(properties);
-};
+  async getGrowerAccountById(growerAccountId) {
+    const growerAccount = await this._growerAccountRepository.getById(
+      growerAccountId,
+    );
+    return this.constructor.GrowerAccount(growerAccount);
+  }
 
-module.exports = {
-  getGrowerAccounts,
-  GrowerAccountInsertObject,
-  updateGrowerAccount,
-  GrowerAccount,
-};
+  async createGrowerAccount(growerAccountToCreate) {
+    let status = 200;
+    const existingGrowerAccount = await this.getGrowerAccounts(
+      { wallet: growerAccountToCreate.wallet },
+      undefined,
+      true,
+    );
+
+    let [growerAccount] = existingGrowerAccount;
+
+    if (!growerAccount) {
+      status = 201;
+      growerAccount = await this._growerAccountRepository.create({
+        location: knex.raw(
+          `ST_PointFromText('POINT( ${growerAccountToCreate.lon} ${growerAccountToCreate.lat}) ', 4326)`,
+        ),
+        ...growerAccountToCreate,
+      });
+    }
+
+    return { status, growerAccount };
+  }
+
+  async updateGrowerAccount(updateObject) {
+    return this._growerAccountRepository.update({
+      ...updateObject,
+      updated_at: new Date().toISOString(),
+    });
+  }
+
+  async upsertGrowerAccount(growerAccountObject) {
+    const { wallet, first_name, last_name, phone, email, location, lat, lon } =
+      growerAccountObject;
+
+    const existingGrowerAccount = await this.getGrowerAccounts({
+      wallet,
+    });
+
+    let growerAccount = {};
+    let status = 200;
+
+    if (existingGrowerAccount.length > 0) {
+      growerAccount = await this._growerAccountRepository.updateInfo({
+        wallet,
+        phone,
+        first_name,
+        last_name,
+        location,
+        email,
+        lat,
+        lon,
+        updated_at: new Date().toISOString(),
+      });
+    } else {
+      const result = await this.createGrowerAccount(growerAccountObject);
+      growerAccount = result.growerAccount;
+      status = result.status;
+    }
+
+    return { status, growerAccount };
+  }
+}
+
+module.exports = GrowerAccount;
