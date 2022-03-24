@@ -25,4 +25,4 @@ jobs:
       - name: Save DigitalOcean kubeconfig
         run: doctl kubernetes cluster kubeconfig save ${{ secrets.DEV_CLUSTER_NAME }}
       - name: List pods in microservice
-        run: kubectl -n ${{ secrets.K8S_NAMESPACE }} exec deployment/treetracker-earnings-api -- npm run seed-cli -- ${{ github.event.inputs.command}}
+        run: kubectl -n ${{ secrets.K8S_NAMESPACE }} exec deployment/treetracker-api -- npm run seed-cli -- ${{ github.event.inputs.command}}
