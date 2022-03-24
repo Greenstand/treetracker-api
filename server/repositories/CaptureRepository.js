@@ -7,49 +7,49 @@ class CaptureRepository extends BaseRepository {
     this._session = session;
   }
 
+  _filterWhereBuilder(object, builder) {
+    const result = builder;
+    const {
+      parameters,
+      whereNulls = [],
+      whereNotNulls = [],
+      whereIns = [],
+    } = { ...object };
+    result.whereNot({ status: 'deleted' });
+    whereNotNulls.forEach((whereNot) => {
+      result.whereNotNull(whereNot);
+    });
+
+    whereNulls.forEach((whereNull) => {
+      result.whereNull(whereNull);
+    });
+
+    whereIns.forEach((whereIn) => {
+      result.whereIn(whereIn.field, whereIn.values);
+    });
+
+    const filterObject = { ...parameters };
+
+    if (filterObject.captured_at_start_date) {
+      result.where(
+        `${this._tableName}.captured_at`,
+        '>=',
+        filterObject.captured_at_start_date,
+      );
+      delete filterObject.captured_at_start_date;
+    }
+    if (filterObject.captured_at_end_date) {
+      result.where(
+        `${this._tableName}.captured_at`,
+        '<=',
+        filterObject.captured_at_end_date,
+      );
+      delete filterObject.captured_at_end_date;
+    }
+    result.where(filterObject);
+  }
+
   async getByFilter(filterCriteria, options = {}) {
-    const whereBuilder = function (object, builder) {
-      const result = builder;
-      const {
-        parameters,
-        whereNulls = [],
-        whereNotNulls = [],
-        whereIns = [],
-      } = { ...object };
-      result.whereNot({ status: 'deleted' });
-      whereNotNulls.forEach((whereNot) => {
-        result.whereNotNull(whereNot);
-      });
-
-      whereNulls.forEach((whereNull) => {
-        result.whereNull(whereNull);
-      });
-
-      whereIns.forEach((whereIn) => {
-        result.whereIn(whereIn.field, whereIn.values);
-      });
-
-      const filterObject = { ...parameters };
-
-      if (filterObject.captured_at_start_date) {
-        result.where(
-          'capture.captured_at',
-          '>=',
-          filterObject.captured_at_start_date,
-        );
-        delete filterObject.captured_at_start_date;
-      }
-      if (filterObject.captured_at_end_date) {
-        result.where(
-          'capture.captured_at',
-          '<=',
-          filterObject.captured_at_end_date,
-        );
-        delete filterObject.captured_at_end_date;
-      }
-      result.where(filterObject);
-    };
-
     const knex = this._session.getDB();
 
     let promise = knex
@@ -76,7 +76,7 @@ class CaptureRepository extends BaseRepository {
         `,
         ),
       )
-      .where((builder) => whereBuilder(filterCriteria, builder));
+      .where((builder) => this._filterWhereBuilder(filterCriteria, builder));
 
     promise = promise.orderBy(
       filterCriteria?.sort?.order_by || 'created_at',
@@ -93,13 +93,18 @@ class CaptureRepository extends BaseRepository {
 
     const captures = await promise;
 
-    const { count } = await knex
+    return captures;
+  }
+
+  async countByFilter(filter) {
+    const { count } = await this._session
+      .getDB()
       .count('*')
-      .where((builder) => whereBuilder(filterCriteria, builder))
-      .from('capture')
+      .where((builder) => this._filterWhereBuilder(filter, builder))
+      .from(this._tableName)
       .first();
 
-    return { captures, count: Number(count) };
+    return Number(count);
   }
 
   async add(capture) {

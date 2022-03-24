@@ -252,41 +252,16 @@ describe('/captures', () => {
       ]);
     });
 
-    it('should delete a single tag attached to a capture', async () => {
+    it('should update a single tag attached to a capture', async () => {
       await request(app)
-        .delete(`/captures/${captureId}/tags/${tag2.id}`)
+        .patch(`/captures/${captureId}/tags/${tag2.id}`)
+        .send({ status: 'deleted' })
         .expect(204);
 
       const result = await request(app)
         .get(`/captures/${captureId}/tags/${tag2.id}`)
         .expect(200);
       expect(result.body).to.be.empty;
-    });
-
-    it('should update a single tag attached to a capture', async () => {
-      await request(app)
-        .patch(`/captures/${captureId}/tags/${tag2.id}`)
-        .send({ status: 'active' })
-        .expect(204);
-
-      const result = await request(app)
-        .get(`/captures/${captureId}/tags/${tag2.id}`)
-        .expect(200);
-      expect(result.body).to.include({
-        capture_id: captureId,
-        tag_id: tag2.id,
-        tag_name: tag2.name,
-        status: 'active',
-      });
-      expect(result.body).to.have.keys([
-        'id',
-        'capture_id',
-        'tag_id',
-        'tag_name',
-        'status',
-        'created_at',
-        'updated_at',
-      ]);
     });
   });
 });

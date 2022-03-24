@@ -14,7 +14,6 @@ const {
   captureHandlerTagPost,
   captureHandlerSingleTagGet,
   captureHandlerSingleTagPatch,
-  captureHandlerSingleTagDelete,
 } = require('./handlers/captureHandler');
 const {
   treeHandlerPost,
@@ -106,7 +105,6 @@ router
 router
   .route('/captures/:capture_id/tags/:tag_id')
   .get(validateRequest, handlerWrapper(captureHandlerSingleTagGet))
-  .patch(validateRequest, handlerWrapper(captureHandlerSingleTagPatch))
-  .delete(validateRequest, handlerWrapper(captureHandlerSingleTagDelete));
+  .patch(validateRequest, handlerWrapper(captureHandlerSingleTagPatch));
 
 module.exports = router;
