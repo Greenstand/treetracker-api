@@ -1,3 +1,10 @@
+## [1.15.1](https://github.com/Greenstand/treetracker-api/compare/v1.15.0...v1.15.1) (2022-03-24)
+
+
+### Bug Fixes
+
+* test tool ([7d4bace](https://github.com/Greenstand/treetracker-api/commit/7d4bace49e3b2e7bdbf8dbc151fd0ff4c9c35fd5))
+
 # [1.15.0](https://github.com/Greenstand/treetracker-api/compare/v1.14.1...v1.15.0) (2022-03-24)
 
 
