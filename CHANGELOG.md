@@ -1,3 +1,29 @@
+## [1.15.2](https://github.com/Greenstand/treetracker-api/compare/v1.15.1...v1.15.2) (2022-03-24)
+
+
+### Bug Fixes
+
+* test tool ([2f51296](https://github.com/Greenstand/treetracker-api/commit/2f512965c1e73bd70991c803dc510af6f5694001))
+
+## [1.15.1](https://github.com/Greenstand/treetracker-api/compare/v1.15.0...v1.15.1) (2022-03-24)
+
+
+### Bug Fixes
+
+* test tool ([7d4bace](https://github.com/Greenstand/treetracker-api/commit/7d4bace49e3b2e7bdbf8dbc151fd0ff4c9c35fd5))
+
+# [1.15.0](https://github.com/Greenstand/treetracker-api/compare/v1.14.1...v1.15.0) (2022-03-24)
+
+
+### Bug Fixes
+
+* eslint ([6289c9a](https://github.com/Greenstand/treetracker-api/commit/6289c9a59ab966adc2cb73a6b84db5e911e11f2a))
+
+
+### Features
+
+* test tool ([26afaa0](https://github.com/Greenstand/treetracker-api/commit/26afaa017c61791db2fbb5d2fdefa78853a01e7c))
+
 ## [1.14.1](https://github.com/Greenstand/treetracker-api/compare/v1.14.0...v1.14.1) (2022-03-19)
 
 

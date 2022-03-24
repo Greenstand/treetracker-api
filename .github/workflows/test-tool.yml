@@ -1,0 +1,28 @@
+name: Test Tool
+
+on:
+  workflow_dispatch:
+    inputs:
+      command:
+        description: 'The command for seed data, try with `--help` for manual'
+        required: true
+env:
+  project-directory: ./
+
+jobs:
+  seed:
+    name: Generate data to DB
+    runs-on: ubuntu-latest
+    if: |
+      !contains(github.event.head_commit.message, 'skip-ci') &&
+      github.event_name == 'push' &&
+      github.repository == "Greenstand/${{ github.event.repository.name }}"
+    steps:
+      - name: Install doctl for kubernetes
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DEV_DIGITALOCEAN_TOKEN }}
+      - name: Save DigitalOcean kubeconfig
+        run: doctl kubernetes cluster kubeconfig save ${{ secrets.DEV_CLUSTER_NAME }}
+      - name: Execute the seed command
+        run: kubectl -n ${{ secrets.K8S_NAMESPACE }} exec deployment/treetracker-api -- npm run seed-cli -- ${{ github.event.inputs.command}}
