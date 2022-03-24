@@ -37,7 +37,7 @@ class CaptureTag {
   async addTagsToCapture({ tags, capture_id }) {
     const insertObjectArray = await Promise.all(
       tags.map(async (t) => {
-        const captureTag = await this._captureTagRepository.getByFilter({
+        const captureTag = await this._captureTagRepository.getCaptureTags({
           tag_id: t,
           capture_id,
         });

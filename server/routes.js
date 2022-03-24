@@ -25,7 +25,6 @@ const {
   treeHandlerTagPost,
   treeHandlerSingleTagGet,
   treeHandlerSingleTagPatch,
-  treeHandlerSingleTagDelete,
 } = require('./handlers/treeHandler');
 const {
   growerAccountHandlerGet,
@@ -63,8 +62,7 @@ router
 router
   .route('/trees/:tree_id/tags/:tag_id')
   .get(validateRequest, handlerWrapper(treeHandlerSingleTagGet))
-  .patch(validateRequest, handlerWrapper(treeHandlerSingleTagPatch))
-  .delete(validateRequest, handlerWrapper(treeHandlerSingleTagDelete));
+  .patch(validateRequest, handlerWrapper(treeHandlerSingleTagPatch));
 
 router
   .route('/grower_accounts')

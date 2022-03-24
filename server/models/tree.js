@@ -1,57 +1,13 @@
-/* eslint-disable no-param-reassign */
-/* eslint-disable prefer-destructuring */
-const log = require('loglevel');
-const { Repository } = require('./Repository');
-const HttpError = require('../utils/HttpError');
-const { PaginationQueryOptions } = require('./helper');
 const { raiseEvent, DomainEvent } = require('./DomainEvent');
+const TreeRepository = require('../repositories/TreeRepository');
+const EventRepository = require('../repositories/EventRepository');
 
-const treeInsertObject = ({
-  id,
-  latest_capture_id,
-  image_url,
-  lat,
-  lon,
-  gps_accuracy,
-  species_id = null,
-  morphology = null,
-  age = null,
-  attributes,
-}) => {
-  return Object.freeze({
-    id,
-    latest_capture_id,
-    image_url,
-    lat,
-    lon,
-    gps_accuracy,
-    morphology,
-    age,
-    status: 'active',
-    attributes: attributes ? { entries: attributes } : null,
-    species_id,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    point: `POINT( ${lon} ${lat} )`,
-  });
-};
+class Tree {
+  constructor(session) {
+    this._treeRepository = new TreeRepository(session);
+  }
 
-const Tree = ({
-  id,
-  latest_capture_id,
-  image_url,
-  lat,
-  lon,
-  gps_accuracy,
-  morphology,
-  age,
-  status,
-  attributes,
-  species_id,
-  created_at,
-  updated_at,
-}) => {
-  return Object.freeze({
+  static Tree({
     id,
     latest_capture_id,
     image_url,
@@ -65,65 +21,94 @@ const Tree = ({
     species_id,
     created_at,
     updated_at,
-  });
-};
-
-const FilterCriteria = ({
-  grower_username = undefined,
-  grower_id = undefined,
-  id = undefined,
-}) => {
-  return Object.entries({ grower_username, grower_id, id })
-    .filter((entry) => entry[1] !== undefined)
-    .reduce((result, item) => {
-      result[item[0]] = item[1];
-      return result;
-    }, {});
-};
-const getTrees = (treeRepositoryImpl) => async (filterCriteria = undefined) => {
-  let filter = {};
-  let options = { limit: 1000, offset: 0 };
-  if (filterCriteria !== undefined) {
-    filter = FilterCriteria({ ...filterCriteria });
-    options = { ...options, ...PaginationQueryOptions({ ...filterCriteria }) };
+  }) {
+    return Object.freeze({
+      id,
+      latest_capture_id,
+      image_url,
+      lat,
+      lon,
+      gps_accuracy,
+      morphology,
+      age,
+      status,
+      attributes,
+      species_id,
+      created_at,
+      updated_at,
+    });
   }
-  // console.log('TREE MODEL getTrees', filterCriteria, filter, options);
-  const treeRepository = new Repository(treeRepositoryImpl);
-  const trees = await treeRepository.getByFilter(
-    { ...filter, status: 'active' },
-    options,
-  );
-  return trees.map((row) => {
-    return Tree({ ...row });
-  });
-};
 
-const createTree = (treeRepository, eventRepository) => async (tree) => {
-  const repository = new Repository(treeRepository);
-  await repository.add(tree);
-
-  const raiseCaptureEvent = raiseEvent(eventRepository);
-  const domainEvent = await raiseCaptureEvent(DomainEvent(tree));
-  return { raisedEvents: { domainEvent } };
-};
-
-const potentialMatches = (treeRepository) => async (
-  captureId,
-  distance = 6,
-) => {
-  log.warn('potentialMatches...');
-  if (!captureId) {
-    throw new HttpError(400, 'missing parameter captureId');
+  async getTrees(filter, limitOptions) {
+    const trees = await this._treeRepository.getByFilter(
+      { ...filter, status: 'active' },
+      limitOptions,
+    );
+    return trees.map((row) => this.constructor.Tree(row));
   }
-  const id = captureId;
-  const matches = await treeRepository.getPotentialMatches(id, distance);
-  return matches;
-};
 
-module.exports = {
-  getTrees,
-  createTree,
-  treeInsertObject,
-  potentialMatches,
-  Tree,
-};
+  async getTreesCount(filter) {
+    return this._treeRepository.countByFilter(filter);
+  }
+
+  async getTreeById(treeId) {
+    const tree = await this._treeRepository.getById(treeId);
+    return this.constructor.Tree(tree);
+  }
+
+  async createTree(treeObject) {
+    const eventRepo = new EventRepository(this._session);
+
+    const newTree = {
+      ...treeObject,
+      point: `POINT( ${treeObject.lon} ${treeObject.lat} )`,
+      attributes: treeObject.attributes
+        ? { entries: treeObject.attributes }
+        : null,
+      // created_at: new Date().toISOString(),
+      // updated_at: new Date().toISOString(),
+    };
+    const existingTree = await this.getTreeById(newTree.id);
+    if (existingTree) {
+      const domainEvent = await eventRepo.getDomainEvent(newTree.id);
+      if (domainEvent.status !== 'sent') {
+        return { domainEvent, tree: existingTree, eventRepo };
+      }
+      return { tree: existingTree };
+    }
+    const createdTree = await this._treeRepository.create(newTree);
+
+    const raiseTreeEvent = raiseEvent(eventRepo);
+    const domainEvent = await raiseTreeEvent(DomainEvent(createdTree));
+
+    return { domainEvent, tree: createdTree, eventRepo };
+  }
+
+  async updateTree(treeObject) {
+    return this._treeRepository.update({
+      ...treeObject,
+      updated_at: new Date().toISOString,
+    });
+  }
+
+  async getPotentialMatches(captureId, getCaptures) {
+    const distance = 6;
+    const potentialTrees = await this._treeRepository.getPotentialMatches(
+      captureId,
+      distance,
+    );
+
+    const matches = await Promise.all(
+      potentialTrees.map(async (tree) => {
+        const treeCopy = { ...tree };
+        const captures = await getCaptures({ tree_id: tree.id });
+        treeCopy.captures = captures;
+        return treeCopy;
+      }),
+    );
+
+    return matches;
+  }
+}
+
+module.exports = Tree;
