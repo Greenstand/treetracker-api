@@ -44,7 +44,18 @@ class CaptureService {
   }
 
   async updateCapture(captureObject) {
-    return this._capture.updateCapture(captureObject);
+    try {
+      await this._session.beginTransaction();
+      const updatedCapture = await this._capture.updateCapture(captureObject);
+      await this._session.commitTransaction();
+
+      return updatedCapture;
+    } catch (e) {
+      if (this._session.isTransactionInProgress()) {
+        await this._session.rollbackTransaction();
+      }
+      throw e;
+    }
   }
 }
 

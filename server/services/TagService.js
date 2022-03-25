@@ -35,7 +35,18 @@ class TagService {
   }
 
   async updateTag(object) {
-    return this._tag.updateTag(object);
+    try {
+      await this._session.beginTransaction();
+      const updatedTag = await this._tag.updateTag(object);
+      await this._session.commitTransaction();
+
+      return updatedTag;
+    } catch (e) {
+      if (this._session.isTransactionInProgress()) {
+        await this._session.rollbackTransaction();
+      }
+      throw e;
+    }
   }
 }
 

@@ -36,7 +36,19 @@ class GrowerAccountService {
   }
 
   async updateGrowerAccount(growerAccountObject) {
-    return this._growerAccount.updateGrowerAccount(growerAccountObject);
+    try {
+      await this._session.beginTransaction();
+      const updatedGrowerAccount =
+        await this._growerAccount.updateGrowerAccount(growerAccountObject);
+      await this._session.commitTransaction();
+
+      return updatedGrowerAccount;
+    } catch (e) {
+      if (this._session.isTransactionInProgress()) {
+        await this._session.rollbackTransaction();
+      }
+      throw e;
+    }
   }
 
   async upsertGrowerAccount(growerAccountObject) {
