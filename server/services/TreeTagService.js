@@ -30,7 +30,7 @@ class TreeTagService {
   async updateTreeTag(updateObject) {
     try {
       await this._session.beginTransaction();
-      const treeTag = this._treeTag.updateTreeTag(updateObject);
+      const treeTag = await this._treeTag.updateTreeTag(updateObject);
       await this._session.commitTransaction();
       return treeTag;
     } catch (e) {

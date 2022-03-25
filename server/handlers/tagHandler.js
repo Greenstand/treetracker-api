@@ -92,7 +92,7 @@ const tagHandlerSingleGet = async function (req, res) {
 
   const tag = await tagService.getTagById(req.params.tag_id);
 
-  res.send(tag);
+  res.send({ tag });
 };
 
 module.exports = {

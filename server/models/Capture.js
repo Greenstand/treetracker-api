@@ -1,3 +1,4 @@
+const knex = require('../database/knex');
 const CaptureRepository = require('../repositories/CaptureRepository');
 const EventRepository = require('../repositories/EventRepository');
 const { raiseEvent, DomainEvent } = require('./DomainEvent');
@@ -105,18 +106,22 @@ class Capture {
     };
   }
 
+  _response(capture) {
+    return this.constructor.Capture(capture);
+  }
+
   async getCaptures(filter, options, getAll) {
     const captures = await this._captureRepository.getByFilter(
-      { ...this._filterCriteria(filter), getAll },
+      { ...this.constructor.FilterCriteria(filter), getAll },
       options,
     );
 
-    return captures.map((row) => this.constructor.Capture(row));
+    return captures.map((row) => this._response(row));
   }
 
   async getCapturesCount(filter) {
     return this._captureRepository.countByFilter({
-      ...this.constructor.FilterCriteria(filter),
+      ...this.constructor.FilterCriteria({ ...filter, status: 'active' }),
     });
   }
 
@@ -127,23 +132,27 @@ class Capture {
 
     const [capture = {}] = captures;
 
-    return this.constructor.Capture(capture);
+    return this._response(capture);
   }
 
   async createCapture(captureObject) {
     const eventRepo = new EventRepository(this._session);
 
+    const location = knex.raw(
+      `ST_PointFromText('POINT(${captureObject.lon} ${captureObject.lat})', 4326)`,
+    );
     const newCapture = {
       ...captureObject,
-      point: `POINT( ${captureObject.lon} ${captureObject.lat} )`,
+      estimated_geometric_location: location,
+      estimated_geographic_location: location,
       attributes: captureObject.attributes
         ? { entries: captureObject.attributes }
         : null,
-      // created_at: new Date().toISOString(),
-      // updated_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      created_at: new Date().toISOString(),
     };
     const existingCapture = await this.getCaptureById(newCapture.id);
-    if (existingCapture) {
+    if (existingCapture.id) {
       const domainEvent = await eventRepo.getDomainEvent(newCapture.id);
       if (domainEvent.status !== 'sent') {
         return { domainEvent, capture: existingCapture, eventRepo };
@@ -151,7 +160,7 @@ class Capture {
       return { capture: existingCapture };
     }
     const createdCapture = await this._captureRepository.create(newCapture);
-    const captureCreatedToRaise = this._captureCreated({
+    const captureCreatedToRaise = this.constructor.CaptureCreated({
       ...createdCapture,
     });
 
@@ -160,14 +169,20 @@ class Capture {
       DomainEvent(captureCreatedToRaise),
     );
 
-    return { domainEvent, capture: createdCapture, eventRepo };
+    return {
+      domainEvent,
+      capture: this._response(createdCapture),
+      eventRepo,
+    };
   }
 
   async updateCapture(captureObject) {
-    return this._captureRepository.update({
+    const updatedCapture = await this._captureRepository.update({
       ...captureObject,
       updated_at: new Date().toISOString(),
     });
+
+    return this._response(updatedCapture);
   }
 
   async applyVerification(verifyCaptureProcessed) {

@@ -102,12 +102,12 @@ const captureHandlerGet = async function (req, res) {
 };
 
 const captureHandlerPost = async function (req, res) {
-  await capturePostSchema.validateAsync(req.body, {
+  const captureObject = await capturePostSchema.validateAsync(req.body, {
     abortEarly: false,
   });
 
   const captureService = new CaptureService();
-  const capture = await captureService.createCapture(req.body);
+  const capture = await captureService.createCapture(captureObject);
 
   res.send({ capture });
 };

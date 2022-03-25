@@ -38,11 +38,16 @@ describe('/trees', () => {
     });
 
     it('should create a tree', async () => {
-      await request(app)
+      const res = await request(app)
         .post(`/trees`)
         .send(tree2)
         .set('Accept', 'application/json')
-        .expect(204);
+        .expect(200);
+
+      const treeCopy = { ...tree2 };
+      expect(res.body.tree.attributes.entries).to.eql(treeCopy.attributes);
+      delete treeCopy.attributes;
+      expect(res.body.tree).to.include({ ...treeCopy });
     });
 
     it('should not error out when duplicate data is sent', async () => {
@@ -50,7 +55,7 @@ describe('/trees', () => {
         .post(`/trees`)
         .send(tree2)
         .set('Accept', 'application/json')
-        .expect(204);
+        .expect(200);
     });
 
     it('should resend tree created event if it wasnt successful last time and tree already exists', async () => {
@@ -58,7 +63,7 @@ describe('/trees', () => {
         .post(`/trees`)
         .send({ ...tree2, id: tree1.id })
         .set('Accept', 'application/json')
-        .expect(204);
+        .expect(200);
 
       // added a timer to confirm this because the function call in the API is not 'awaited'
       await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -80,13 +85,15 @@ describe('/trees', () => {
         .patch(`/trees/${tree2.id}`)
         .send(treeUpdates)
         .set('Accept', 'application/json')
-        .expect(204);
+        .expect(200);
 
       const copy = { ...updatedModTree };
       const result = await request(app).get(`/trees/${tree2.id}`).expect(200);
-      expect(result.body.attributes.entries).to.eql(copy.attributes.entries);
+      expect(result.body.tree.attributes.entries).to.eql(
+        copy.attributes.entries,
+      );
       delete copy.attributes;
-      expect(result.body).to.include({ ...copy });
+      expect(result.body.tree).to.include({ ...copy });
     });
   });
 
@@ -94,10 +101,13 @@ describe('/trees', () => {
     it('should get trees', async () => {
       const result = await request(app).get(`/trees`).expect(200);
       const copy = { ...updatedModTree };
-      expect(result.body.length).to.eql(1);
-      expect(result.body[0].attributes.entries).to.eql(copy.attributes.entries);
+      expect(result.body.trees.length).to.eql(1);
+      expect(result.body.query.count).to.eql(1);
+      expect(result.body.trees[0].attributes.entries).to.eql(
+        copy.attributes.entries,
+      );
       delete copy.attributes;
-      expect(result.body[0]).to.include({ ...copy });
+      expect(result.body.trees[0]).to.include({ ...copy });
     });
 
     it('should delete a tree', async () => {
@@ -105,10 +115,11 @@ describe('/trees', () => {
         .patch(`/trees/${tree2.id}`)
         .send({ status: 'deleted' })
         .set('Accept', 'application/json')
-        .expect(204);
+        .expect(200);
 
       const result = await request(app).get(`/trees`).expect(200);
-      expect(result.body.length).to.eql(0);
+      expect(result.body.trees.length).to.eql(0);
+      expect(result.body.query.count).to.eql(0);
     });
   });
 
@@ -149,14 +160,14 @@ describe('/trees', () => {
       const result = await request(app)
         .get(`/trees/${treeId}/tags`)
         .expect(200);
-      expect(result.body.length).to.eql(1);
-      expect(result.body[0]).to.include({
+      expect(result.body.tree_tags.length).to.eql(1);
+      expect(result.body.tree_tags[0]).to.include({
         tree_id: treeId,
         tag_id: tag2.id,
         tag_name: tag2.name,
         status: tag2.status,
       });
-      expect(result.body[0]).to.have.keys([
+      expect(result.body.tree_tags[0]).to.have.keys([
         'id',
         'tree_id',
         'tag_id',
@@ -165,42 +176,15 @@ describe('/trees', () => {
         'created_at',
         'updated_at',
       ]);
-    });
-
-    it('should delete a single tag attached to a tree', async () => {
-      await request(app).delete(`/trees/${treeId}/tags/${tag2.id}`).expect(204);
-
-      const result = await request(app)
-        .get(`/trees/${treeId}/tags/${tag2.id}`)
-        .expect(200);
-      expect(result.body).to.be.empty;
     });
 
     it('should update a single tag attached to a tree', async () => {
       await request(app)
         .patch(`/trees/${treeId}/tags/${tag2.id}`)
-        .send({ status: 'active' })
-        .expect(204);
-
-      const result = await request(app)
-        .get(`/trees/${treeId}/tags/${tag2.id}`)
+        .send({ status: 'deleted' })
         .expect(200);
-      expect(result.body).to.include({
-        tree_id: treeId,
-        tag_id: tag2.id,
-        tag_name: tag2.name,
-        status: 'active',
-      });
 
-      expect(result.body).to.have.keys([
-        'id',
-        'tree_id',
-        'tag_id',
-        'tag_name',
-        'status',
-        'created_at',
-        'updated_at',
-      ]);
+      await request(app).get(`/trees/${treeId}/tags/${tag2.id}`).expect(404);
     });
   });
 });

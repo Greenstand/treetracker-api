@@ -30,7 +30,7 @@ class CaptureTagService {
   async updateCaptureTag(updateObject) {
     try {
       await this._session.beginTransaction();
-      const captureTag = this._captureTag.updateCaptureTag(updateObject);
+      const captureTag = await this._captureTag.updateCaptureTag(updateObject);
       await this._session.commitTransaction();
       return captureTag;
     } catch (e) {

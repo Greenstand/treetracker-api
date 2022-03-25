@@ -10,6 +10,7 @@ before(async () => {
       return {
         on: (state, callback) => {
           if (state === 'success') callback();
+          return { on: () => {} };
         },
       };
     },

@@ -17,36 +17,43 @@ class Tag {
     });
   }
 
+  _response(tag) {
+    return this.constructor.Tag(tag);
+  }
+
   async getTags(filter, options, getAll) {
     const tags = await this._tagRepository.getByFilter(
       { ...(!getAll && { status: 'active' }), ...filter },
       options,
     );
 
-    return tags.map((row) => this.constructor.Tag(row));
+    return tags.map((row) => this._response(row));
   }
 
   async getTagsCount(filter) {
-    return this._tagRepository.countByFilter(filter);
+    return this._tagRepository.countByFilter({ ...filter, status: 'active' });
   }
 
   async getTagById(tagId) {
     const tag = await this._tagRepository.getById(tagId);
-    return this.constructor.Tag(tag);
+    return this._response(tag);
   }
 
   async createTag(tagToCreate) {
     const tag = await this.getTags({ name: tagToCreate.name }, undefined, true);
     if (tag.length > 0) throw new HttpError(422, 'Tag name already exists');
 
-    return this._tagRepository.create(tagToCreate);
+    const createdTag = await this._tagRepository.create(tagToCreate);
+    return this._response(createdTag);
   }
 
   async updateTag(object) {
-    return this._tagRepository.update({
+    const updatedTag = await this._tagRepository.update({
       ...object,
       updated_at: new Date().toISOString(),
     });
+
+    return this._response(updatedTag);
   }
 }
 

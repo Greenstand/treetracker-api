@@ -1,8 +1,8 @@
 // functions to seed into database for testing
-const log = require("loglevel");
+const log = require('loglevel');
 const uuid = require('uuid');
-const knex = require('../../server/infra/database/knex');
-const captures = require("./data/20220210-Captures.json");
+const knex = require('../../server/database/knex');
+const captures = require('./data/20220210-Captures.json');
 
 exports.createCapture = async function (
   created_at,
@@ -20,18 +20,23 @@ exports.createCapture = async function (
       planting_organization_id,
       lat,
       lon,
-      estimated_geometric_location: knex.raw(`ST_SetSRID(ST_MakePoint(${lon},${lat}),4326)`),
-      estimated_geographic_location: knex.raw(`ST_SetSRID(ST_MakePoint(${lon},${lat}),4326)`),
-    }).returning('*');
-  log.warn("Created capture: ", result);
-}
+      estimated_geometric_location: knex.raw(
+        `ST_SetSRID(ST_MakePoint(${lon},${lat}),4326)`,
+      ),
+      estimated_geographic_location: knex.raw(
+        `ST_SetSRID(ST_MakePoint(${lon},${lat}),4326)`,
+      ),
+    })
+    .returning('*');
+  log.warn('Created capture: ', result);
+};
 
-exports.createTree = async function (
-  capture_id,
-) {
-  const capturesDB = await knex('capture').select('*').where({ id: capture_id });
+exports.createTree = async function (capture_id) {
+  const capturesDB = await knex('capture')
+    .select('*')
+    .where({ id: capture_id });
   if (capturesDB.length === 0) {
-    throw new Error("Capture not found");
+    throw new Error('Capture not found');
   }
 
   const [capture] = capturesDB;
@@ -49,11 +54,13 @@ exports.createTree = async function (
       created_at: new Date(),
       updated_at: new Date(),
       estimated_geographic_location: capture.estimated_geographic_location,
-    }).returning('*');
-  log.warn("Created tree: ", treeDB);
+    })
+    .returning('*');
+  log.warn('Created tree: ', treeDB);
   const captureUpdate = await knex('capture')
     .update({
       tree_id: treeDB[0].id,
-    }).where({ id: capture.id });
-  log.warn("Updated capture: ", captureUpdate);
-}
+    })
+    .where({ id: capture.id });
+  log.warn('Updated capture: ', captureUpdate);
+};

@@ -15,11 +15,13 @@ describe('/tag', () => {
 
   describe('POST', () => {
     it('should create a tag', async () => {
-      await request(app)
+      const res = await request(app)
         .post(`/tags`)
         .send(tag1)
         .set('Accept', 'application/json')
-        .expect(204);
+        .expect(201);
+
+      expect(res.body.tag).to.include({ ...tag1 });
     });
 
     it('should error out -- tag name already exists', async () => {
@@ -38,11 +40,14 @@ describe('/tag', () => {
       const tagId = await knex('tag')
         .select('id')
         .where({ ...tag1 });
-      await request(app)
+
+      const result = await request(app)
         .patch(`/tags/${tagId[0].id}`)
         .send(tagUpdates)
         .set('Accept', 'application/json')
-        .expect(204);
+        .expect(200);
+
+      expect(result.body.tag).to.include({ ...tag1, ...tagUpdates });
     });
   });
 
@@ -51,8 +56,9 @@ describe('/tag', () => {
       const tagId = await knex('tag')
         .select('id')
         .where({ ...tagUpdates });
+
       const result = await request(app).get(`/tags/${tagId[0].id}`).expect(200);
-      expect(result.body).to.include({ ...tag1, ...tagUpdates });
+      expect(result.body.tag).to.include({ ...tag1, ...tagUpdates });
     });
 
     it('should get tags', async () => {
@@ -70,7 +76,7 @@ describe('/tag', () => {
         .patch(`/tags/${tagId[0].id}`)
         .send({ status: 'deleted' })
         .set('Accept', 'application/json')
-        .expect(204);
+        .expect(200);
     });
 
     it('should get tags --should be empty', async () => {

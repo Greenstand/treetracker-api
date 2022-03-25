@@ -18,7 +18,7 @@ class GrowerAccountRepository extends BaseRepository {
           filterObject.organization_id;
       }
 
-      const {getAll} = filterObject;
+      const { getAll } = filterObject;
       delete filterObject.organization_id;
       delete filterObject.getAll;
 
@@ -26,7 +26,10 @@ class GrowerAccountRepository extends BaseRepository {
 
       if (!getAll) {
         result.andWhere('grower_account.status', 'active');
-        result.orWhere('grower_account_org.status', 'active');
+        result.orWhere({
+          'grower_account_org.status': 'active',
+          'grower_account.status': 'active',
+        });
       }
     };
 

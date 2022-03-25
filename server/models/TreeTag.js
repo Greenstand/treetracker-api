@@ -3,7 +3,7 @@ const HttpError = require('../utils/HttpError');
 
 class TreeTag {
   constructor(session) {
-    this._treeTagRepository = TreeTagRepository(session);
+    this._treeTagRepository = new TreeTagRepository(session);
   }
 
   static TreeTag({
@@ -26,12 +26,16 @@ class TreeTag {
     });
   }
 
+  _response(treeTag) {
+    return this.constructor.TreeTag(treeTag);
+  }
+
   async getTreeTags(filter) {
     const treeTags = await this._treeTagRepository.getTreeTags({
       ...filter,
     });
 
-    return treeTags.map((row) => this.constructor.TreeTag(row));
+    return treeTags.map((row) => this._response(row));
   }
 
   async addTagsToTree({ tags, tree_id }) {
@@ -59,7 +63,7 @@ class TreeTag {
       updated_at: new Date().toISOString(),
     });
 
-    return this.constructor.TreeTag(treeTag);
+    return this._response(treeTag);
   }
 }
 

@@ -107,59 +107,6 @@ class CaptureRepository extends BaseRepository {
     return Number(count);
   }
 
-  async add(capture) {
-    await this._session.getDB().raw(
-      `INSERT INTO capture (
-        id,
-        reference_id,
-        tree_id,
-        image_url,
-        lat,
-        lon,
-        gps_accuracy,
-        species_id,
-        morphology,
-        age,
-        note,
-        attributes,
-        domain_specific_data,
-        device_configuration_id,
-        session_id,
-        status,
-        grower_account_id,
-        planting_organization_id,
-        estimated_geometric_location,
-        estimated_geographic_location,
-        captured_at,
-        updated_at
-      )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ST_PointFromText(?, 4326), ST_PointFromText(?, 4326), ?, now());`,
-      [
-        capture.id,
-        capture.reference_id,
-        capture.tree_id,
-        capture.image_url,
-        capture.lat,
-        capture.lon,
-        capture.gps_accuracy,
-        capture.species_id,
-        capture.morphology,
-        capture.age,
-        capture.note,
-        capture.attributes,
-        capture.domain_specific_data,
-        capture.device_configuration_id,
-        capture.session_id,
-        capture.status,
-        capture.grower_account_id,
-        capture.planting_organization_id,
-        capture.point,
-        capture.point,
-        capture.captured_at,
-      ],
-    );
-  }
-
   async getById(id) {
     const object = await this._session
       .getDB()

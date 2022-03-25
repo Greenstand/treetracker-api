@@ -27,12 +27,12 @@ class CaptureService {
       const { capture, domainEvent, eventRepo } =
         await this._capture.createCapture(captureObject);
 
+      await this._session.commitTransaction();
+
       if (domainEvent) {
         const eventDispatch = dispatch(eventRepo, publishMessage);
         eventDispatch('capture-created', domainEvent);
       }
-
-      await this._session.commitTransaction();
 
       return capture;
     } catch (e) {

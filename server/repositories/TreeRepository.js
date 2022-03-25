@@ -7,46 +7,6 @@ class TreeRepository extends BaseRepository {
     this._session = session;
   }
 
-  async add(tree) {
-    await this._session.getDB().raw(
-      `INSERT INTO tree (
-        id,
-        latest_capture_id,
-        image_url,
-        lat,
-        lon,
-        gps_accuracy,
-        morphology,
-        age,
-        status,
-        attributes,
-        species_id,
-        created_at,
-        updated_at,
-        estimated_geometric_location,
-        estimated_geographic_location
-      )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ST_PointFromText(?, 4326), ?);`,
-      [
-        tree.id,
-        tree.latest_capture_id,
-        tree.image_url,
-        tree.lat,
-        tree.lon,
-        tree.gps_accuracy,
-        tree.morphology,
-        tree.age,
-        tree.status,
-        tree.attributes,
-        tree.species_id,
-        tree.created_at,
-        tree.updated_at,
-        tree.point,
-        tree.point,
-      ],
-    );
-  }
-
   async getPotentialMatches(id, distance) {
     // maximum distance in meters between possible matches and tree in query
     const query = `

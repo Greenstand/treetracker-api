@@ -69,7 +69,7 @@ const growerAccountHandlerGet = async function (req, res) {
   });
 
   res.send({
-    growerAccounts,
+    grower_accounts: growerAccounts,
     links,
     query: { count, ...limitOptions, ...filter },
   });
@@ -110,7 +110,7 @@ const growerAccountHandlerPatch = async function (req, res) {
     id: req.params.grower_account_id,
   });
 
-  res.send({ growerAccount });
+  res.send({ grower_account: growerAccount });
   res.end();
 };
 
@@ -124,6 +124,12 @@ const growerAccountHandlerSingleGet = async function (req, res) {
   const growerAccount = await growerAccountService.getGrowerAccountById(
     req.params.grower_account_id,
   );
+
+  if (!growerAccount.id)
+    throw new HttpError(
+      400,
+      `Grower Account with id ${req.params.grower_account_id} not found`,
+    );
 
   res.send({ grower_account: growerAccount });
 };
@@ -142,7 +148,7 @@ const growerAccountHandlerPut = async function (req, res) {
   const { growerAccount, status } =
     await growerAccountService.upsertGrowerAccount(req.body);
 
-  res.status(status).send({ growerAccount });
+  res.status(status).send({ grower_account: growerAccount });
   res.end();
 };
 

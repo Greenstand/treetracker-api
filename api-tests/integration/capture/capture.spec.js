@@ -48,28 +48,41 @@ describe('/captures', () => {
         estimated_geometric_location: 'POINT(50 50)',
         updated_at: '2022-02-01 11:11:11',
       });
-      // await addCapture({
-      //   ...capture2,
-      //   estimated_geometric_location: 'POINT(50 50)',
-      //   updated_at: "2022-02-01 11:11:11"
-      // });
       await knex('domain_event').insert({ ...domain_event2 });
     });
 
     it('should create a capture', async () => {
-      await request(app)
+      const res = await request(app)
         .post(`/captures`)
         .send(capture2)
         .set('Accept', 'application/json')
-        .expect(204);
+        .expect(200);
+
+      expect(res.body.capture).to.include({
+        image_url: capture2.image_url,
+        planting_organization_id: capture2.planting_organization_id,
+        latitude: capture2.lat,
+        longitude: capture2.lon,
+        tree_associated: false,
+        captured_at: new Date(capture2.captured_at).toISOString(),
+      });
     });
 
     it('should not error out when duplicate data is sent', async () => {
-      await request(app)
+      const res = await request(app)
         .post(`/captures`)
         .send(capture2)
         .set('Accept', 'application/json')
-        .expect(204);
+        .expect(200);
+
+      expect(res.body.capture).to.include({
+        image_url: capture2.image_url,
+        planting_organization_id: capture2.planting_organization_id,
+        latitude: capture2.lat,
+        longitude: capture2.lon,
+        tree_associated: false,
+        captured_at: new Date(capture2.captured_at).toISOString(),
+      });
     });
 
     it('should resend capture created event if it wasnt successful last time and capture already exists', async () => {
@@ -77,9 +90,9 @@ describe('/captures', () => {
         .post(`/captures`)
         .send({ ...capture2, id: capture1.id })
         .set('Accept', 'application/json')
-        .expect(204);
+        .expect(200);
 
-      // added a timer to confirm this because the function call in the API is not 'awaited'
+      // added a timer to confirm this because the function call in the API is a callback function not 'awaited'
       await new Promise((resolve) => setTimeout(resolve, 2000));
       const numOfEmittedEvents = await knex('domain_event')
         .count()
@@ -108,18 +121,20 @@ describe('/captures', () => {
         tree_id: tree1.id,
       };
 
-      await request(app)
+      const res = await request(app)
         .patch(`/captures/${capture2.id}`)
         .send(updates)
         .set('Accept', 'application/json')
-        .expect(204);
-
-      const result = await request(app)
-        .get(`/captures/${capture2.id}`)
         .expect(200);
-      // expect(result.body.attributes.entries).to.eql(captureUpdates.attributes.entries);
-      // delete copy.attributes;
-      expect(result.body).to.include({ ...updates });
+
+      expect(res.body.capture).to.include({
+        image_url: capture2.image_url,
+        planting_organization_id: capture2.planting_organization_id,
+        latitude: capture2.lat,
+        longitude: capture2.lon,
+        tree_associated: true,
+        tree_id: updates.tree_id,
+      });
     });
 
     after(async () => {
@@ -155,7 +170,7 @@ describe('/captures', () => {
         .get(`/captures?tree_associated=true`)
         .expect(200);
       expect(result.body.captures.length).to.eql(1);
-      expect(result.body.count).to.eql(1);
+      expect(result.body.query.count).to.eql(1);
       expect(result.body.captures[0].id).to.eql(
         'c02a5ae6-3727-11ec-8d3d-0242ac130003',
       );
@@ -166,7 +181,7 @@ describe('/captures', () => {
         .get(`/captures?tree_associated=false`)
         .expect(200);
       expect(result.body.captures.length).to.eql(1);
-      expect(result.body.count).to.eql(1);
+      expect(result.body.query.count).to.eql(1);
       expect(result.body.captures[0].id).to.eql(
         'd2c69205-b13f-4ab6-bb5e-33dc504fa0c2',
       );
@@ -177,7 +192,7 @@ describe('/captures', () => {
         .patch(`/captures/${capture2.id}`)
         .send({ status: 'deleted' })
         .set('Accept', 'application/json')
-        .expect(204);
+        .expect(200);
 
       const result = await request(app).get(`/captures`).expect(200);
       expect(result.body.captures.length).to.eql(1);
@@ -234,14 +249,14 @@ describe('/captures', () => {
       const result = await request(app)
         .get(`/captures/${captureId}/tags`)
         .expect(200);
-      expect(result.body.length).to.eql(1);
-      expect(result.body[0]).to.include({
+      expect(result.body.capture_tags.length).to.eql(1);
+      expect(result.body.capture_tags[0]).to.include({
         capture_id: captureId,
         tag_id: tag2.id,
         tag_name: tag2.name,
         status: tag2.status,
       });
-      expect(result.body[0]).to.have.keys([
+      expect(result.body.capture_tags[0]).to.have.keys([
         'id',
         'capture_id',
         'tag_id',
@@ -256,12 +271,11 @@ describe('/captures', () => {
       await request(app)
         .patch(`/captures/${captureId}/tags/${tag2.id}`)
         .send({ status: 'deleted' })
-        .expect(204);
-
-      const result = await request(app)
-        .get(`/captures/${captureId}/tags/${tag2.id}`)
         .expect(200);
-      expect(result.body).to.be.empty;
+
+      await request(app)
+        .get(`/captures/${captureId}/tags/${tag2.id}`)
+        .expect(404);
     });
   });
 });

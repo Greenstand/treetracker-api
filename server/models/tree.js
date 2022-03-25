@@ -1,9 +1,12 @@
 const { raiseEvent, DomainEvent } = require('./DomainEvent');
 const TreeRepository = require('../repositories/TreeRepository');
 const EventRepository = require('../repositories/EventRepository');
+const Capture = require('./Capture');
+const knex = require('../database/knex');
 
 class Tree {
   constructor(session) {
+    this._session = session;
     this._treeRepository = new TreeRepository(session);
   }
 
@@ -39,59 +42,77 @@ class Tree {
     });
   }
 
+  _response(tree) {
+    return this.constructor.Tree(tree);
+  }
+
   async getTrees(filter, limitOptions) {
     const trees = await this._treeRepository.getByFilter(
       { ...filter, status: 'active' },
       limitOptions,
     );
-    return trees.map((row) => this.constructor.Tree(row));
+    return trees.map((row) => this._response(row));
   }
 
   async getTreesCount(filter) {
-    return this._treeRepository.countByFilter(filter);
+    return this._treeRepository.countByFilter({ ...filter, status: 'active' });
   }
 
   async getTreeById(treeId) {
     const tree = await this._treeRepository.getById(treeId);
-    return this.constructor.Tree(tree);
+    return this._response(tree);
   }
 
   async createTree(treeObject) {
     const eventRepo = new EventRepository(this._session);
 
+    const location = knex.raw(
+      `ST_PointFromText('POINT(${treeObject.lon} ${treeObject.lat})', 4326)`,
+    );
+
     const newTree = {
       ...treeObject,
-      point: `POINT( ${treeObject.lon} ${treeObject.lat} )`,
       attributes: treeObject.attributes
         ? { entries: treeObject.attributes }
         : null,
-      // created_at: new Date().toISOString(),
-      // updated_at: new Date().toISOString(),
+      estimated_geometric_location: location,
+      estimated_geographic_location: location,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     };
-    const existingTree = await this.getTreeById(newTree.id);
+    const existingTrees = await this._treeRepository.getByFilter({
+      id: newTree.id,
+    });
+    const [existingTree] = existingTrees;
     if (existingTree) {
       const domainEvent = await eventRepo.getDomainEvent(newTree.id);
       if (domainEvent.status !== 'sent') {
         return { domainEvent, tree: existingTree, eventRepo };
       }
-      return { tree: existingTree };
+      return { tree: this._response(existingTree) };
     }
-    const createdTree = await this._treeRepository.create(newTree);
+
+    const createdTree = await this._treeRepository.create({
+      ...newTree,
+    });
 
     const raiseTreeEvent = raiseEvent(eventRepo);
     const domainEvent = await raiseTreeEvent(DomainEvent(createdTree));
 
-    return { domainEvent, tree: createdTree, eventRepo };
+    return { domainEvent, tree: this._response(createdTree), eventRepo };
   }
 
   async updateTree(treeObject) {
-    return this._treeRepository.update({
+    const updatedTree = await this._treeRepository.update({
       ...treeObject,
-      updated_at: new Date().toISOString,
+      updated_at: new Date().toISOString(),
     });
+
+    return this._response(updatedTree);
   }
 
-  async getPotentialMatches(captureId, getCaptures) {
+  async getPotentialMatches(captureId) {
+    const capture = new Capture(this._session);
     const distance = 6;
     const potentialTrees = await this._treeRepository.getPotentialMatches(
       captureId,
@@ -101,7 +122,7 @@ class Tree {
     const matches = await Promise.all(
       potentialTrees.map(async (tree) => {
         const treeCopy = { ...tree };
-        const captures = await getCaptures({ tree_id: tree.id });
+        const captures = await capture.getCaptures({ tree_id: tree.id });
         treeCopy.captures = captures;
         return treeCopy;
       }),

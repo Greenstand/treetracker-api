@@ -1,5 +1,6 @@
 const request = require('supertest');
 const chai = require('chai');
+const { v4: uuid } = require('uuid');
 
 const { expect } = chai;
 chai.use(require('chai-like'));
@@ -27,25 +28,40 @@ describe('/grower_account', () => {
 
   describe('POST', () => {
     it('should create a grower account', async () => {
-      await request(app)
+      const res = await request(app)
         .post(`/grower_accounts`)
         .send(grower_account1)
         .set('Accept', 'application/json')
-        .expect(204);
+        .expect(201);
 
-      await request(app)
+      expect(res.body.grower_account).include({
+        ...grower_account1,
+      });
+      expect(res.body.grower_account.organizations.length).to.eql(0);
+
+      const res2 = await request(app)
         .post(`/grower_accounts`)
         .send(grower_account2)
         .set('Accept', 'application/json')
-        .expect(204);
+        .expect(201);
+
+      expect(res2.body.grower_account).include({
+        ...grower_account2,
+      });
+      expect(res2.body.grower_account.organizations.length).to.eql(0);
     });
 
     it('should not error out if duplicate wallet is sent', async () => {
-      await request(app)
+      const res = await request(app)
         .post(`/grower_accounts`)
         .send(grower_account1)
         .set('Accept', 'application/json')
-        .expect(204);
+        .expect(200);
+
+      expect(res.body.grower_account).include({
+        ...grower_account1,
+      });
+      expect(res.body.grower_account.organizations.length).to.eql(0);
     });
   });
 
@@ -56,16 +72,13 @@ describe('/grower_account', () => {
     });
 
     it('should uodate a grower account', async () => {
-      await request(app)
+      const res = await request(app)
         .patch(`/grower_accounts/${grower_account1.id}`)
         .send(growerAccountUpdates)
         .set('Accept', 'application/json')
-        .expect(204);
-
-      const result = await request(app)
-        .get(`/grower_accounts/${grower_account1.id}`)
         .expect(200);
-      expect(result.body).to.include({
+
+      expect(res.body.grower_account).to.include({
         ...grower_account1,
         ...growerAccountUpdates,
       });
@@ -73,6 +86,15 @@ describe('/grower_account', () => {
   });
 
   describe('GET', () => {
+    const organizationId = uuid();
+
+    before(async () => {
+      await knex('grower_account_org').insert({
+        organization_id: organizationId,
+        grower_account_id: grower_account1.id,
+      });
+    });
+
     it('should get grower account', async () => {
       const result = await request(app).get(`/grower_accounts`).expect(200);
       expect(result.body.grower_accounts.length).to.eql(2);
@@ -85,12 +107,26 @@ describe('/grower_account', () => {
         });
     });
 
+    it('should get grower account -- by id', async () => {
+      const result = await request(app)
+        .get(`/grower_accounts/${grower_account1.id}`)
+        .expect(200);
+      expect(result.body.grower_account).to.include({
+        ...grower_account1,
+        ...growerAccountUpdates,
+      });
+
+      expect(result.body.grower_account.organizations[0]).to.eql(
+        organizationId,
+      );
+    });
+
     it('should delete a grower account', async () => {
       await request(app)
         .patch(`/grower_accounts/${grower_account1.id}`)
         .send({ status: 'deleted' })
         .set('Accept', 'application/json')
-        .expect(204);
+        .expect(200);
 
       const result = await request(app).get(`/grower_accounts`).expect(200);
       expect(result.body.grower_accounts.length).to.eql(1);
@@ -107,7 +143,7 @@ describe('/grower_account', () => {
         .set('Accept', 'application/json')
         .expect(200);
 
-      expect(result.body).to.include({
+      expect(result.body.grower_account).to.include({
         ...grower_account2,
         first_name: grower_account1.first_name,
         last_name: grower_account1.last_name,

@@ -93,13 +93,13 @@ const treeHandlerGet = async function (req, res) {
 };
 
 const treeHandlerPost = async function (req, res) {
-  await treePostSchema.validateAsync(req.body, {
+  const treeObject = await treePostSchema.validateAsync(req.body, {
     abortEarly: false,
   });
 
   const treeService = new TreeService();
 
-  const tree = await treeService.createTag(req.body);
+  const tree = await treeService.createTag(treeObject);
 
   res.send({ tree });
 };
@@ -189,7 +189,7 @@ const treeHandlerSingleTagGet = async function (req, res) {
 
   const treeTagService = new TreeTagService();
 
-  const treeTags = treeTagService.getTreeTags({
+  const treeTags = await treeTagService.getTreeTags({
     tree_id: req.params.tree_id,
     tag_id: req.params.tag_id,
   });

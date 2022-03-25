@@ -48,6 +48,10 @@ class GrowerAccount {
     });
   }
 
+  _response(growerAccount) {
+    return this.constructor.GrowerAccount(growerAccount);
+  }
+
   async getGrowerAccounts(filter, options, getAll) {
     const growerAccounts = await this._growerAccountRepository.getByFilter(
       { ...filter, getAll },
@@ -59,19 +63,22 @@ class GrowerAccount {
       if (rowCopy.organizations[0] === null) {
         rowCopy.organizations = [];
       }
-      return this.constructor.GrowerAccount(rowCopy);
+      return this._response(rowCopy);
     });
   }
 
   async getGrowerAccountsCount(filter) {
-    return this._growerAccountRepository.countByFilter(filter);
+    return this._growerAccountRepository.countByFilter({
+      ...filter,
+      status: 'active',
+    });
   }
 
   async getGrowerAccountById(growerAccountId) {
-    const growerAccount = await this._growerAccountRepository.getById(
-      growerAccountId,
-    );
-    return this.constructor.GrowerAccount(growerAccount);
+    const growerAccount = await this._growerAccountRepository.getByFilter({
+      'grower_account.id': growerAccountId,
+    });
+    return this._response(growerAccount[0]);
   }
 
   async createGrowerAccount(growerAccountToCreate) {
@@ -94,14 +101,16 @@ class GrowerAccount {
       });
     }
 
-    return { status, growerAccount };
+    return { status, growerAccount: this._response(growerAccount) };
   }
 
   async updateGrowerAccount(updateObject) {
-    return this._growerAccountRepository.update({
+    const updatedGrowerAccount = await this._growerAccountRepository.update({
       ...updateObject,
       updated_at: new Date().toISOString(),
     });
+
+    return this._response(updatedGrowerAccount);
   }
 
   async upsertGrowerAccount(growerAccountObject) {
@@ -133,7 +142,7 @@ class GrowerAccount {
       status = result.status;
     }
 
-    return { status, growerAccount };
+    return { status, growerAccount: this._response(growerAccount) };
   }
 }
 

@@ -26,12 +26,16 @@ class CaptureTag {
     });
   }
 
+  _response(captureTag) {
+    return this.constructor.CaptureTag(captureTag);
+  }
+
   async getCaptureTags(filter) {
     const captureTags = await this._captureTagRepository.getCaptureTags({
       ...filter,
     });
 
-    return captureTags.map((row) => this.constructor.CaptureTag(row));
+    return captureTags.map((row) => this._response(row));
   }
 
   async addTagsToCapture({ tags, capture_id }) {
@@ -59,7 +63,7 @@ class CaptureTag {
       updated_at: new Date().toISOString(),
     });
 
-    return this.constructor.CaptureTag(captureTag);
+    return this._response(captureTag);
   }
 }
 

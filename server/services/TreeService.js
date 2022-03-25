@@ -1,4 +1,3 @@
-const Capture = require('../models/Capture');
 const Session = require('../models/Session');
 const Tree = require('../models/tree');
 const { dispatch } = require('../models/DomainEvent');
@@ -29,12 +28,12 @@ class TreeService {
         treeObject,
       );
 
+      await this._session.commitTransaction();
+
       if (domainEvent) {
         const eventDispatch = dispatch(eventRepo, publishMessage);
         eventDispatch('tree-created', domainEvent);
       }
-
-      await this._session.commitTransaction();
 
       return tree;
     } catch (e) {
@@ -60,8 +59,7 @@ class TreeService {
   }
 
   async getPotentialMatches(captureId) {
-    const capture = new Capture();
-    return this._tree.getPotentialMatches(captureId, capture.getCaptures);
+    return this._tree.getPotentialMatches(captureId);
   }
 }
 
