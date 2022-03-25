@@ -24,7 +24,7 @@
     "db-migrate-ci": "cd database; db-migrate up",
     "seed-dev": "NODE_ENV=development knex seed:run",
     "seed-usertest": "NODE_ENV=usertest knex seed:run",
-    "seed-cli": "node ./database/seed-cli.js"
+    "seed-cli": "NODE_ENV=test node ./database/seed-cli.js"
   },
   "keywords": [
     "ecology"
