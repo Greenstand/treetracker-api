@@ -9,6 +9,7 @@ exports.createCapture = async function (
   planting_organization_id,
   lat,
   lon,
+  grower_account_id,
 ) {
   const result = await knex('capture')
     .insert({
@@ -22,6 +23,7 @@ exports.createCapture = async function (
       lon,
       estimated_geometric_location: knex.raw(`ST_SetSRID(ST_MakePoint(${lon},${lat}),4326)`),
       estimated_geographic_location: knex.raw(`ST_SetSRID(ST_MakePoint(${lon},${lat}),4326)`),
+      grower_account_id,
     }).returning('*');
   log.warn("Created capture: ", result);
 }
