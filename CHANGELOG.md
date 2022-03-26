@@ -1,3 +1,11 @@
+# [1.16.0](https://github.com/Greenstand/treetracker-api/compare/v1.15.2...v1.16.0) (2022-03-26)
+
+
+### Features
+
+* add group_account_id ([64fbf39](https://github.com/Greenstand/treetracker-api/commit/64fbf39a29f13e4adf85ee713668afe58e4df8d7))
+* add grower account ([bb4f6e1](https://github.com/Greenstand/treetracker-api/commit/bb4f6e14a44a8d71760e3fdaaef209116b7009cb))
+
 ## [1.15.2](https://github.com/Greenstand/treetracker-api/compare/v1.15.1...v1.15.2) (2022-03-24)
 
 
