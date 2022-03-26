@@ -1,3 +1,10 @@
+# [1.18.0](https://github.com/Greenstand/treetracker-api/compare/v1.17.0...v1.18.0) (2022-03-26)
+
+
+### Features
+
+* cors ([ce8a643](https://github.com/Greenstand/treetracker-api/commit/ce8a643660fa0a8372d2a1281744139ecbd98c40))
+
 # [1.17.0](https://github.com/Greenstand/treetracker-api/compare/v1.16.1...v1.17.0) (2022-03-26)
 
 
