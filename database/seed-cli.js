@@ -28,6 +28,7 @@ program.command('create-capture')
   .requiredOption('-o, --organization <string>', 'the organization id of the capture')
   .requiredOption('-l, --lat <string>', 'the latitude of the capture')
   .requiredOption('-n, --lon <string>', 'the longitude of the capture')
+  .requiredOption('-g, --grower <string>', 'the grower id for this capture')
   .action((options) => {
     // const limit = options.first ? 1 : undefined;
     // console.log(str.split(options.separator, limit));
@@ -38,6 +39,7 @@ program.command('create-capture')
         options.organization,
         options.lat,
         options.lon,
+        options.grower,
       )
     );
   });
