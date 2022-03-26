@@ -15,6 +15,7 @@ const Capture = ({
   captured_at,
   planting_organization_id,
   tag_array,
+  grower_account_id,
 }) =>
   Object.freeze({
     id,
@@ -28,6 +29,7 @@ const Capture = ({
     status,
     tags: tag_array || undefined,
     captured_at,
+    grower_account_id,
   });
 
 const captureInsertObject = ({
