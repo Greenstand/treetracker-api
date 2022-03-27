@@ -20,6 +20,7 @@ class Capture {
     captured_at,
     planting_organization_id,
     tag_array,
+    grower_account_id,
   }) {
     return Object.freeze({
       id,
@@ -33,6 +34,7 @@ class Capture {
       status,
       tags: tag_array || undefined,
       captured_at,
+      grower_account_id,
     });
   }
 

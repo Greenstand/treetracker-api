@@ -1,8 +1,8 @@
-// const Session = require('../infra/database/Session');
+// const Session = require('../database/Session');
 // // const { subscribe } = require('../messaging/RabbitMQMessaging');
 
-// const EventRepository = require('../infra/repositories/EventRepository');
-// const CaptureRepository = require('../infra/repositories/CaptureRepository');
+// const EventRepository = require('../repositories/EventRepository');
+// const CaptureRepository = require('../repositories/CaptureRepository');
 
 // const { DomainEvent, receiveEvent } = require('../models/DomainEvent');
 // const { applyVerification } = require('../models/Capture');

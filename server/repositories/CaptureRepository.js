@@ -65,7 +65,8 @@ class CaptureRepository extends BaseRepository {
         created_at,
         status,
         captured_at, 
-        t.tag_array
+        t.tag_array,
+        grower_account_id
           FROM capture
           LEFT JOIN (
               SELECT ct.capture_id, array_agg(t.name) AS tag_array
