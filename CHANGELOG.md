@@ -1,3 +1,10 @@
+## [1.19.1](https://github.com/Greenstand/treetracker-api/compare/v1.19.0...v1.19.1) (2022-03-28)
+
+
+### Bug Fixes
+
+* test cors ([68addec](https://github.com/Greenstand/treetracker-api/commit/68addec73d258ccc9fc2eb5d1fe5fa6921073440))
+
 # [1.19.0](https://github.com/Greenstand/treetracker-api/compare/v1.18.0...v1.19.0) (2022-03-28)
 
 
