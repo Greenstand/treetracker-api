@@ -72,7 +72,30 @@ Options:
 
 # For test environment
 
-TODO
+- The major organization:
+
+  - Name: FCC
+  - ID: df12ea71-65e6-4059-b4f5-60c675764497
+
+- The grower accounts 1
+
+  - Grower account name: tarek bohdima
+  - ID: a15778cb-50b0-4bd8-a752-2d30d18aa106
+
+- The grower accounts 2
+
+  - Grower account name: Sebastian Gaertner
+  - ID: f6e35ae5-d7b5-4236-81ac-c8cf24d54b84
+
+- Sub organization one
+
+  - name: FCCABC
+  - ID: 894e4a9a-3a85-46ea-ba8c-6c00689503f3
+
+- Sub organization two
+
+  - Organization: FCCDEF
+  - ID: d523df4e-7fcd-4cd3-acb7-05b48e0939b8
 
 # Test Cases
 
