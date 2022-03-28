@@ -4,7 +4,7 @@ metadata:
   name: treetracker-api
 spec:
   cors:
-    origins: '*'
+    origins: 'http://google.com'
     methods: GET, POST, PATCH, OPTIONS
     headers:
       - Content-Type
