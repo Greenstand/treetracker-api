@@ -29,6 +29,12 @@ Options:
   -h, --help                   display help for command
 ```
 
+Example:
+
+```
+create-capture -d 2022-03-28 -o df12ea71-65e6-4059-b4f5-60c675764497 -l 23.120023699288623 -n 113.23645359014937 -g f6e35ae5-d7b5-4236-81ac-c8cf24d54b84
+```
+
 ### Create tree
 
 ```
@@ -39,6 +45,12 @@ Create new tree from a capture
 Options:
   -c, --capture <string>  the capture id for the tree
   -h, --help              display help for command
+```
+
+Example:
+
+```
+create-tree -c f6e35ae5-d7b5-4236-81ac-c8cf24d54b84
 ```
 
 # Test Cases Story (preset data)
