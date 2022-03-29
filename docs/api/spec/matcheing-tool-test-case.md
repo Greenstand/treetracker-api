@@ -26,6 +26,7 @@ Options:
   -o, --organization <string>  the organization id of the capture
   -l, --lat <string>           the latitude of the capture
   -n, --lon <string>           the longitude of the capture
+  -g                           the grower id of the capture
   -h, --help                   display help for command
 ```
 
