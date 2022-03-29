@@ -2,7 +2,7 @@ const { raiseEvent, DomainEvent } = require('./DomainEvent');
 const TreeRepository = require('../repositories/TreeRepository');
 const EventRepository = require('../repositories/EventRepository');
 const Capture = require('./Capture');
-const knex = require('../database/knex');
+const knex = require('../infra/database/knex');
 
 class Tree {
   constructor(session) {

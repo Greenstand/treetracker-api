@@ -1,7 +1,6 @@
-const Session = require('../database/Session');
+const Session = require('../infra/database/Session');
 const Tree = require('../models/tree');
-const { dispatch } = require('../models/DomainEvent');
-const { publishMessage } = require('./RabbitMQService');
+const { publishTreeCreatedMessage } = require('./QueueService');
 
 class TreeService {
   constructor() {
@@ -31,8 +30,7 @@ class TreeService {
       await this._session.commitTransaction();
 
       if (domainEvent) {
-        const eventDispatch = dispatch(eventRepo, publishMessage);
-        eventDispatch('tree-created', domainEvent);
+        publishTreeCreatedMessage(eventRepo, domainEvent);
       }
 
       return tree;

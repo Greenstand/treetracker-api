@@ -1,4 +1,4 @@
-const knex = require('../database/knex');
+const knex = require('../infra/database/knex');
 const GrowerAccountRepository = require('../repositories/GrowerAccountRepository');
 
 class GrowerAccount {

@@ -1,4 +1,4 @@
-const knex = require('../database/knex');
+const knex = require('../infra/database/knex');
 const CaptureRepository = require('../repositories/CaptureRepository');
 const EventRepository = require('../repositories/EventRepository');
 const { raiseEvent, DomainEvent } = require('./DomainEvent');

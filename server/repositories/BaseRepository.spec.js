@@ -4,7 +4,7 @@ const mockKnex = require('mock-knex');
 
 const tracker = mockKnex.getTracker();
 const BaseRepository = require('./BaseRepository');
-const Session = require('../database/Session');
+const Session = require('../infra/database/Session');
 
 describe('BaseRepository', () => {
   let baseRepository;

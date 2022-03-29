@@ -1,5 +1,5 @@
 const growers = require('./data/20220130-Growers.json');
-const knexDb = require('../../server/database/knex');
+const knexDb = require('../../server/infra/database/knex');
 
 const parsePoint = (json) => {
   const jsonCopy = { ...json };

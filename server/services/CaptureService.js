@@ -1,7 +1,6 @@
 const Capture = require('../models/Capture');
-const Session = require('../database/Session');
-const { dispatch } = require('../models/DomainEvent');
-const { publishMessage } = require('./RabbitMQService');
+const Session = require('../infra/database/Session');
+const { publishCaptureCreatedMessage } = require('./QueueService');
 
 class CaptureService {
   constructor() {
@@ -30,8 +29,7 @@ class CaptureService {
       await this._session.commitTransaction();
 
       if (domainEvent) {
-        const eventDispatch = dispatch(eventRepo, publishMessage);
-        eventDispatch('capture-created', domainEvent);
+        publishCaptureCreatedMessage(eventRepo, domainEvent);
       }
 
       return capture;

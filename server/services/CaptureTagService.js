@@ -1,5 +1,5 @@
 const CaptureTag = require('../models/CaptureTag');
-const Session = require('../database/Session');
+const Session = require('../infra/database/Session');
 
 class CaptureTagService {
   constructor() {

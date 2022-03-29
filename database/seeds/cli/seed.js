@@ -1,7 +1,7 @@
 // functions to seed into database for testing
 const log = require('loglevel');
 const uuid = require('uuid');
-const knex = require('../../../server/database/knex');
+const knex = require('../../../server/infra/database/knex');
 const captures = require('../data/20220210-Captures.json');
 
 exports.createCapture = async function (

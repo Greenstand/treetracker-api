@@ -1,15 +1,11 @@
 const log = require('loglevel');
 const Broker = require('rascal').BrokerAsPromised;
-const { config } = require('./config/rabbitMQConfig');
+const { config } = require('./config');
 
 const publishMessage = async (publicationName, payload, resultHandler) => {
   const broker = await Broker.create(config);
   try {
-    const publication = await broker.publish(
-      publicationName,
-      payload,
-      'capture-data.creation',
-    );
+    const publication = await broker.publish(publicationName, payload);
     publication.on('success', resultHandler).on('error', (err, messageId) => {
       log.error(`Error with id ${messageId} ${err.message}`);
       throw err;
