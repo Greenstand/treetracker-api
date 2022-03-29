@@ -3,8 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const log = require('loglevel');
 const HttpError = require('./utils/HttpError');
-const { errorHandler } = require('./handlers/utils');
-const helper = require('./handlers/utils');
+const { errorHandler } = require('./utils/utils');
+const helper = require('./utils/utils');
 const router = require('./routes');
 const registerEventHandlers = require('./services/EventHandlerService');
 

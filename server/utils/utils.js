@@ -3,7 +3,7 @@
  */
 const log = require('loglevel');
 const { ValidationError } = require('joi');
-const HttpError = require('../utils/HttpError');
+const HttpError = require('./HttpError');
 
 /*
  * This is from the library https://github.com/Abazhenov/express-async-handler

@@ -4,7 +4,7 @@ const router = express.Router();
 const validateRequest = (req, res, next) => {
   next();
 };
-const { handlerWrapper } = require('./handlers/utils');
+const { handlerWrapper } = require('./utils/utils');
 const {
   captureHandlerPost,
   captureHandlerGet,
