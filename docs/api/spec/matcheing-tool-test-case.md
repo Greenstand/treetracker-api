@@ -186,3 +186,7 @@ create-tree -c f6e35ae5-d7b5-4236-81ac-c8cf24d54b84
    1. Matching panel: the tree capture list is correct, including: every capture's photo, date, distance (can click the location icon to open google map).
 
    1. By clicking the capture photo, can open the capture profile panel.
+
+1. Please compose more test cases
+   
+   The more test cases, and seneriois, and edge cases we tested, the high application quality we got, so, please add your new test cases below, and test it! If you have no permission to change this document, please raise a Pull Request.
