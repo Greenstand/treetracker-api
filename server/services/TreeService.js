@@ -1,4 +1,4 @@
-const Session = require('../models/Session');
+const Session = require('../database/Session');
 const Tree = require('../models/tree');
 const { dispatch } = require('../models/DomainEvent');
 const { publishMessage } = require('./RabbitMQService');

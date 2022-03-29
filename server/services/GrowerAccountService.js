@@ -1,4 +1,4 @@
-const Session = require('../models/Session');
+const Session = require('../database/Session');
 const GrowerAccount = require('../models/GrowerAccount');
 
 class GrowerAccountService {

@@ -1,5 +1,5 @@
 const Capture = require('../models/Capture');
-const Session = require('../models/Session');
+const Session = require('../database/Session');
 const { dispatch } = require('../models/DomainEvent');
 const { publishMessage } = require('./RabbitMQService');
 
