@@ -157,9 +157,14 @@ class Capture {
     if (existingCapture.id) {
       const domainEvent = await eventRepo.getDomainEvent(newCapture.id);
       if (domainEvent.status !== 'sent') {
-        return { domainEvent, capture: existingCapture, eventRepo };
+        return {
+          domainEvent,
+          capture: existingCapture,
+          eventRepo,
+          status: 200,
+        };
       }
-      return { capture: existingCapture };
+      return { capture: existingCapture, status: 200 };
     }
     const createdCapture = await this._captureRepository.create(newCapture);
     const captureCreatedToRaise = this.constructor.CaptureCreated({
@@ -175,6 +180,7 @@ class Capture {
       domainEvent,
       capture: this._response(createdCapture),
       eventRepo,
+      status: 201,
     };
   }
 

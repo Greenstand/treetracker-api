@@ -107,9 +107,9 @@ const captureHandlerPost = async function (req, res) {
   });
 
   const captureService = new CaptureService();
-  const capture = await captureService.createCapture(captureObject);
+  const { capture, status } = await captureService.createCapture(captureObject);
 
-  res.send({ capture });
+  res.status(status).send({ capture });
 };
 
 const captureHandlerPatch = async function (req, res) {

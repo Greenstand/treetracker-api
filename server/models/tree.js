@@ -87,9 +87,9 @@ class Tree {
     if (existingTree) {
       const domainEvent = await eventRepo.getDomainEvent(newTree.id);
       if (domainEvent.status !== 'sent') {
-        return { domainEvent, tree: existingTree, eventRepo };
+        return { domainEvent, tree: existingTree, eventRepo, status: 200 };
       }
-      return { tree: this._response(existingTree) };
+      return { tree: this._response(existingTree), status: 200 };
     }
 
     const createdTree = await this._treeRepository.create({
@@ -99,7 +99,12 @@ class Tree {
     const raiseTreeEvent = raiseEvent(eventRepo);
     const domainEvent = await raiseTreeEvent(DomainEvent(createdTree));
 
-    return { domainEvent, tree: this._response(createdTree), eventRepo };
+    return {
+      domainEvent,
+      tree: this._response(createdTree),
+      eventRepo,
+      status: 201,
+    };
   }
 
   async updateTree(treeObject) {

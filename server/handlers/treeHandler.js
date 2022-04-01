@@ -99,9 +99,9 @@ const treeHandlerPost = async function (req, res) {
 
   const treeService = new TreeService();
 
-  const tree = await treeService.createTag(treeObject);
+  const { tree, status } = await treeService.createTag(treeObject);
 
-  res.send({ tree });
+  res.status(status).send({ tree });
 };
 
 const treeHandlerGetPotentialMatches = async (req, res) => {

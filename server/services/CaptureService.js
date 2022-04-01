@@ -23,7 +23,7 @@ class CaptureService {
   async createCapture(captureObject) {
     try {
       await this._session.beginTransaction();
-      const { capture, domainEvent, eventRepo } =
+      const { capture, domainEvent, eventRepo, status } =
         await this._capture.createCapture(captureObject);
 
       await this._session.commitTransaction();
@@ -32,7 +32,7 @@ class CaptureService {
         publishCaptureCreatedMessage(eventRepo, domainEvent);
       }
 
-      return capture;
+      return { capture, status };
     } catch (e) {
       if (this._session.isTransactionInProgress()) {
         await this._session.rollbackTransaction();

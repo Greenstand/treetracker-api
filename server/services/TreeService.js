@@ -23,9 +23,8 @@ class TreeService {
   async createTag(treeObject) {
     try {
       await this._session.beginTransaction();
-      const { tree, domainEvent, eventRepo } = await this._tree.createTree(
-        treeObject,
-      );
+      const { tree, domainEvent, eventRepo, status } =
+        await this._tree.createTree(treeObject);
 
       await this._session.commitTransaction();
 
@@ -33,7 +32,7 @@ class TreeService {
         publishTreeCreatedMessage(eventRepo, domainEvent);
       }
 
-      return tree;
+      return { tree, status };
     } catch (e) {
       if (this._session.isTransactionInProgress()) {
         await this._session.rollbackTransaction();
