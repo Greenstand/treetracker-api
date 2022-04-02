@@ -56,9 +56,9 @@ describe('/captures', () => {
         .post(`/captures`)
         .send(capture2)
         .set('Accept', 'application/json')
-        .expect(200);
+        .expect(201);
 
-      expect(res.body.capture).to.include({
+      expect(res.body).to.include({
         image_url: capture2.image_url,
         planting_organization_id: capture2.planting_organization_id,
         latitude: capture2.lat,
@@ -75,7 +75,7 @@ describe('/captures', () => {
         .set('Accept', 'application/json')
         .expect(200);
 
-      expect(res.body.capture).to.include({
+      expect(res.body).to.include({
         image_url: capture2.image_url,
         planting_organization_id: capture2.planting_organization_id,
         latitude: capture2.lat,
@@ -127,7 +127,7 @@ describe('/captures', () => {
         .set('Accept', 'application/json')
         .expect(200);
 
-      expect(res.body.capture).to.include({
+      expect(res.body).to.include({
         image_url: capture2.image_url,
         planting_organization_id: capture2.planting_organization_id,
         latitude: capture2.lat,
@@ -249,14 +249,14 @@ describe('/captures', () => {
       const result = await request(app)
         .get(`/captures/${captureId}/tags`)
         .expect(200);
-      expect(result.body.capture_tags.length).to.eql(1);
-      expect(result.body.capture_tags[0]).to.include({
+      expect(result.body.length).to.eql(1);
+      expect(result.body[0]).to.include({
         capture_id: captureId,
         tag_id: tag2.id,
         tag_name: tag2.name,
         status: tag2.status,
       });
-      expect(result.body.capture_tags[0]).to.have.keys([
+      expect(result.body[0]).to.have.keys([
         'id',
         'capture_id',
         'tag_id',

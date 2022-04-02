@@ -60,7 +60,7 @@ const tagHandlerPost = async function (req, res) {
   const tagService = new TagService();
   const createdTag = await tagService.createTag(req.body);
 
-  res.status(201).send({ tag: createdTag });
+  res.status(201).send(createdTag);
   res.end();
 };
 
@@ -79,7 +79,7 @@ const tagHandlerPatch = async function (req, res) {
     id: req.params.tag_id,
   });
 
-  res.status(200).send({ tag: updatedTag });
+  res.status(200).send(updatedTag);
   res.end();
 };
 
@@ -92,7 +92,7 @@ const tagHandlerSingleGet = async function (req, res) {
 
   const tag = await tagService.getTagById(req.params.tag_id);
 
-  res.send({ tag });
+  res.send(tag);
 };
 
 module.exports = {

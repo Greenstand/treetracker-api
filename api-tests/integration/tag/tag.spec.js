@@ -21,7 +21,7 @@ describe('/tag', () => {
         .set('Accept', 'application/json')
         .expect(201);
 
-      expect(res.body.tag).to.include({ ...tag1 });
+      expect(res.body).to.include({ ...tag1 });
     });
 
     it('should error out -- tag name already exists', async () => {
@@ -47,7 +47,7 @@ describe('/tag', () => {
         .set('Accept', 'application/json')
         .expect(200);
 
-      expect(result.body.tag).to.include({ ...tag1, ...tagUpdates });
+      expect(result.body).to.include({ ...tag1, ...tagUpdates });
     });
   });
 
@@ -58,7 +58,7 @@ describe('/tag', () => {
         .where({ ...tagUpdates });
 
       const result = await request(app).get(`/tags/${tagId[0].id}`).expect(200);
-      expect(result.body.tag).to.include({ ...tag1, ...tagUpdates });
+      expect(result.body).to.include({ ...tag1, ...tagUpdates });
     });
 
     it('should get tags', async () => {

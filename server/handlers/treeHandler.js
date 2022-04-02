@@ -101,7 +101,7 @@ const treeHandlerPost = async function (req, res) {
 
   const { tree, status } = await treeService.createTag(treeObject);
 
-  res.status(status).send({ tree });
+  res.status(status).send(tree);
 };
 
 const treeHandlerGetPotentialMatches = async (req, res) => {
@@ -127,7 +127,7 @@ const treeHandlerSingleGet = async (req, res) => {
   if (!tree.id)
     throw new HttpError(404, `tree with id ${req.params.tree_id} not found`);
 
-  res.send({ tree });
+  res.send(tree);
 };
 
 const treeHandlerPatch = async (req, res) => {
@@ -160,7 +160,7 @@ const treeHandlerTagGet = async (req, res) => {
     tree_id: req.params.tree_id,
   });
 
-  res.send({ tree_tags: treeTags });
+  res.send(treeTags);
 };
 
 const treeHandlerTagPost = async function (req, res) {
@@ -198,7 +198,7 @@ const treeHandlerSingleTagGet = async function (req, res) {
 
   if (!treeTag) throw new HttpError(404, 'Tree Tag not found');
 
-  res.send({ tree_tag: treeTag });
+  res.send(treeTag);
 };
 
 const treeHandlerSingleTagPatch = async function (req, res) {
@@ -218,7 +218,7 @@ const treeHandlerSingleTagPatch = async function (req, res) {
     ...req.body,
   });
 
-  res.send({ tree_tag: treeTag });
+  res.send(treeTag);
 };
 
 module.exports = {

@@ -90,7 +90,7 @@ const growerAccountHandlerPost = async function (req, res) {
   const { growerAccount, status } =
     await growerAccountService.createGrowerAccount(req.body);
 
-  res.status(status).send({ grower_account: growerAccount });
+  res.status(status).send(growerAccount);
   res.end();
 };
 
@@ -110,7 +110,7 @@ const growerAccountHandlerPatch = async function (req, res) {
     id: req.params.grower_account_id,
   });
 
-  res.send({ grower_account: growerAccount });
+  res.send(growerAccount);
   res.end();
 };
 
@@ -131,7 +131,7 @@ const growerAccountHandlerSingleGet = async function (req, res) {
       `Grower Account with id ${req.params.grower_account_id} not found`,
     );
 
-  res.send({ grower_account: growerAccount });
+  res.send(growerAccount);
 };
 
 const growerAccountHandlerPut = async function (req, res) {
@@ -148,7 +148,7 @@ const growerAccountHandlerPut = async function (req, res) {
   const { growerAccount, status } =
     await growerAccountService.upsertGrowerAccount(req.body);
 
-  res.status(status).send({ grower_account: growerAccount });
+  res.status(status).send(growerAccount);
   res.end();
 };
 

@@ -109,7 +109,7 @@ const captureHandlerPost = async function (req, res) {
   const captureService = new CaptureService();
   const { capture, status } = await captureService.createCapture(captureObject);
 
-  res.status(status).send({ capture });
+  res.status(status).send(capture);
 };
 
 const captureHandlerPatch = async function (req, res) {
@@ -127,7 +127,7 @@ const captureHandlerPatch = async function (req, res) {
     ...req.body,
   });
 
-  res.send({ capture });
+  res.send(capture);
 };
 
 const captureHandlerSingleGet = async function (req, res) {
@@ -158,7 +158,7 @@ const captureHanglerTagGet = async function (req, res) {
     capture_id: req.params.capture_id,
   });
 
-  res.send({ capture_tags: captureTags });
+  res.send(captureTags);
   res.end();
 };
 
@@ -197,7 +197,7 @@ const captureHandlerSingleTagGet = async function (req, res) {
 
   if (!captureTag) throw new HttpError(404, 'Capture Tag not found');
 
-  res.send({ capture_tag: captureTag });
+  res.send(captureTag);
 };
 
 const captureHandlerSingleTagPatch = async function (req, res) {
@@ -216,7 +216,7 @@ const captureHandlerSingleTagPatch = async function (req, res) {
     ...req.body,
   });
 
-  res.send({ capture_tag: captureTag });
+  res.send(captureTag);
 };
 
 module.exports = {

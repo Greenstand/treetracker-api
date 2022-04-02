@@ -42,12 +42,12 @@ describe('/trees', () => {
         .post(`/trees`)
         .send(tree2)
         .set('Accept', 'application/json')
-        .expect(200);
+        .expect(201);
 
       const treeCopy = { ...tree2 };
-      expect(res.body.tree.attributes.entries).to.eql(treeCopy.attributes);
+      expect(res.body.attributes.entries).to.eql(treeCopy.attributes);
       delete treeCopy.attributes;
-      expect(res.body.tree).to.include({ ...treeCopy });
+      expect(res.body).to.include({ ...treeCopy });
     });
 
     it('should not error out when duplicate data is sent', async () => {
@@ -89,11 +89,9 @@ describe('/trees', () => {
 
       const copy = { ...updatedModTree };
       const result = await request(app).get(`/trees/${tree2.id}`).expect(200);
-      expect(result.body.tree.attributes.entries).to.eql(
-        copy.attributes.entries,
-      );
+      expect(result.body.attributes.entries).to.eql(copy.attributes.entries);
       delete copy.attributes;
-      expect(result.body.tree).to.include({ ...copy });
+      expect(result.body).to.include({ ...copy });
     });
   });
 
@@ -160,14 +158,14 @@ describe('/trees', () => {
       const result = await request(app)
         .get(`/trees/${treeId}/tags`)
         .expect(200);
-      expect(result.body.tree_tags.length).to.eql(1);
-      expect(result.body.tree_tags[0]).to.include({
+      expect(result.body.length).to.eql(1);
+      expect(result.body[0]).to.include({
         tree_id: treeId,
         tag_id: tag2.id,
         tag_name: tag2.name,
         status: tag2.status,
       });
-      expect(result.body.tree_tags[0]).to.have.keys([
+      expect(result.body[0]).to.have.keys([
         'id',
         'tree_id',
         'tag_id',

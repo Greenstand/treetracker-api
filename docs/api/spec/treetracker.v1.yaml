@@ -121,15 +121,18 @@ paths:
       summary: ''
       operationId: post-captures
       responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/capture'
         '201':
           description: Created
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  capture:
-                    $ref: '#/components/schemas/capture'
+                $ref: '#/components/schemas/capture'
       requestBody:
         content:
           application/json:
@@ -253,10 +256,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  capture:
-                    $ref: '#/components/schemas/capture'
+                $ref: '#/components/schemas/capture'
     get:
       summary: ''
       operationId: get-captures-capture_id
@@ -266,10 +266,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  capture:
-                    $ref: '#/components/schemas/capture'
+                $ref: '#/components/schemas/capture'
   '/captures/{capture_id}/tags/':
     parameters:
       - schema:
@@ -286,10 +283,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  capture_tags:
-                    $ref: '#/components/schemas/capture_tags'
+                type: array
+                items:
+                  $ref: '#/components/schemas/capture_tags'
       operationId: get-captures-capture_id-tags
     post:
       summary: ''
@@ -331,10 +327,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  capture_tag:
-                    $ref: '#/components/schemas/capture_tags'
+                $ref: '#/components/schemas/capture_tags'
       operationId: get-captures-capture_id-tags-tag_id
     patch:
       summary: ''
@@ -353,10 +346,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  capture_tag:
-                    $ref: '#/components/schemas/capture_tags'
+                $ref: '#/components/schemas/capture_tags'
   /trees:
     get:
       summary: Your GET endpoint
@@ -415,15 +405,18 @@ paths:
       summary: ''
       operationId: post-trees
       responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tree'
         '201':
           description: Created
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  tree:
-                    $ref: '#/components/schemas/tree'
+                $ref: '#/components/schemas/tree'
       requestBody:
         content:
           application/json:
@@ -488,10 +481,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  tree:
-                    $ref: '#/components/schemas/tree_tags'
+                type: array
+                items:
+                  $ref: '#/components/schemas/tree_tags'
       operationId: get-trees-capture_id-tags
     post:
       summary: ''
@@ -520,12 +512,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  tree_tags:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/tree_tags'
+                $ref: '#/components/schemas/tree_tags'
       operationId: get-trees-tree_id-tags-tag_id
     patch:
       summary: ''
@@ -536,10 +523,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  tree_tag:
-                    $ref: '#/components/schemas/tree_tags'
+                $ref: '#/components/schemas/tree_tags'
       requestBody:
         content:
           application/json:
@@ -567,10 +551,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                tree:
-                  $ref: '#/components/schemas/tree'
+              $ref: '#/components/schemas/tree'
     patch:
       summary: ''
       operationId: patch-trees-tree_id
@@ -580,10 +561,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  tree:
-                    $ref: '#/components/schemas/tree'
+                $ref: '#/components/schemas/tree'
   /trees/potential_matches:
     get:
       summary: Your GET endpoint
@@ -686,6 +664,15 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/tag'
+                  links:
+                    type: object
+                    properties:
+                      prev:
+                        type: string
+                      next:
+                        type: string
+                  query:
+                    type: object
       operationId: get-tag
       parameters:
         - schema:
@@ -705,10 +692,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  tag:
-                    $ref: '#/components/schemas/tag'
+                $ref: '#/components/schemas/tag'
       requestBody:
         content:
           application/json:
@@ -739,10 +723,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                tag:
-                  $ref: '#/components/schemas/tag'
+              $ref: '#/components/schemas/tag'
     patch:
       summary: ''
       operationId: patch-tags-tagid
@@ -752,10 +733,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  tag:
-                    $ref: '#/components/schemas/tag'
+                $ref: '#/components/schemas/tag'
   /grower_account:
     get:
       summary: Your GET endpoint
@@ -808,23 +786,143 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  grower_account:
-                    $ref: '#/components/schemas/grower_account'
-    patch:
+                $ref: '#/components/schemas/grower_account'
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/grower_account'
+      description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                wallet:
+                  type: string
+                person_id:
+                  type: string
+                  format: uuid
+                organization_id:
+                  type: string
+                  format: uuid
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+                lat:
+                  type: integer
+                lon:
+                  type: integer
+                email:
+                  type: string
+                phone:
+                  type: string
+                image_url:
+                  type: string
+                  format: uri
+                image_rotation:
+                  type: string
+                first_registration_at:
+                  type: string
+                  format: date-time
+              required:
+                - wallet
+                - first_name
+                - last_name
+                - lat
+                - lon
+                - image_url
+                - first_registration_at
+    parameters: []
+    put:
       summary: ''
-      operationId: patch-grower_account
+      operationId: put-grower_account
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  grower_account:
-                    $ref: '#/components/schemas/grower_account'
+                $ref: '#/components/schemas/grower_account'
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/grower_account'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                wallet:
+                  type: string
+                person_id:
+                  type: string
+                  format: uuid
+                organization_id:
+                  type: string
+                  format: uuid
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+                lat:
+                  type: integer
+                lon:
+                  type: integer
+                email:
+                  type: string
+                phone:
+                  type: string
+                image_url:
+                  type: string
+                  format: uri
+                image_rotation:
+                  type: string
+                first_registration_at:
+                  type: string
+                  format: date-time
+              required:
+                - wallet
+                - first_name
+                - last_name
+                - lat
+                - lon
+                - image_url
+                - first_registration_at
+  '/grower_account/{grower_account_id}':
+    parameters:
+      - schema:
+          type: string
+        name: grower_account_id
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/grower_account'
+      operationId: get-grower_account-grower_account_id
+    patch:
+      summary: ''
+      operationId: patch-grower_account-grower_account_id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/grower_account'
       requestBody:
         content:
           application/json:
@@ -843,19 +941,15 @@ paths:
                   type: string
                 email:
                   type: string
-                  format: email
                 phone:
                   type: string
                 image_url:
                   type: string
                   format: uri
                 image_rotation:
-                  type: integer
+                  type: string
                 status:
                   type: string
-                  enum:
-                    - deleted
-                    - active
 components:
   schemas:
     capture:

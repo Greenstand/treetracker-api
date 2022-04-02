@@ -34,10 +34,10 @@ describe('/grower_account', () => {
         .set('Accept', 'application/json')
         .expect(201);
 
-      expect(res.body.grower_account).include({
+      expect(res.body).include({
         ...grower_account1,
       });
-      expect(res.body.grower_account.organizations.length).to.eql(0);
+      expect(res.body.organizations.length).to.eql(0);
 
       const res2 = await request(app)
         .post(`/grower_accounts`)
@@ -45,10 +45,10 @@ describe('/grower_account', () => {
         .set('Accept', 'application/json')
         .expect(201);
 
-      expect(res2.body.grower_account).include({
+      expect(res2.body).include({
         ...grower_account2,
       });
-      expect(res2.body.grower_account.organizations.length).to.eql(0);
+      expect(res2.body.organizations.length).to.eql(0);
     });
 
     it('should not error out if duplicate wallet is sent', async () => {
@@ -58,10 +58,10 @@ describe('/grower_account', () => {
         .set('Accept', 'application/json')
         .expect(200);
 
-      expect(res.body.grower_account).include({
+      expect(res.body).include({
         ...grower_account1,
       });
-      expect(res.body.grower_account.organizations.length).to.eql(0);
+      expect(res.body.organizations.length).to.eql(0);
     });
   });
 
@@ -78,7 +78,7 @@ describe('/grower_account', () => {
         .set('Accept', 'application/json')
         .expect(200);
 
-      expect(res.body.grower_account).to.include({
+      expect(res.body).to.include({
         ...grower_account1,
         ...growerAccountUpdates,
       });
@@ -111,14 +111,12 @@ describe('/grower_account', () => {
       const result = await request(app)
         .get(`/grower_accounts/${grower_account1.id}`)
         .expect(200);
-      expect(result.body.grower_account).to.include({
+      expect(result.body).to.include({
         ...grower_account1,
         ...growerAccountUpdates,
       });
 
-      expect(result.body.grower_account.organizations[0]).to.eql(
-        organizationId,
-      );
+      expect(result.body.organizations[0]).to.eql(organizationId);
     });
 
     it('should delete a grower account', async () => {
@@ -143,7 +141,7 @@ describe('/grower_account', () => {
         .set('Accept', 'application/json')
         .expect(200);
 
-      expect(result.body.grower_account).to.include({
+      expect(result.body).to.include({
         ...grower_account2,
         first_name: grower_account1.first_name,
         last_name: grower_account1.last_name,
