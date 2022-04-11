@@ -6,12 +6,13 @@ class Tag {
     this._tagRepository = new TagRepository(session);
   }
 
-  static Tag({ id, name, isPublic, status, created_at, updated_at }) {
+  static Tag({ id, name, isPublic, status, owner_id, created_at, updated_at }) {
     return Object.freeze({
       id,
       name,
       isPublic,
       status,
+      owner_id,
       created_at,
       updated_at,
     });
