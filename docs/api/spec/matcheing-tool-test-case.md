@@ -4,7 +4,7 @@ This article describes the test cases for the matching tool on admin panel and h
 
 # The tool to generate test data for matching tool
 
-We use Github Action to generate test data for matching tool, the action is here: https://github.com/Greenstand/treetracker-api/actions/workflows/test-tool.yml
+We use Github Action to generate test data for matching tool, the action is here: https://github.com/Greenstand/treetracker-api/actions/workflows/test-tool-test-env.yml
 
 Basically, the Action accept a command to generate data, for example: `create-capture -d 2022-03-24 -o ce14d9b7-92c3-450b-9779-2bb731c5aefc -l 23.12040111695386 -n 113.23542764520303`, this command generate a capture, which is taken at 2022-03-24, belongs to an org whose id is `ce14d9b7-92c3-450b-9779-2bb731c5aefc`, and the location is `23.12040111695386, 113.23542764520303`.
 

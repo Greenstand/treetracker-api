@@ -23,6 +23,7 @@ class GrowerAccount {
     organizations = [],
     status,
     first_registration_at,
+    bulk_pack_file_name,
     created_at,
     updated_at,
   }) {
@@ -43,6 +44,7 @@ class GrowerAccount {
       organizations,
       status,
       first_registration_at,
+      bulk_pack_file_name,
       created_at,
       updated_at,
     });

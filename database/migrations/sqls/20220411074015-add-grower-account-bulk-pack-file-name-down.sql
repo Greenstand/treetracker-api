@@ -1,0 +1,1 @@
+ALTER TABLE grower_account DROP COLUMN bulk_pack_file_name;
