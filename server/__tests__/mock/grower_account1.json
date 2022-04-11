@@ -9,5 +9,6 @@
   "phone": "12345",
   "image_rotation": 14,
   "lat": "14",
-  "lon": "14"
+  "lon": "14",
+  "bulk_pack_file_name": "bulk_pack_file_name"
 }

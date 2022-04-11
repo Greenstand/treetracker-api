@@ -18,6 +18,7 @@ const GrowerAccount = ({
   image_rotation,
   status,
   first_registration_at,
+  bulk_pack_file_name,
   created_at,
   updated_at,
 }) =>
@@ -37,6 +38,7 @@ const GrowerAccount = ({
     image_rotation,
     status,
     first_registration_at,
+    bulk_pack_file_name,
     created_at,
     updated_at,
   });
@@ -96,8 +98,9 @@ const FilterCriteria = ({
   organization_id = undefined,
   id = undefined,
   wallet = undefined,
+  bulk_pack_file_name = undefined,
 }) => {
-  return Object.entries({ organization_id, id, wallet })
+  return Object.entries({ organization_id, id, wallet, bulk_pack_file_name })
     .filter((entry) => entry[1] !== undefined)
     .reduce((result, item) => {
       const [key, value] = item;

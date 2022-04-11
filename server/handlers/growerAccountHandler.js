@@ -16,6 +16,7 @@ const growerAccountGetQuerySchema = Joi.object({
   organization_id: Joi.string().uuid(),
   id: Joi.string().uuid(),
   wallet: Joi.string(),
+  bulk_pack_file_name: Joi.string(),
 }).unknown(false);
 
 const growerAccountPostQuerySchema = Joi.object({
@@ -31,6 +32,7 @@ const growerAccountPostQuerySchema = Joi.object({
   image_url: Joi.string().uri().required(),
   image_rotation: Joi.number().integer(),
   first_registration_at: Joi.date().iso().required(),
+  bulk_pack_file_name: Joi.string(),
 }).unknown(false);
 
 const growerAccountPatchQuerySchema = Joi.object({
@@ -58,10 +60,8 @@ const growerAccountHandlerGet = async function (req, res) {
   const growerAccountRepo = new GrowerAccountRepository(session);
 
   const executeGetGrowerAccounts = getGrowerAccounts(growerAccountRepo);
-  const {
-    grower_accounts,
-    growerAccountsCount,
-  } = await executeGetGrowerAccounts(req.query);
+  const { grower_accounts, growerAccountsCount } =
+    await executeGetGrowerAccounts(req.query);
 
   const defaultRange = { limit: '100', offset: '0' };
   filter.limit = filter.limit ?? defaultRange.limit;
@@ -198,16 +198,8 @@ const growerAccountHandlerPut = async function (req, res, next) {
 
   try {
     const growerAccountInsertObject = GrowerAccountInsertObject(req.body);
-    const {
-      wallet,
-      first_name,
-      last_name,
-      phone,
-      email,
-      location,
-      lat,
-      lon,
-    } = growerAccountInsertObject;
+    const { wallet, first_name, last_name, phone, email, location, lat, lon } =
+      growerAccountInsertObject;
     const existingGrowerAccount = await growerAccountRepo.getByFilter({
       wallet,
     });
