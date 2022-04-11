@@ -154,7 +154,7 @@ class Capture {
       created_at: new Date().toISOString(),
     };
     const existingCapture = await this.getCaptureById(newCapture.id);
-    if (existingCapture.id) {
+    if (existingCapture?.id) {
       const domainEvent = await eventRepo.getDomainEvent(newCapture.id);
       if (domainEvent.status !== 'sent') {
         return {

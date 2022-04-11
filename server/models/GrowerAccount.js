@@ -77,10 +77,11 @@ class GrowerAccount {
   }
 
   async getGrowerAccountById(growerAccountId) {
-    const growerAccount = await this._growerAccountRepository.getByFilter({
+    const growerAccounts = await this._growerAccountRepository.getByFilter({
       'grower_account.id': growerAccountId,
     });
-    return this._response(growerAccount[0]);
+    const [growerAccount = {}] = growerAccounts;
+    return this._response(growerAccount);
   }
 
   async createGrowerAccount(growerAccountToCreate) {

@@ -45,7 +45,7 @@ class CaptureTag {
           tag_id: t,
           capture_id,
         });
-        if (captureTag.length > 0)
+        if (captureTag?.length > 0)
           throw new HttpError(
             400,
             `Tag ${t} has already been assigned to the specified capture`,
