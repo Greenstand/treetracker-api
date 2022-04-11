@@ -1,12 +1,21 @@
 const { v4: uuid } = require('uuid');
 const { PaginationQueryOptions } = require('./helper');
 
-const Tag = ({ id, name, isPublic, status, created_at, updated_at }) =>
+const Tag = ({
+  id,
+  name,
+  isPublic,
+  status,
+  owner_id,
+  created_at,
+  updated_at,
+}) =>
   Object.freeze({
     id,
     name,
     isPublic,
     status,
+    owner_id,
     created_at,
     updated_at,
   });
@@ -43,8 +52,8 @@ const PropertiesToUpdate = ({
 };
 
 /* eslint-disable no-param-reassign */
-const FilterCriteria = ({ name = undefined }) => {
-  return Object.entries({ name })
+const FilterCriteria = ({ name = undefined, owner_id = undefined }) => {
+  return Object.entries({ name, owner_id })
     .filter((entry) => entry[1] !== undefined)
     .reduce((result, item) => {
       const [key, value] = item;

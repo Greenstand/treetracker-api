@@ -7,11 +7,13 @@ const HttpError = require('../utils/HttpError');
 const tagGetQuerySchema = Joi.object({
   limit: Joi.number().integer().greater(0).less(101),
   offset: Joi.number().integer().greater(-1),
+  owner_id: Joi.string(),
 }).unknown(false);
 
 const tagPostQuerySchema = Joi.object({
   isPublic: Joi.boolean().required(),
   name: Joi.string().required(),
+  owner_id: Joi.string(),
 }).unknown(false);
 
 const TagPatchQuerySchema = Joi.object({
