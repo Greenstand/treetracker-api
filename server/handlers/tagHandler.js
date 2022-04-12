@@ -13,7 +13,7 @@ const tagGetQuerySchema = Joi.object({
 const tagPostQuerySchema = Joi.object({
   isPublic: Joi.boolean().required(),
   name: Joi.string().required(),
-  owner_id: Joi.string(),
+  owner_id: Joi.string().required(),
 }).unknown(false);
 
 const TagPatchQuerySchema = Joi.object({
@@ -51,9 +51,13 @@ const tagHandlerPost = async function (req, res, next) {
 
   try {
     const tagInsertObject = TagInsertObject(req.body);
-    const tag = await tagRepo.getByFilter({ name: tagInsertObject.name });
+    const tag = await tagRepo.getByFilter({
+      name: tagInsertObject.name,
+      owner_id: tagInsertObject.owner_id,
+    });
 
-    if (tag.length > 0) throw new HttpError(422, 'Tag name already exists');
+    if (tag.length > 0)
+      throw new HttpError(422, 'Tag name already exists for this organization');
     await session.beginTransaction();
     await tagRepo.create(tagInsertObject);
 
