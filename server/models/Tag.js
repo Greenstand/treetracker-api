@@ -41,8 +41,13 @@ class Tag {
   }
 
   async createTag(tagToCreate) {
-    const tag = await this.getTags({ name: tagToCreate.name }, undefined, true);
-    if (tag.length > 0) throw new HttpError(422, 'Tag name already exists');
+    const tag = await this.getTags(
+      { name: tagToCreate.name, owner_id: tagToCreate.owner_id },
+      undefined,
+      true,
+    );
+    if (tag.length > 0)
+      throw new HttpError(422, 'Tag name already exists for this organization');
 
     const createdTag = await this._tagRepository.create(tagToCreate);
     return this._response(createdTag);

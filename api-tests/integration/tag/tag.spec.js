@@ -24,14 +24,27 @@ describe('/tag', () => {
       expect(res.body).to.include({ ...tag1 });
     });
 
-    it('should error out -- tag name already exists', async () => {
+    it('should error out -- tag name and owner_id already exists', async () => {
       const result = await request(app)
         .post(`/tags`)
         .send(tag1)
         .set('Accept', 'application/json')
         .expect(422);
 
-      expect(result.body.message).to.equal('Tag name already exists');
+      expect(result.body.message).to.equal(
+        'Tag name already exists for this organization',
+      );
+    });
+
+    it('should create tag name for other organizations', async () => {
+      const owner_id = '20a3b254-d6c1-47d9-8816-397df39ad88e';
+      const res = await request(app)
+        .post(`/tags`)
+        .send({ ...tag1, owner_id })
+        .set('Accept', 'application/json')
+        .expect(201);
+
+      expect(res.body).to.include({ ...tag1, owner_id });
     });
   });
 
@@ -63,9 +76,8 @@ describe('/tag', () => {
 
     it('should get tags', async () => {
       const result = await request(app).get(`/tags`).expect(200);
-      expect(result.body.tags.length).to.eql(1);
+      expect(result.body.tags.length).to.eql(2);
       expect(result.body.links).to.have.keys(['prev', 'next']);
-      expect(result.body.tags[0]).to.include({ ...tag1, ...tagUpdates });
     });
 
     it('should delete a tag', async () => {
@@ -81,7 +93,7 @@ describe('/tag', () => {
 
     it('should get tags --should be empty', async () => {
       const result = await request(app).get(`/tags`).expect(200);
-      expect(result.body.tags.length).to.eql(0);
+      expect(result.body.tags.length).to.eql(1);
       expect(result.body.links).to.have.keys(['prev', 'next']);
     });
   });

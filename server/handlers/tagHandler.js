@@ -14,7 +14,7 @@ const tagGetQuerySchema = Joi.object({
 const tagPostQuerySchema = Joi.object({
   isPublic: Joi.boolean().required(),
   name: Joi.string().required(),
-  owner_id: Joi.string(),
+  owner_id: Joi.string().required(),
 }).unknown(false);
 
 const TagPatchQuerySchema = Joi.object({
