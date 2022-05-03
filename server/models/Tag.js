@@ -1,94 +1,66 @@
-const { v4: uuid } = require('uuid');
-const { PaginationQueryOptions } = require('./helper');
+const TagRepository = require('../repositories/TagRepository');
+const HttpError = require('../utils/HttpError');
 
-const Tag = ({ id, name, isPublic, status, created_at, updated_at }) =>
-  Object.freeze({
-    id,
-    name,
-    isPublic,
-    status,
-    created_at,
-    updated_at,
-  });
-
-const TagInsertObject = (requestBody) =>
-  Object.freeze({
-    ...Tag(requestBody),
-    id: uuid(),
-    status: 'active',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  });
-
-const PropertiesToUpdate = ({
-  status = undefined,
-  isPublic = undefined,
-  tag_id = undefined,
-}) => {
-  const id = tag_id;
-  const updated_at = new Date().toISOString();
-  /* eslint-disable no-param-reassign */
-  return Object.entries({
-    id,
-    isPublic,
-    status,
-    updated_at,
-  })
-    .filter((entry) => entry[1] !== undefined)
-    .reduce((result, item) => {
-      const [key, value] = item;
-      result[key] = value;
-      return result;
-    }, {});
-};
-
-/* eslint-disable no-param-reassign */
-const FilterCriteria = ({ name = undefined }) => {
-  return Object.entries({ name })
-    .filter((entry) => entry[1] !== undefined)
-    .reduce((result, item) => {
-      const [key, value] = item;
-      result[key] = value;
-      return result;
-    }, {});
-};
-
-const getTags = (tagRepo) => async (filterCriteria, url) => {
-  let options = { limit: 100, offset: 0 };
-  options = { ...options, ...PaginationQueryOptions({ ...filterCriteria }) };
-
-  const filter = { status: 'active', ...FilterCriteria(filterCriteria) };
-
-  let next = '';
-  let prev = '';
-
-  const query = `${url}?limit=${options.limit}&`;
-
-  next = `${query}offset=${+options.offset + +options.limit}`;
-  if (options.offset - +options.limit >= 0) {
-    prev = `${query}offset=${+options.offset - +options.limit}`;
+class Tag {
+  constructor(session) {
+    this._tagRepository = new TagRepository(session);
   }
 
-  const tags = await tagRepo.getByFilter(filter, options);
+  static Tag({ id, name, isPublic, status, owner_id, created_at, updated_at }) {
+    return Object.freeze({
+      id,
+      name,
+      isPublic,
+      status,
+      owner_id,
+      created_at,
+      updated_at,
+    });
+  }
 
-  return {
-    tags: tags.map((row) => Tag(row)),
-    links: {
-      prev,
-      next,
-    },
-  };
-};
+  _response(tag) {
+    return this.constructor.Tag(tag);
+  }
 
-const updatetag = (tagRepo) => async (updateObject) => {
-  const properties = { ...PropertiesToUpdate({ ...updateObject }) };
+  async getTags(filter, options, getAll) {
+    const tags = await this._tagRepository.getByFilter(
+      { ...(!getAll && { status: 'active' }), ...filter },
+      options,
+    );
 
-  await tagRepo.update(properties);
-};
+    return tags.map((row) => this._response(row));
+  }
 
-module.exports = {
-  getTags,
-  TagInsertObject,
-  updatetag,
-  Tag,
-};
+  async getTagsCount(filter) {
+    return this._tagRepository.countByFilter({ ...filter, status: 'active' });
+  }
+
+  async getTagById(tagId) {
+    const tag = await this._tagRepository.getById(tagId);
+    return this._response(tag);
+  }
+
+  async createTag(tagToCreate) {
+    const tag = await this.getTags(
+      { name: tagToCreate.name, owner_id: tagToCreate.owner_id },
+      undefined,
+      true,
+    );
+    if (tag.length > 0)
+      throw new HttpError(422, 'Tag name already exists for this organization');
+
+    const createdTag = await this._tagRepository.create(tagToCreate);
+    return this._response(createdTag);
+  }
+
+  async updateTag(object) {
+    const updatedTag = await this._tagRepository.update({
+      ...object,
+      updated_at: new Date().toISOString(),
+    });
+
+    return this._response(updatedTag);
+  }
+}
+
+module.exports = Tag;

@@ -4,7 +4,7 @@ const router = express.Router();
 const validateRequest = (req, res, next) => {
   next();
 };
-const { handlerWrapper } = require('./handlers/utils');
+const { handlerWrapper } = require('./utils/utils');
 const {
   captureHandlerPost,
   captureHandlerGet,
@@ -14,7 +14,6 @@ const {
   captureHandlerTagPost,
   captureHandlerSingleTagGet,
   captureHandlerSingleTagPatch,
-  captureHandlerSingleTagDelete,
 } = require('./handlers/captureHandler');
 const {
   treeHandlerPost,
@@ -26,7 +25,6 @@ const {
   treeHandlerTagPost,
   treeHandlerSingleTagGet,
   treeHandlerSingleTagPatch,
-  treeHandlerSingleTagDelete,
 } = require('./handlers/treeHandler');
 const {
   growerAccountHandlerGet,
@@ -64,8 +62,7 @@ router
 router
   .route('/trees/:tree_id/tags/:tag_id')
   .get(validateRequest, handlerWrapper(treeHandlerSingleTagGet))
-  .patch(validateRequest, handlerWrapper(treeHandlerSingleTagPatch))
-  .delete(validateRequest, handlerWrapper(treeHandlerSingleTagDelete));
+  .patch(validateRequest, handlerWrapper(treeHandlerSingleTagPatch));
 
 router
   .route('/grower_accounts')
@@ -106,7 +103,6 @@ router
 router
   .route('/captures/:capture_id/tags/:tag_id')
   .get(validateRequest, handlerWrapper(captureHandlerSingleTagGet))
-  .patch(validateRequest, handlerWrapper(captureHandlerSingleTagPatch))
-  .delete(validateRequest, handlerWrapper(captureHandlerSingleTagDelete));
+  .patch(validateRequest, handlerWrapper(captureHandlerSingleTagPatch));
 
 module.exports = router;

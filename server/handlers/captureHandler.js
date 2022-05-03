@@ -1,21 +1,12 @@
-const log = require('loglevel');
 const Joi = require('joi');
 
+const CaptureTagService = require('../services/CaptureTagService');
+const CaptureService = require('../services/CaptureService');
+const HttpError = require('../utils/HttpError');
 const {
-  createCapture,
-  captureInsertObject,
-  getCaptures,
-  Capture,
-} = require('../models/Capture');
-const { getCaptureTags, addTagsToCapture } = require('../models/CaptureTag');
-const { dispatch } = require('../models/DomainEvent');
-
-const Session = require('../infra/database/Session');
-const { publishMessage } = require('../infra/messaging/RabbitMQMessaging');
-
-const CaptureRepository = require('../infra/repositories/CaptureRepository');
-const CaptureTagRepository = require('../infra/repositories/CaptureTagRepository');
-const EventRepository = require('../infra/repositories/EventRepository');
+  generatePrevAndNext,
+  getFilterAndLimitOptions,
+} = require('../utils/helper');
 
 const capturePostSchema = Joi.object({
   id: Joi.string().uuid().required(),
@@ -27,12 +18,12 @@ const capturePostSchema = Joi.object({
   grower_account_id: Joi.string().uuid().required(),
   planting_organization_id: Joi.string().uuid().required(),
   device_configuration_id: Joi.string().uuid().required(),
-  reference_id: Joi.number().integer(),
-  tree_id: Joi.string().uuid(),
-  note: Joi.string(),
-  species_id: Joi.string().uuid(),
-  morphology: Joi.string(),
-  age: Joi.number().integer(),
+  reference_id: Joi.number().integer().default(null),
+  tree_id: Joi.string().uuid().default(null),
+  note: Joi.string().default(null),
+  species_id: Joi.string().uuid().default(null),
+  morphology: Joi.string().default(null),
+  age: Joi.number().integer().default(null),
   captured_at: Joi.date().iso().required(),
   attributes: Joi.array()
     .items(
@@ -41,8 +32,9 @@ const capturePostSchema = Joi.object({
         value: Joi.string().required().allow(''),
       }),
     )
-    .allow(null),
-  domain_specific_data: Joi.object(),
+    .allow(null)
+    .default(null),
+  domain_specific_data: Joi.object().default(null),
 }).unknown(false);
 
 const captureGetQuerySchema = Joi.object({
@@ -85,56 +77,42 @@ const captureHandlerGet = async function (req, res) {
   await captureGetQuerySchema.validateAsync(req.query, {
     abortEarly: false,
   });
-  const session = new Session(false);
-  const captureRepo = new CaptureRepository(session);
-  const executeGetCaptures = getCaptures(captureRepo);
-  const result = await executeGetCaptures(req.query);
-  res.send(result);
+
+  const { filter, limitOptions } = getFilterAndLimitOptions(req.query);
+
+  const captureService = new CaptureService();
+  const captures = await captureService.getCaptures(filter, limitOptions);
+  const count = await captureService.getCapturesCount(filter);
+
+  const url = 'captures';
+
+  const links = generatePrevAndNext({
+    url,
+    count,
+    limitOptions,
+    queryObject: { ...filter, ...limitOptions },
+  });
+
+  res.send({
+    captures,
+    links,
+    query: { count, ...limitOptions, ...filter },
+  });
   res.end();
 };
 
-const captureHandlerPost = async function (req, res, next) {
-  const session = new Session();
-  const captureRepo = new CaptureRepository(session);
-  const eventRepo = new EventRepository(session);
-
-  await capturePostSchema.validateAsync(req.body, {
+const captureHandlerPost = async function (req, res) {
+  const captureObject = await capturePostSchema.validateAsync(req.body, {
     abortEarly: false,
   });
 
-  const executeCreateCapture = createCapture(captureRepo, eventRepo);
+  const captureService = new CaptureService();
+  const { capture, status } = await captureService.createCapture(captureObject);
 
-  const eventDispatch = dispatch(eventRepo, publishMessage);
-
-  try {
-    const newCapture = captureInsertObject({ ...req.body });
-    const existingCapture = await captureRepo.getById(newCapture.id);
-    if (existingCapture) {
-      const domainEvent = await eventRepo.getDomainEvent(newCapture.id);
-      if (domainEvent.status !== 'sent') {
-        eventDispatch('capture-created', domainEvent);
-      }
-    } else {
-      await session.beginTransaction();
-      const {
-        raisedEvents: { domainEvent },
-      } = await executeCreateCapture(newCapture);
-      await session.commitTransaction();
-      eventDispatch('capture-created', domainEvent);
-    }
-
-    res.status(204).send();
-    res.end();
-  } catch (e) {
-    log.warn(e);
-    if (session.isTransactionInProgress()) {
-      await session.rollbackTransaction();
-    }
-    next(e);
-  }
+  res.status(status).send(capture);
 };
 
-const captureHandlerPatch = async function (req, res, next) {
+const captureHandlerPatch = async function (req, res) {
   await capturePatchSchema.validateAsync(req.body, {
     abortEarly: false,
   });
@@ -143,26 +121,13 @@ const captureHandlerPatch = async function (req, res, next) {
     abortEarly: false,
   });
 
-  const session = new Session();
-  const captureRepo = new CaptureRepository(session);
+  const captureService = new CaptureService();
+  const capture = await captureService.updateCapture({
+    id: req.params.capture_id,
+    ...req.body,
+  });
 
-  try {
-    await session.beginTransaction();
-    await captureRepo.update({
-      id: req.params.capture_id,
-      ...req.body,
-      updated_at: new Date().toISOString(),
-    });
-    await session.commitTransaction();
-    res.status(204).send();
-    res.end();
-  } catch (e) {
-    log.warn(e);
-    if (session.isTransactionInProgress()) {
-      await session.rollbackTransaction();
-    }
-    next(e);
-  }
+  res.send(capture);
 };
 
 const captureHandlerSingleGet = async function (req, res) {
@@ -170,18 +135,17 @@ const captureHandlerSingleGet = async function (req, res) {
     abortEarly: false,
   });
 
-  const session = new Session();
-  const captureRepo = new CaptureRepository(session);
+  const captureService = new CaptureService();
 
-  const {
-    captures: [capture = {}],
-  } = await captureRepo.getByFilter({
-    parameters: {
-      id: req.params.capture_id,
-    },
-  });
+  const capture = await captureService.getCaptureById(req.params.capture_id);
 
-  res.send(Capture(capture));
+  if (!capture.id)
+    throw new HttpError(
+      404,
+      `capture with id ${req.params.capture_id} not found`,
+    );
+
+  res.send(capture);
 };
 
 const captureHanglerTagGet = async function (req, res) {
@@ -189,19 +153,16 @@ const captureHanglerTagGet = async function (req, res) {
     abortEarly: false,
   });
 
-  const session = new Session();
-  const captureTagRepo = new CaptureTagRepository(session);
-
-  const executeGetCaptureTags = getCaptureTags(captureTagRepo);
-
-  const result = await executeGetCaptureTags({
+  const captureTagService = new CaptureTagService();
+  const captureTags = await captureTagService.getCaptureTags({
     capture_id: req.params.capture_id,
   });
 
-  res.send(result);
+  res.send(captureTags);
+  res.end();
 };
 
-const captureHandlerTagPost = async function (req, res, next) {
+const captureHandlerTagPost = async function (req, res) {
   await captureIdParamSchema.validateAsync(req.params, {
     abortEarly: false,
   });
@@ -210,28 +171,14 @@ const captureHandlerTagPost = async function (req, res, next) {
     abortEarly: false,
   });
 
-  const session = new Session();
-  const captureTagRepo = new CaptureTagRepository(session);
+  const captureTagService = new CaptureTagService();
+  await captureTagService.addTagsToCapture({
+    tags: req.body.tags,
+    capture_id: req.params.capture_id,
+  });
 
-  try {
-    await session.beginTransaction();
-
-    const executeAddTagsToCapture = addTagsToCapture(captureTagRepo);
-    await executeAddTagsToCapture({
-      tags: req.body.tags,
-      capture_id: req.params.capture_id,
-    });
-
-    await session.commitTransaction();
-    res.status(204).send();
-    res.end();
-  } catch (e) {
-    log.warn(e);
-    if (session.isTransactionInProgress()) {
-      await session.rollbackTransaction();
-    }
-    next(e);
-  }
+  res.status(204).send();
+  res.end();
 };
 
 const captureHandlerSingleTagGet = async function (req, res) {
@@ -239,22 +186,21 @@ const captureHandlerSingleTagGet = async function (req, res) {
     abortEarly: false,
   });
 
-  const session = new Session();
-  const captureTagRepo = new CaptureTagRepository(session);
+  const captureTagService = new CaptureTagService();
 
-  const executeGetCaptureTags = getCaptureTags(captureTagRepo);
-
-  const result = await executeGetCaptureTags({
+  const captureTags = await captureTagService.getCaptureTags({
     capture_id: req.params.capture_id,
     tag_id: req.params.tag_id,
   });
 
-  const [r = {}] = result;
+  const [captureTag] = captureTags;
 
-  res.send(r);
+  if (!captureTag) throw new HttpError(404, 'Capture Tag not found');
+
+  res.send(captureTag);
 };
 
-const captureHandlerSingleTagPatch = async function (req, res, next) {
+const captureHandlerSingleTagPatch = async function (req, res) {
   await captureTagIdQuerySchema.validateAsync(req.params, {
     abortEarly: false,
   });
@@ -263,55 +209,14 @@ const captureHandlerSingleTagPatch = async function (req, res, next) {
     abortEarly: false,
   });
 
-  const session = new Session();
-  const captureTagRepo = new CaptureTagRepository(session);
-
-  try {
-    await session.beginTransaction();
-    await captureTagRepo.update({
-      capture_id: req.params.capture_id,
-      tag_id: req.params.tag_id,
-      ...req.body,
-      updated_at: new Date().toISOString(),
-    });
-    await session.commitTransaction();
-    res.status(204).send();
-    res.end();
-  } catch (e) {
-    log.warn(e);
-    if (session.isTransactionInProgress()) {
-      await session.rollbackTransaction();
-    }
-    next(e);
-  }
-};
-
-const captureHandlerSingleTagDelete = async function (req, res, next) {
-  await captureTagIdQuerySchema.validateAsync(req.params, {
-    abortEarly: false,
+  const captureTagService = new CaptureTagService();
+  const captureTag = await captureTagService.updateCaptureTag({
+    capture_id: req.params.capture_id,
+    tag_id: req.params.tag_id,
+    ...req.body,
   });
 
-  const session = new Session();
-  const captureTagRepo = new CaptureTagRepository(session);
-
-  try {
-    await session.beginTransaction();
-    await captureTagRepo.update({
-      capture_id: req.params.capture_id,
-      tag_id: req.params.tag_id,
-      status: 'deleted',
-      updated_at: new Date().toISOString(),
-    });
-    await session.commitTransaction();
-    res.status(204).send();
-    res.end();
-  } catch (e) {
-    log.warn(e);
-    if (session.isTransactionInProgress()) {
-      await session.rollbackTransaction();
-    }
-    next(e);
-  }
+  res.send(captureTag);
 };
 
 module.exports = {
@@ -323,5 +228,4 @@ module.exports = {
   captureHandlerTagPost,
   captureHandlerSingleTagGet,
   captureHandlerSingleTagPatch,
-  captureHandlerSingleTagDelete,
 };

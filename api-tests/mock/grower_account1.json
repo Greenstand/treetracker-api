@@ -1,0 +1,14 @@
+{
+  "wallet": "wallet",
+  "organization_id": "36dbe2d3-b4a9-4a87-ab1d-9d3e5743149c",
+  "first_name": "firstName",
+  "last_name": "lastName",
+  "image_url": "https://imageurl.com",
+  "first_registration_at": "2021-12-18T13:04:07.371Z",
+  "email": "email@email.com",
+  "phone": "12345",
+  "image_rotation": 14,
+  "lat": "14",
+  "lon": "14",
+  "bulk_pack_file_name": "bulk_pack_file_name"
+}

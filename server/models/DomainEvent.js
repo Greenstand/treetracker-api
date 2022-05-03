@@ -1,5 +1,4 @@
 const { v4: uuid } = require('uuid');
-const { Repository } = require('./Repository');
 
 const DomainEvent = (payload) =>
   Object.freeze({
@@ -9,27 +8,24 @@ const DomainEvent = (payload) =>
     updated_at: new Date().toISOString(),
   });
 
-const raiseEvent = (eventRepositoryImpl) => async (domainEvent) => {
-  const eventRepository = new Repository(eventRepositoryImpl);
-  return eventRepository.add({ ...domainEvent, status: 'raised' });
+const raiseEvent = (eventRepository) => async (domainEvent) => {
+  return eventRepository.create({ ...domainEvent, status: 'raised' });
 };
 
-const receiveEvent = (eventRepositoryImpl) => async (domainEvent) => {
-  const eventRepository = new Repository(eventRepositoryImpl);
-  return eventRepository.add({ ...domainEvent, status: 'received' });
+const receiveEvent = (eventRepository) => async (domainEvent) => {
+  return eventRepository.create({ ...domainEvent, status: 'received' });
 };
 
-const dispatch = (eventRepositoryImpl, publishToTopic) => async (
-  publicationName,
-  domainEvent,
-) => {
-  publishToTopic(publicationName, domainEvent.payload, () => {
-    eventRepositoryImpl.update({
-      ...domainEvent,
-      status: 'sent',
-      updated_at: new Date().toISOString(),
+const dispatch =
+  (eventRepositoryImpl, publishToTopic) =>
+  async (publicationName, domainEvent) => {
+    publishToTopic(publicationName, domainEvent.payload, () => {
+      eventRepositoryImpl.update({
+        ...domainEvent,
+        status: 'sent',
+        updated_at: new Date().toISOString(),
+      });
     });
-  });
-};
+  };
 
 module.exports = { DomainEvent, raiseEvent, receiveEvent, dispatch };

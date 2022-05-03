@@ -1,18 +1,12 @@
-/* eslint-disable no-param-reassign */
-/* eslint-disable prefer-destructuring */
-const { v4: uuid } = require('uuid');
+const TreeTagRepository = require('../repositories/TreeTagRepository');
 const HttpError = require('../utils/HttpError');
 
-const TreeTag = ({
-  id,
-  tree_id,
-  tag_id,
-  tag_name,
-  status,
-  created_at,
-  updated_at,
-}) =>
-  Object.freeze({
+class TreeTag {
+  constructor(session) {
+    this._treeTagRepository = new TreeTagRepository(session);
+  }
+
+  static TreeTag({
     id,
     tree_id,
     tag_id,
@@ -20,55 +14,57 @@ const TreeTag = ({
     status,
     created_at,
     updated_at,
-  });
+  }) {
+    return Object.freeze({
+      id,
+      tree_id,
+      tag_id,
+      tag_name,
+      status,
+      created_at,
+      updated_at,
+    });
+  }
 
-const treeTagInsertObject = ({ tag_id, tree_id }) =>
-  Object.freeze({
-    id: uuid(),
-    tag_id,
-    tree_id,
-    status: 'active',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  });
+  _response(treeTag) {
+    return this.constructor.TreeTag(treeTag);
+  }
 
-const FilterCriteria = ({ tree_id = undefined, tag_id = undefined }) => {
-  return Object.entries({ tree_id, tag_id })
-    .filter((entry) => entry[1] !== undefined)
-    .reduce((result, item) => {
-      result[item[0]] = item[1];
-      return result;
-    }, {});
-};
+  async getTreeTags(filter) {
+    const treeTags = await this._treeTagRepository.getTreeTags({
+      ...filter,
+    });
 
-const getTreeTags = (treeTagRepositoryImpl) => async (
-  filterCriteria = undefined,
-) => {
-  const filter = { ...FilterCriteria(filterCriteria) };
-  const treeTags = await treeTagRepositoryImpl.getTreeTags(filter);
-  return treeTags.map((row) => TreeTag({ ...row }));
-};
+    return treeTags.map((row) => this._response(row));
+  }
 
-const addTagsToTree = (treeTagRepositoryImpl) => async ({ tags, tree_id }) => {
-  const insertObjectArray = await Promise.all(
-    tags.map(async (t) => {
-      const treeTag = await treeTagRepositoryImpl.getByFilter({
-        tag_id: t,
-        tree_id,
-      });
-      if (treeTag.length > 0)
-        throw new HttpError(
-          400,
-          `Tag ${t} has already been assigned to the specified tree`,
-        );
-      return treeTagInsertObject({ tag_id: t, tree_id });
-    }),
-  );
+  async addTagsToTree({ tags, tree_id }) {
+    const insertObjectArray = await Promise.all(
+      tags.map(async (t) => {
+        const treeTag = await this._treeTagRepository.getTreeTags({
+          tag_id: t,
+          tree_id,
+        });
+        if (treeTag.length > 0)
+          throw new HttpError(
+            400,
+            `Tag ${t} has already been assigned to the specified tree`,
+          );
+        return { tag_id: t, tree_id };
+      }),
+    );
 
-  await treeTagRepositoryImpl.create(insertObjectArray);
-};
+    await this._treeTagRepository.create(insertObjectArray);
+  }
 
-module.exports = {
-  getTreeTags,
-  addTagsToTree,
-};
+  async updateTreeTag(updateObject) {
+    const treeTag = await this._treeTagRepository.update({
+      ...updateObject,
+      updated_at: new Date().toISOString(),
+    });
+
+    return this._response(treeTag);
+  }
+}
+
+module.exports = TreeTag;
