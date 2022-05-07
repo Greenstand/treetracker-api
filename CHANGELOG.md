@@ -1,3 +1,10 @@
+## [1.19.7](https://github.com/Greenstand/treetracker-api/compare/v1.19.6...v1.19.7) (2022-05-07)
+
+
+### Bug Fixes
+
+* action not run ([63dcab7](https://github.com/Greenstand/treetracker-api/commit/63dcab745ab60d0f4208de8cc16b622bbfe44b07))
+
 ## [1.19.6](https://github.com/Greenstand/treetracker-api/compare/v1.19.5...v1.19.6) (2022-05-07)
 
 
