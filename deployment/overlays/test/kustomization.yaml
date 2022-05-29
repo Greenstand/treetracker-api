@@ -1,7 +1,12 @@
-bases:
-  - ../../base
 patchesStrategicMerge:
   - database-connection-sealed-secret.yaml
   - database-migration-connection-sealed-secret.yaml
   - rabbitmq-connection-sealed-secret.yaml
   - mapping.yaml
+images:
+  - name: greenstand/treetracker-api
+    newTag: 1.19.4
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base
