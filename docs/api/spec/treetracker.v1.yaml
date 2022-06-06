@@ -49,8 +49,8 @@ paths:
                         image_url: string
                         user_photo_url: string
                         created_at: string
-                        latitude: 0
-                        longitude: 0
+                        lat: 0
+                        lon: 0
                         tree_associated: true
             application/xml:
               schema:
