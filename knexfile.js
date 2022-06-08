@@ -1,10 +1,13 @@
 require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` });
 const path = require('path');
-const expect = require('expect-runtime');
 
 const connection = process.env.DATABASE_URL_SEEDER;
 
-expect(connection).to.match(/^postgresql:\//);
+const postgresPattern = /^postgresql:\//;
+
+if (!postgresPattern.test(connection)) {
+  throw new Error('invalid databases connection url received');
+}
 
 module.exports = {
   development: {
