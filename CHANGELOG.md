@@ -1,3 +1,12 @@
+## [1.19.8](https://github.com/Greenstand/treetracker-api/compare/v1.19.7...v1.19.8) (2022-06-08)
+
+
+### Bug Fixes
+
+* query for captures with capture_tags ([f2d157b](https://github.com/Greenstand/treetracker-api/commit/f2d157b9804a67236d81515385f6083d956c8fe8))
+* update db url check ([98b15e8](https://github.com/Greenstand/treetracker-api/commit/98b15e887e9dd5fe91413d2fa15e148209d02faf))
+* update tests and yaml to match api w/ lat, lon keys ([c41da9c](https://github.com/Greenstand/treetracker-api/commit/c41da9c5022f659e17dc85e31550765b1a35e814))
+
 ## [1.19.7](https://github.com/Greenstand/treetracker-api/compare/v1.19.6...v1.19.7) (2022-05-07)
 
 
