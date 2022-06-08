@@ -61,8 +61,8 @@ describe('/captures', () => {
       expect(res.body).to.include({
         image_url: capture2.image_url,
         planting_organization_id: capture2.planting_organization_id,
-        latitude: capture2.lat,
-        longitude: capture2.lon,
+        lat: capture2.lat,
+        lon: capture2.lon,
         tree_associated: false,
         captured_at: new Date(capture2.captured_at).toISOString(),
       });
@@ -78,8 +78,8 @@ describe('/captures', () => {
       expect(res.body).to.include({
         image_url: capture2.image_url,
         planting_organization_id: capture2.planting_organization_id,
-        latitude: capture2.lat,
-        longitude: capture2.lon,
+        lat: capture2.lat,
+        lon: capture2.lon,
         tree_associated: false,
         captured_at: new Date(capture2.captured_at).toISOString(),
       });
@@ -130,8 +130,8 @@ describe('/captures', () => {
       expect(res.body).to.include({
         image_url: capture2.image_url,
         planting_organization_id: capture2.planting_organization_id,
-        latitude: capture2.lat,
-        longitude: capture2.lon,
+        lat: capture2.lat,
+        lon: capture2.lon,
         tree_associated: true,
         tree_id: updates.tree_id,
       });

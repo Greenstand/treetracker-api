@@ -9,13 +9,10 @@ class CaptureRepository extends BaseRepository {
 
   _filterWhereBuilder(object, builder) {
     const result = builder;
-    const {
-      parameters,
-      whereNulls = [],
-      whereNotNulls = [],
-      whereIns = [],
-    } = { ...object };
-    result.whereNot({ status: 'deleted' });
+    const { parameters, whereNulls = [], whereNotNulls = [], whereIns = [] } = {
+      ...object,
+    };
+    result.whereNot(`${this._tableName}.status`, 'deleted');
     whereNotNulls.forEach((whereNot) => {
       result.whereNotNull(whereNot);
     });
@@ -56,22 +53,28 @@ class CaptureRepository extends BaseRepository {
       .select(
         knex.raw(
           `
-        id,
-        tree_id,
-        planting_organization_id,
-        image_url,
-        lat,
-        lon,
-        created_at,
-        status,
-        captured_at, 
-        t.tag_array,
-        grower_account_id
+            id,
+            tree_id,
+            planting_organization_id,
+            image_url,
+            lat,
+            lon,
+            status,
+            grower_account_id,
+            morphology,
+            age,
+            note,
+            attributes,
+            species_id,
+            session_id,
+            created_at,
+            captured_at,
+            t.tag_array
           FROM capture
           LEFT JOIN (
               SELECT ct.capture_id, array_agg(t.name) AS tag_array
               FROM capture_tag ct
-              JOIN tag t  ON t.id = ct.tag_id
+              JOIN tag t ON t.id = ct.tag_id
               GROUP BY ct.capture_id
             ) t ON id = t.capture_id
         `,
