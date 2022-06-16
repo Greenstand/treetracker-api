@@ -10,7 +10,7 @@ const {
   captureHandlerGet,
   captureHandlerPatch,
   captureHandlerSingleGet,
-  captureHanglerTagGet,
+  captureHandlerTagGet,
   captureHandlerTagPost,
   captureHandlerSingleTagGet,
   captureHandlerSingleTagPatch,
@@ -97,7 +97,7 @@ router
 
 router
   .route('/captures/:capture_id/tags')
-  .get(validateRequest, handlerWrapper(captureHanglerTagGet))
+  .get(validateRequest, handlerWrapper(captureHandlerTagGet))
   .post(validateRequest, handlerWrapper(captureHandlerTagPost));
 
 router

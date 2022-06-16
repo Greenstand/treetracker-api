@@ -47,7 +47,10 @@ class Tag {
       true,
     );
     if (tag.length > 0)
-      throw new HttpError(422, 'Tag name already exists for this organization');
+      throw new HttpError(
+        422,
+        `Tag name "${tagToCreate.name}" already exists for this organization`,
+      );
 
     const createdTag = await this._tagRepository.create(tagToCreate);
     return this._response(createdTag);

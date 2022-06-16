@@ -148,7 +148,7 @@ const captureHandlerSingleGet = async function (req, res) {
   res.send(capture);
 };
 
-const captureHanglerTagGet = async function (req, res) {
+const captureHandlerTagGet = async function (req, res) {
   await captureIdParamSchema.validateAsync(req.params, {
     abortEarly: false,
   });
@@ -224,7 +224,7 @@ module.exports = {
   captureHandlerGet,
   captureHandlerPatch,
   captureHandlerSingleGet,
-  captureHanglerTagGet,
+  captureHandlerTagGet,
   captureHandlerTagPost,
   captureHandlerSingleTagGet,
   captureHandlerSingleTagPatch,
