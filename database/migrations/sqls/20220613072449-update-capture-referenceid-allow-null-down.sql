@@ -1,1 +1,1 @@
-ALTER TABLE capture ALTER COLUMN reference_id NOT NULL;
+ALTER TABLE capture ALTER COLUMN reference_id SET NOT NULL;
