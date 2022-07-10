@@ -1,3 +1,13 @@
+## [1.19.9](https://github.com/Greenstand/treetracker-api/compare/v1.19.8...v1.19.9) (2022-07-10)
+
+
+### Bug Fixes
+
+* table migrations and joi validation ([a4050eb](https://github.com/Greenstand/treetracker-api/commit/a4050eb7f0e46a3a1df4905acbb2b02a5deacecf))
+* typos and improve error message ([302dc14](https://github.com/Greenstand/treetracker-api/commit/302dc146fadba6479416be39edd8a99ae7a76ff5))
+* update tag test ([bf22812](https://github.com/Greenstand/treetracker-api/commit/bf22812e4243060cb61dc645af3a0f4154a45773))
+* update validation and table to allow null values ([f0a6374](https://github.com/Greenstand/treetracker-api/commit/f0a6374e0513d8e2ee4e53ed5d032cf514c59770))
+
 ## [1.19.8](https://github.com/Greenstand/treetracker-api/compare/v1.19.7...v1.19.8) (2022-06-08)
 
 
