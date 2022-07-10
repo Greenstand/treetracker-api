@@ -32,7 +32,7 @@ describe('/tag', () => {
         .expect(422);
 
       expect(result.body.message).to.equal(
-        'Tag name already exists for this organization',
+        'Tag name "tag1" already exists for this organization',
       );
     });
 
