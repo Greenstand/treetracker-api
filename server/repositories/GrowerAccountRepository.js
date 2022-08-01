@@ -44,7 +44,6 @@ class GrowerAccountRepository extends BaseRepository {
         'grower_account.last_name',
         'grower_account.email',
         'grower_account.phone',
-        'grower_account.about',
         'grower_account.lat',
         'grower_account.lon',
         'grower_account.location',
