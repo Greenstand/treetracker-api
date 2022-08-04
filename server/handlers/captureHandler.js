@@ -18,7 +18,7 @@ const capturePostSchema = Joi.object({
   grower_account_id: Joi.string().uuid().required(),
   planting_organization_id: Joi.string().uuid().allow(null).default(null),
   device_configuration_id: Joi.string().uuid().required(),
-  reference_id: Joi.number().integer().default(null),
+  reference_id: Joi.number().integer().required(),
   tree_id: Joi.string().uuid().default(null),
   note: Joi.string().default(null),
   species_id: Joi.string().uuid().default(null),
