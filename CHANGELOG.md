@@ -1,3 +1,10 @@
+## [1.19.11](https://github.com/Greenstand/treetracker-api/compare/v1.19.10...v1.19.11) (2022-08-04)
+
+
+### Bug Fixes
+
+* add gender column ([c7bf8e4](https://github.com/Greenstand/treetracker-api/commit/c7bf8e45263c2bcaf9ad1fcad7ef5ebd0c4ab541))
+
 ## [1.19.10](https://github.com/Greenstand/treetracker-api/compare/v1.19.9...v1.19.10) (2022-07-10)
 
 
