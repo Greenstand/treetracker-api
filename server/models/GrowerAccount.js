@@ -23,6 +23,7 @@ class GrowerAccount {
     organizations = [],
     status,
     first_registration_at,
+    gender,
     bulk_pack_file_name,
     created_at,
     updated_at,
@@ -44,6 +45,7 @@ class GrowerAccount {
       organizations,
       status,
       first_registration_at,
+      gender,
       bulk_pack_file_name,
       created_at,
       updated_at,
@@ -117,8 +119,17 @@ class GrowerAccount {
   }
 
   async upsertGrowerAccount(growerAccountObject) {
-    const { wallet, first_name, last_name, phone, email, location, lat, lon } =
-      growerAccountObject;
+    const {
+      wallet,
+      first_name,
+      last_name,
+      phone,
+      email,
+      location,
+      lat,
+      lon,
+      gender,
+    } = growerAccountObject;
 
     const existingGrowerAccount = await this.getGrowerAccounts({
       wallet,
@@ -135,6 +146,7 @@ class GrowerAccount {
         last_name,
         location,
         email,
+        gender,
         lat,
         lon,
         updated_at: new Date().toISOString(),

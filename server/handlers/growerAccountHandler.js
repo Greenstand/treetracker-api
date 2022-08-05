@@ -25,6 +25,7 @@ const growerAccountPostQuerySchema = Joi.object({
   lon: Joi.number().required().min(-180).max(180),
   email: Joi.string().allow(null),
   phone: Joi.string().allow(null),
+  gender: Joi.string().valid('male', 'female', 'neutral').allow(null),
   image_url: Joi.string().uri().required(),
   image_rotation: Joi.number().integer(),
   first_registration_at: Joi.date().iso().required(),
@@ -41,6 +42,7 @@ const growerAccountPatchQuerySchema = Joi.object({
   image_url: Joi.string().uri(),
   image_rotation: Joi.number().integer(),
   status: Joi.string().valid('active', 'deleted'),
+  gender: Joi.string().valid('male', 'female', 'neutral'),
 }).unknown(false);
 
 const growerAccountIdQuerySchema = Joi.object({
