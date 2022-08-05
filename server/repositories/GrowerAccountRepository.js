@@ -51,6 +51,7 @@ class GrowerAccountRepository extends BaseRepository {
         'grower_account.image_rotation',
         'grower_account.status',
         'grower_account.first_registration_at',
+        'grower_account.gender',
         'grower_account.bulk_pack_file_name',
         'grower_account.created_at',
         'grower_account.updated_at',

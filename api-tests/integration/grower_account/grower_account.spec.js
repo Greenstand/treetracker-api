@@ -15,6 +15,7 @@ describe('/grower_account', () => {
     person_id: 'df9541b7-4bf4-4c8b-8711-f42f66bc50cc',
     first_name: 'name',
     last_name: 'name2',
+    gender: 'female',
     email: 'name@email.com',
     phone: '1234567',
     image_url: 'https://www.himage.com',
