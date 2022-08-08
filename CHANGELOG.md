@@ -1,3 +1,17 @@
+# [1.20.0](https://github.com/Greenstand/treetracker-api/compare/v1.19.11...v1.20.0) (2022-08-08)
+
+
+### Features
+
+* add about field in grow_account.handler,repo,model ([92f261d](https://github.com/Greenstand/treetracker-api/commit/92f261d7e243294701f22f230a6a41999f0d391f))
+* add about field tests ([a187803](https://github.com/Greenstand/treetracker-api/commit/a187803ef49e670a60bb4f4a7b3e5e94ba67efb5))
+* add about field to grow-account migration ([9e99f93](https://github.com/Greenstand/treetracker-api/commit/9e99f93ef8ba81739acce08db7e56ef7241443a2))
+* add about in grow_account.handler,repo,model ([6d812ce](https://github.com/Greenstand/treetracker-api/commit/6d812ced5aeb56c4f4b794641f627988cbf79f57))
+* delete config ([f63736d](https://github.com/Greenstand/treetracker-api/commit/f63736d4b7c70b1e7fc359a3a81034015aca39ab))
+* fix about in grow_account.handler,repo,model ([0d5fcd7](https://github.com/Greenstand/treetracker-api/commit/0d5fcd7f05be093ebf93301c21d78073fe30450e))
+* fix unused files ([3185dad](https://github.com/Greenstand/treetracker-api/commit/3185dadab42f35a24ddd1a92b9661f2e8551e17d))
+* remove package-lock changes ([7c5a68b](https://github.com/Greenstand/treetracker-api/commit/7c5a68b85ebe25b681393cd16a927ba44b9a1a92))
+
 ## [1.19.11](https://github.com/Greenstand/treetracker-api/compare/v1.19.10...v1.19.11) (2022-08-04)
 
 
