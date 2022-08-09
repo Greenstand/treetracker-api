@@ -18,6 +18,7 @@ describe('/grower_account', () => {
     gender: 'female',
     email: 'name@email.com',
     phone: '1234567',
+    about: "about",
     image_url: 'https://www.himage.com',
     image_rotation: 44,
   };
