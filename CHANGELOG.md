@@ -1,3 +1,11 @@
+# [1.21.0](https://github.com/Greenstand/treetracker-api/compare/v1.20.0...v1.21.0) (2022-08-09)
+
+
+### Features
+
+* add max length for about field ([7918214](https://github.com/Greenstand/treetracker-api/commit/7918214acad47cfa42c2982c2a548747b0efe26e))
+* cross-env rollback ([5bea1f4](https://github.com/Greenstand/treetracker-api/commit/5bea1f497e813d5ee348588f7bdd59695561ec99))
+
 # [1.20.0](https://github.com/Greenstand/treetracker-api/compare/v1.19.11...v1.20.0) (2022-08-08)
 
 
