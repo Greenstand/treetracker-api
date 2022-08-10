@@ -2,6 +2,7 @@ const request = require('supertest');
 require('dotenv').config();
 const { expect } = require('chai');
 require('../../setup');
+const uuid = require('uuid');
 const app = require('../../../server/app');
 const capture2 = require('../../mock/capture2.json');
 const capture1 = require('../../mock/capture1.json');
@@ -11,7 +12,7 @@ const grower_account1 = require('../../mock/grower_account1.json');
 const grower_account2 = require('../../mock/grower_account2.json');
 const domain_event2 = require('../../mock/domain_event2.json');
 const tree1 = require('../../mock/tree1.json');
-const { knex, addCapture } = require('../../utils');
+const { knex, addCapture, addTree } = require('../../utils');
 
 describe('/captures', () => {
   before(async () => {
@@ -27,10 +28,18 @@ describe('/captures', () => {
         status: 'active',
       })
       .returning('id');
-
+    const [savedTree1] = await addTree({
+      ...tree1,
+      created_at: '2021-05-04 11:24:43',
+      updated_at: '2021-05-04 11:24:43',
+      estimated_geometric_location: 'POINT(50 50)',
+      latest_capture_id: uuid.v4(),
+      attributes: { entries: tree1.attributes },
+    });
     const [capture1GrowerAccountId] = growerAccount1;
     const [capture2GrowerAccountId] = growerAccount2;
     capture1.grower_account_id = capture1GrowerAccountId;
+    capture1.tree_id = savedTree1.id;
     capture2.grower_account_id = capture2GrowerAccountId;
   });
 
@@ -39,6 +48,7 @@ describe('/captures', () => {
     await knex('tag').del();
     await knex('capture').del();
     await knex('grower_account').del();
+    await knex('tree').del();
   });
 
   describe('POST', () => {

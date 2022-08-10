@@ -18,15 +18,18 @@ describe('GET /trees/potential_matches', () => {
 
     const [captureGrowerAccountId] = growerAccount1;
     capture1.grower_account_id = captureGrowerAccountId;
+    capture1.tree_id = tree1.id;
   });
 
   afterEach(async () => {
-    await utils.delTree(tree1.id);
     await utils.delCapture(capture1.id);
+    await utils.delTree(tree1.id);
   });
 
   after(async () => {
     await knex('grower_account').del();
+    await knex('tree').del();
+    await knex('capture').del();
   });
 
   const extraInfo = {
@@ -49,6 +52,8 @@ describe('GET /trees/potential_matches', () => {
       estimated_geographic_location: 'POINT(50 50)',
       updated_at: '2021-05-04 11:24:43',
     });
+    console.log(1111)
+    console.log(capture1)
     const response = await request(app).get(
       `/trees/potential_matches?capture_id=${capture1.id}`,
     );

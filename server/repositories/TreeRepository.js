@@ -31,7 +31,7 @@ class TreeRepository extends BaseRepository {
       WHERE
         t1.id IS NOT NULL
         AND	t2.id = :id
-        AND (t2.tree_id IS NULL OR t2.tree_id <> t1.id )
+        OR t2.tree_id IS NULL
     `;
     //      'SELECT t1.id, t1.image_url, t1.latest_capture_id, t1.lat, t1.lon, t1.species_id, t1.morphology, t1.age, t1.status, t1.created_at, t1.updated_at FROM tree t1 LEFT JOIN capture t2 ON ST_DWithin(t1.estimated_geometric_location, t2.estimated_geometric_location, :distance) WHERE t1.id= :id AND t2.id<> :id';
     const data = await this._session.getDB().raw(query, { id, distance });

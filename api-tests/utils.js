@@ -12,7 +12,7 @@ function parsePoint(json) {
 
 module.exports = {
   async addTree(json) {
-    await knex('tree').insert(parsePoint(json)).returning('*');
+    return knex('tree').insert(parsePoint(json)).returning('*');
   },
   async addCapture(json) {
     return knex('capture').insert(parsePoint(json)).returning('*');
