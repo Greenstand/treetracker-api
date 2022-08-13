@@ -59,8 +59,6 @@ describe('GET /trees/potential_matches', () => {
       estimated_geographic_location: 'POINT(50 50)',
       updated_at: '2021-05-04 11:24:43',
     });
-    console.log(1111);
-    console.log(capture1);
     const response = await request(app).get(
       `/trees/potential_matches?capture_id=${capture1.id}`,
     );
