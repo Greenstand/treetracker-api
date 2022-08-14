@@ -1,3 +1,14 @@
+# [1.22.0](https://github.com/Greenstand/treetracker-api/compare/v1.21.0...v1.22.0) (2022-08-14)
+
+
+### Features
+
+* add tree-id refrence to capture table ([52a4c18](https://github.com/Greenstand/treetracker-api/commit/52a4c1834e1a8793839d149871b8e56603c3e7ef))
+* fix already exists error ([c05fb92](https://github.com/Greenstand/treetracker-api/commit/c05fb927835065e4b0274ad1b12a7f34d45de9b1))
+* fix test errors ([466e954](https://github.com/Greenstand/treetracker-api/commit/466e954b247db0491ff3300e959ed0c9fa7b88e0))
+* remove logs ([6a4c64d](https://github.com/Greenstand/treetracker-api/commit/6a4c64dfbd55772966a95209c18898bd88f805c1))
+* teevert query change and fix test ([4d98ebe](https://github.com/Greenstand/treetracker-api/commit/4d98ebedd557beb1985c9b6360f6546497576e84))
+
 # [1.21.0](https://github.com/Greenstand/treetracker-api/compare/v1.20.0...v1.21.0) (2022-08-09)
 
 
