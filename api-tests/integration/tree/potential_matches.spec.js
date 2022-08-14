@@ -4,6 +4,7 @@ const uuid = require('uuid');
 const app = require('../../../server/app');
 const utils = require('../../utils');
 const tree1 = require('../../mock/tree1.json');
+const tree2 = require('../../mock/tree2.json');
 const capture1 = require('../../mock/capture1.json');
 const grower_account1 = require('../../mock/grower_account1.json');
 
@@ -18,15 +19,19 @@ describe('GET /trees/potential_matches', () => {
 
     const [captureGrowerAccountId] = growerAccount1;
     capture1.grower_account_id = captureGrowerAccountId;
+    capture1.tree_id = tree1.id;
   });
 
   afterEach(async () => {
-    await utils.delTree(tree1.id);
     await utils.delCapture(capture1.id);
+    await utils.delTree(tree1.id);
+    await utils.delTree(tree2.id);
   });
 
   after(async () => {
     await knex('grower_account').del();
+    await knex('tree').del();
+    await knex('capture').del();
   });
 
   const extraInfo = {
@@ -43,6 +48,11 @@ describe('GET /trees/potential_matches', () => {
       attributes: { entries: tree1.attributes },
       ...extraInfo,
     });
+    await utils.addTree({
+      ...tree2,
+      attributes: { entries: tree2.attributes },
+      ...extraInfo,
+    });
     await utils.addCapture({
       ...capture1,
       estimated_geometric_location: 'POINT(50 50)',
@@ -54,7 +64,7 @@ describe('GET /trees/potential_matches', () => {
     );
     expect(response.body).to.have.property('matches');
     //    expect(response.body.matches[0].id).eq(1);
-    expect(response.body.matches.map((m) => m.id)).to.have.members([tree1.id]);
+    expect(response.body.matches.map((m) => m.id)).to.have.members([tree2.id]);
   });
 
   it("tree1 doesn't potential matches capture1 because it already attached by capture1", async () => {

@@ -1,0 +1,1 @@
+ALTER TABLE capture DROP CONSTRAINT capture_tree_id_fkey;
