@@ -11,11 +11,11 @@ class EventRepository extends BaseRepository {
     return super.create(domainEvent);
   }
 
-  async getDomainEvent(payloadId) {
+  async getDomainEvent(payloadReferenceId) {
     const data = await this._session
       .getDB()
-      .raw(`select * from domain_event where payload ->> 'id' = ?;`, [
-        payloadId,
+      .raw(`select * from domain_event where payload ->> 'reference_id' = ?;`, [
+        payloadReferenceId,
       ]);
 
     return data.rows[0];
