@@ -38,6 +38,7 @@ const capturePostSchema = Joi.object({
 }).unknown(false);
 
 const captureGetQuerySchema = Joi.object({
+  reference_id: Joi.number().integer(),
   tree_id: Joi.string().uuid(),
   tree_associated: Joi.boolean(),
   organization_ids: Joi.array().items(Joi.string().uuid()),

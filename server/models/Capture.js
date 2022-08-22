@@ -11,6 +11,7 @@ class Capture {
 
   static Capture({
     id,
+    reference_id,
     tree_id = undefined,
     image_url,
     lat,
@@ -30,6 +31,7 @@ class Capture {
   }) {
     return Object.freeze({
       id,
+      reference_id,
       image_url,
       planting_organization_id,
       created_at,
@@ -71,6 +73,7 @@ class Capture {
 
   static FilterCriteria({
     tree_id = undefined,
+    reference_id = undefined,
     tree_associated = undefined,
     captured_at_start_date = undefined,
     captured_at_end_date = undefined,
@@ -82,6 +85,7 @@ class Capture {
   }) {
     const parameters = Object.entries({
       tree_id,
+      reference_id,
       captured_at_start_date,
       captured_at_end_date,
       grower_account_id,
