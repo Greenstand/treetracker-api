@@ -9,7 +9,12 @@ class CaptureRepository extends BaseRepository {
 
   _filterWhereBuilder(object, builder) {
     const result = builder;
-    const { parameters, whereNulls = [], whereNotNulls = [], whereIns = [] } = {
+    const {
+      parameters,
+      whereNulls = [],
+      whereNotNulls = [],
+      whereIns = [],
+    } = {
       ...object,
     };
     result.whereNot(`${this._tableName}.status`, 'deleted');
@@ -54,6 +59,7 @@ class CaptureRepository extends BaseRepository {
         knex.raw(
           `
             id,
+            reference_id,
             tree_id,
             planting_organization_id,
             image_url,
