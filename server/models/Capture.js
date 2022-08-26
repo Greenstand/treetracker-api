@@ -53,6 +53,7 @@ class Capture {
   }
 
   static CaptureCreated({
+    id,
     reference_id,
     lat,
     lon,
@@ -61,6 +62,7 @@ class Capture {
     captured_at,
   }) {
     return Object.freeze({
+      id,
       reference_id,
       approved: true,
       type: 'CaptureCreated',
@@ -184,8 +186,8 @@ class Capture {
       newCapture.reference_id,
     );
     if (existingCapture?.id) {
-      const domainEvent = await eventRepo.getDomainEvent(
-        newCapture.reference_id,
+      const domainEvent = await eventRepo.getCaptureDomainEvent(
+        existingCapture.reference_id,
       );
       if (domainEvent.status !== 'sent') {
         return {
