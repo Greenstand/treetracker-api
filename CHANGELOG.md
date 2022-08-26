@@ -1,3 +1,12 @@
+## [1.22.1](https://github.com/Greenstand/treetracker-api/compare/v1.22.0...v1.22.1) (2022-08-26)
+
+
+### Bug Fixes
+
+* merge conflict ([69870ec](https://github.com/Greenstand/treetracker-api/commit/69870ec0d9dcbbcd6861b77a86fa753ea7f8a8a8))
+* rabbitmq captures ([776c09a](https://github.com/Greenstand/treetracker-api/commit/776c09aabd45a6614404184a47f9165e859ba778))
+* update tests ([1e6f026](https://github.com/Greenstand/treetracker-api/commit/1e6f026660e3227f251a0c6bbaf3f0ea7f0616c6))
+
 # [1.22.0](https://github.com/Greenstand/treetracker-api/compare/v1.21.0...v1.22.0) (2022-08-14)
 
 
