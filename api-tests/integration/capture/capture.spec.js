@@ -61,6 +61,11 @@ describe('/captures', () => {
       await knex('domain_event').insert({ ...domain_event2 });
     });
 
+    after(async () => {
+      await knex('capture').del();
+      await knex('domain_event').del();
+    });
+
     it('should create a capture', async () => {
       const res = await request(app)
         .post(`/captures`)
@@ -98,7 +103,7 @@ describe('/captures', () => {
     it('should resend capture created event if it wasnt successful last time and capture already exists', async () => {
       await request(app)
         .post(`/captures`)
-        .send({ ...capture2, id: capture1.id })
+        .send({ ...capture2, reference_id: capture1.reference_id })
         .set('Accept', 'application/json')
         .expect(200);
 
@@ -109,21 +114,22 @@ describe('/captures', () => {
         .where({ status: 'sent' });
       expect(+numOfEmittedEvents[0].count).to.eql(2);
     });
-
-    after(async () => {
-      await knex('capture').del();
-      await knex('domain_event').del();
-    });
   });
 
   describe('PATCH', () => {
+    const captureId = uuid.v4();
     before(async () => {
       await addCapture({
         ...capture2,
+        id: captureId,
         estimated_geometric_location: 'POINT(50 50)',
         updated_at: '2022-01-01T11:11:11.000Z',
         attributes: { entries: attributes.attributes },
       });
+    });
+
+    after(async () => {
+      await knex('capture').del();
     });
 
     it('should update a capture', async () => {
@@ -132,7 +138,7 @@ describe('/captures', () => {
       };
 
       const res = await request(app)
-        .patch(`/captures/${capture2.id}`)
+        .patch(`/captures/${captureId}`)
         .send(updates)
         .set('Accept', 'application/json')
         .expect(200);
@@ -146,13 +152,10 @@ describe('/captures', () => {
         tree_id: updates.tree_id,
       });
     });
-
-    after(async () => {
-      await knex('capture').del();
-    });
   });
 
   describe('GET', () => {
+    const captureId = uuid.v4();
     before(async () => {
       await addCapture({
         ...capture1,
@@ -162,6 +165,7 @@ describe('/captures', () => {
       });
       await addCapture({
         ...capture2,
+        id: captureId,
         estimated_geometric_location: 'POINT(50 50)',
         updated_at: '2022-02-01 11:11:11',
         attributes: { entries: attributes.attributes },
@@ -192,14 +196,12 @@ describe('/captures', () => {
         .expect(200);
       expect(result.body.captures.length).to.eql(1);
       expect(result.body.query.count).to.eql(1);
-      expect(result.body.captures[0].id).to.eql(
-        'd2c69205-b13f-4ab6-bb5e-33dc504fa0c2',
-      );
+      expect(result.body.captures[0].id).to.eql(captureId);
     });
 
     it('should delete a capture', async () => {
       await request(app)
-        .patch(`/captures/${capture2.id}`)
+        .patch(`/captures/${captureId}`)
         .send({ status: 'deleted' })
         .set('Accept', 'application/json')
         .expect(200);
@@ -214,7 +216,7 @@ describe('/captures', () => {
   });
 
   describe('/captures/capture_id/tags', () => {
-    const captureId = capture2.id;
+    const captureId = uuid.v4();
 
     before(async () => {
       await addCapture({
@@ -224,6 +226,7 @@ describe('/captures', () => {
       });
       await addCapture({
         ...capture2,
+        id: captureId,
         estimated_geometric_location: 'POINT(50 50)',
         updated_at: '2022-02-01 11:11:11',
       });

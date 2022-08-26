@@ -6,7 +6,6 @@ const HttpError = require('./utils/HttpError');
 const { errorHandler } = require('./utils/utils');
 const helper = require('./utils/utils');
 const router = require('./routes');
-const registerEventHandlers = require('./services/EventHandlerService');
 
 const app = express();
 
@@ -50,7 +49,5 @@ const { version } = require('../package.json');
 app.get('*', function (req, res) {
   res.status(200).send(version);
 });
-
-registerEventHandlers();
 
 module.exports = app;

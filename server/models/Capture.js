@@ -54,6 +54,7 @@ class Capture {
 
   static CaptureCreated({
     id,
+    reference_id,
     lat,
     lon,
     grower_account_id,
@@ -62,6 +63,8 @@ class Capture {
   }) {
     return Object.freeze({
       id,
+      reference_id,
+      approved: true,
       type: 'CaptureCreated',
       lat,
       lon,
@@ -153,6 +156,16 @@ class Capture {
     return this._response(capture);
   }
 
+  async getCaptureByReferenceId(referenceId) {
+    const captures = await this._captureRepository.getByFilter({
+      parameters: { reference_id: referenceId },
+    });
+
+    const [capture = {}] = captures;
+
+    return this._response(capture);
+  }
+
   async createCapture(captureObject) {
     const eventRepo = new EventRepository(this._session);
 
@@ -169,9 +182,13 @@ class Capture {
       updated_at: new Date().toISOString(),
       created_at: new Date().toISOString(),
     };
-    const existingCapture = await this.getCaptureById(newCapture.id);
+    const existingCapture = await this.getCaptureByReferenceId(
+      newCapture.reference_id,
+    );
     if (existingCapture?.id) {
-      const domainEvent = await eventRepo.getDomainEvent(newCapture.id);
+      const domainEvent = await eventRepo.getCaptureDomainEvent(
+        existingCapture.reference_id,
+      );
       if (domainEvent.status !== 'sent') {
         return {
           domainEvent,
@@ -207,21 +224,6 @@ class Capture {
     });
 
     return this._response(updatedCapture);
-  }
-
-  async applyVerification(verifyCaptureProcessed) {
-    if (verifyCaptureProcessed.approved) {
-      await this._captureRepository.update({
-        id: verifyCaptureProcessed.id,
-        status: 'approved',
-      });
-    } else {
-      await this._captureRepository.update({
-        id: verifyCaptureProcessed.id,
-        status: 'rejected',
-        rejection_reason: verifyCaptureProcessed.rejection_reason,
-      });
-    }
   }
 }
 
