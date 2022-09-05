@@ -103,7 +103,7 @@ describe('/captures', () => {
     it('should resend capture created event if it wasnt successful last time and capture already exists', async () => {
       await request(app)
         .post(`/captures`)
-        .send({ ...capture2, reference_id: capture1.reference_id })
+        .send({ ...capture2, id: capture1.id })
         .set('Accept', 'application/json')
         .expect(200);
 

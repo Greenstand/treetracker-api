@@ -1,6 +1,7 @@
 const Joi = require('joi');
 
 const capturePostSchema = Joi.object({
+  id: Joi.string().uuid().required(),
   session_id: Joi.string().uuid().required(),
   image_url: Joi.string().uri().required(),
   lat: Joi.number().required().min(-90).max(90).required(),
