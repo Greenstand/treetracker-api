@@ -28,6 +28,7 @@ class Capture {
     attributes,
     species_id,
     session_id,
+    device_configuration_id,
   }) {
     return Object.freeze({
       id,
@@ -49,6 +50,7 @@ class Capture {
       attributes,
       species_id,
       session_id,
+      device_configuration_id,
     });
   }
 

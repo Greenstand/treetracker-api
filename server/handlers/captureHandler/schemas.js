@@ -14,8 +14,11 @@ const capturePostSchema = Joi.object({
   tree_id: Joi.string().uuid().default(null),
   note: Joi.string().default(null),
   species_id: Joi.string().uuid().default(null),
+  species_id_int: Joi.number().integer().default(null), // to support legacy API call, until we can consolidate the species systems
+  organization_id: Joi.number().integer().default(null), // to support legacy API call
   morphology: Joi.string().default(null),
   age: Joi.number().integer().default(null),
+  capture_approval_tag: Joi.string().default(null),
   captured_at: Joi.date().iso().required(),
   attributes: Joi.array()
     .items(

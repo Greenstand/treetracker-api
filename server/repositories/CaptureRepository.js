@@ -62,6 +62,7 @@ class CaptureRepository extends BaseRepository {
             reference_id,
             tree_id,
             planting_organization_id,
+            device_configuration_id,
             image_url,
             lat,
             lon,

@@ -49,7 +49,10 @@ const captureHandlerPost = async function (req, res) {
   });
 
   const captureService = new CaptureService();
-  const { capture, status } = await captureService.createCapture(captureObject);
+  const { capture, status } = await captureService.createCapture({
+    ...captureObject,
+    legacyAPIAuthorizationHeader: req.headers.authorization,
+  });
 
   res.status(status).send(capture);
 };
