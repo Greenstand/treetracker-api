@@ -1,6 +1,6 @@
 {
   "name": "treetracker",
-  "version": "1.22.1",
+  "version": "1.23.0",
   "private": true,
   "engines": {
     "node": ">=16.0.0 <17",

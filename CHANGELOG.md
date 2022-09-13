@@ -1,3 +1,15 @@
+# [1.23.0](https://github.com/Greenstand/treetracker-api/compare/v1.22.1...v1.23.0) (2022-09-13)
+
+
+### Bug Fixes
+
+* id to be inserted ([29ff4b3](https://github.com/Greenstand/treetracker-api/commit/29ff4b3cbaf49da3dc342ccad6783068b6dfb3db))
+
+
+### Features
+
+* integrate legacy API to capture creation ([2a5774f](https://github.com/Greenstand/treetracker-api/commit/2a5774f967624e56172572a6a7d3699eecea4634))
+
 ## [1.22.1](https://github.com/Greenstand/treetracker-api/compare/v1.22.0...v1.22.1) (2022-08-26)
 
 
