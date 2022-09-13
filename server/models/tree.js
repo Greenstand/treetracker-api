@@ -85,7 +85,7 @@ class Tree {
     });
     const [existingTree] = existingTrees;
     if (existingTree) {
-      const domainEvent = await eventRepo.getTreeDomainEvent(newTree.id);
+      const domainEvent = await eventRepo.getDomainEvent(newTree.id);
       if (domainEvent.status !== 'sent') {
         return { domainEvent, tree: existingTree, eventRepo, status: 200 };
       }

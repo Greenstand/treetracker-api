@@ -1,6 +1,7 @@
 const Capture = require('../models/Capture');
 const Session = require('../infra/database/Session');
 const { publishCaptureCreatedMessage } = require('./QueueService');
+const LegacyAPI = require('./LegacyAPIService');
 
 class CaptureService {
   constructor() {
@@ -20,8 +21,26 @@ class CaptureService {
     return this._capture.getCaptureById(captureId);
   }
 
-  async createCapture(captureObject) {
+  async createCapture(captureObjectParam) {
     try {
+      const captureObject = { ...captureObjectParam };
+
+      await LegacyAPI.approveLegacyTree({
+        id: captureObject.reference_id,
+        speciesId: captureObject.species_id_int,
+        morphology: captureObject.morphology,
+        age: `${captureObject.age}`,
+        captureApprovalTag: captureObject.capture_approval_tag,
+        legacyAPIAuthorizationHeader:
+          captureObject.legacyAPIAuthorizationHeader,
+        organizationId: captureObject.organization_id,
+      });
+
+      delete captureObject.species_id_int;
+      delete captureObject.capture_approval_tag;
+      delete captureObject.legacyAPIAuthorizationHeader;
+      delete captureObject.organization_id;
+
       await this._session.beginTransaction();
       const { capture, domainEvent, eventRepo, status } =
         await this._capture.createCapture(captureObject);

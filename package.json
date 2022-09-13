@@ -17,7 +17,7 @@
     "test-repository": "NODE_ENV=test mocha -r dotenv/config --env dotenv_config_path=.env.test --exit  ./server/repositories/**/*.spec.js",
     "server": "NODE_ENV=development nodemon server/server.js",
     "test-seedDB": "NODE_ENV=test mocha -r dotenv/config --env dotenv_config_path=.env.test --timeout 10000  './**/*.spec.js'",
-    "test-integration": "NODE_ENV=test mocha -r dotenv/config --env dotenv_config_path=.env.test --exit --timeout 20000 --recursive './api-tests/'",
+    "test-integration": "NODE_ENV=test mocha -r dotenv/config --env dotenv_config_path=.env.test --exit --timeout 20000 --recursive './__tests__/'",
     "test-watch": "mocha -w './server/**/{,spec}.js' --recursive ./server/**/*.spec.js",
     "test-watch-debug": "NODE_ENV=test NODE_LOG_LEVEL=debug mocha -r dotenv/config --env dotenv_config_path=.env.test --timeout 10000 -w -b --ignore './server/repositories/**/*.spec.js'  './server/setup.js' './server/**/*.spec.js' './__tests__/seed.spec.js' './__tests__/supertest.js'",
     "prettier-fix": "prettier ./ --write",
@@ -34,6 +34,7 @@
   "dependencies": {
     "@sentry/node": "^5.1.0",
     "amqplib": "^0.8.0",
+    "axios": "^0.27.2",
     "body-parser": "^1.18.2",
     "commander": "^9.0.0",
     "cors": "^2.8.5",

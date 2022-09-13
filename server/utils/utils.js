@@ -3,6 +3,7 @@
  */
 const log = require('loglevel');
 const { ValidationError } = require('joi');
+const { isAxiosError } = require('axios').default;
 const HttpError = require('./HttpError');
 
 /*
@@ -30,7 +31,7 @@ exports.handlerWrapper = (fn) =>
   };
 
 exports.errorHandler = (err, req, res, _next) => {
-  log.warn('catch error:', err);
+  if (!isAxiosError(err)) log.warn('catch error:', err);
   if (err instanceof HttpError) {
     res.status(err.code).send({
       code: err.code,
@@ -40,6 +41,24 @@ exports.errorHandler = (err, req, res, _next) => {
     res.status(422).send({
       code: 422,
       message: err.details.map((m) => m.message).join(';'),
+    });
+  } else if (isAxiosError(err)) {
+    const errorResponse = err.response?.data;
+    const errorObject = {
+      microserviceUrl: err.config.url,
+      data: err.config.data,
+      code: errorResponse?.error?.statusCode || errorResponse?.code || 500,
+      message:
+        errorResponse?.error?.message ||
+        errorResponse?.message ||
+        err.response?.error ||
+        err.message ||
+        `Unknown error occured with external service call`,
+    };
+    log.warn(errorObject);
+    res.status(500).send({
+      code: 500,
+      message: errorObject.message,
     });
   } else {
     res.status(500).send({

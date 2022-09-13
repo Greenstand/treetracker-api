@@ -11,17 +11,7 @@ class EventRepository extends BaseRepository {
     return super.create(domainEvent);
   }
 
-  async getCaptureDomainEvent(payloadReferenceId) {
-    const data = await this._session
-      .getDB()
-      .raw(`select * from domain_event where payload ->> 'reference_id' = ?;`, [
-        payloadReferenceId,
-      ]);
-
-    return data.rows[0];
-  }
-
-  async getTreeDomainEvent(payloadId) {
+  async getDomainEvent(payloadId) {
     const data = await this._session
       .getDB()
       .raw(`select * from domain_event where payload ->> 'id' = ?;`, [

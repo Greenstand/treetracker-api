@@ -1,8 +1,10 @@
-const request = require('supertest');
 require('dotenv').config();
-const { expect } = require('chai');
 require('../../setup');
+const request = require('supertest');
+const sinon = require('sinon');
+const { expect } = require('chai');
 const uuid = require('uuid');
+const LegacyAPI = require('../../../server/services/LegacyAPIService');
 const app = require('../../../server/app');
 const capture2 = require('../../mock/capture2.json');
 const capture1 = require('../../mock/capture1.json');
@@ -52,6 +54,23 @@ describe('/captures', () => {
   });
 
   describe('POST', () => {
+    const legacyExtraObjects = {
+      capture_approval_tag: 'approved',
+      species_id_int: 12,
+      organization_id: 11,
+    };
+    let legacyAPIApproveTreeStub;
+
+    beforeEach(async () => {
+      legacyAPIApproveTreeStub = sinon
+        .stub(LegacyAPI, 'approveLegacyTree')
+        .resolves();
+    });
+
+    afterEach(async () => {
+      legacyAPIApproveTreeStub.restore();
+    });
+
     before(async () => {
       await addCapture({
         ...capture1,
@@ -69,9 +88,25 @@ describe('/captures', () => {
     it('should create a capture', async () => {
       const res = await request(app)
         .post(`/captures`)
-        .send(capture2)
+        .send({
+          ...capture2,
+          ...legacyExtraObjects,
+        })
         .set('Accept', 'application/json')
+        .set('Authorization', 'jwt_token')
         .expect(201);
+
+      expect(
+        legacyAPIApproveTreeStub.calledOnceWithExactly({
+          id: capture2.reference_id,
+          speciesId: legacyExtraObjects.species_id_int,
+          morphology: capture2.morphology,
+          age: `${capture2.age}`,
+          captureApprovalTag: legacyExtraObjects.capture_approval_tag,
+          legacyAPIAuthorizationHeader: 'jwt_token',
+          organizationId: legacyExtraObjects.organization_id,
+        }),
+      ).eql(true);
 
       expect(res.body).to.include({
         image_url: capture2.image_url,
@@ -86,9 +121,25 @@ describe('/captures', () => {
     it('should not error out when duplicate data is sent', async () => {
       const res = await request(app)
         .post(`/captures`)
-        .send(capture2)
+        .send({
+          ...capture2,
+          ...legacyExtraObjects,
+        })
         .set('Accept', 'application/json')
+        .set('Authorization', 'jwt_token')
         .expect(200);
+
+      expect(
+        legacyAPIApproveTreeStub.calledOnceWithExactly({
+          morphology: capture2.morphology,
+          age: `${capture2.age}`,
+          captureApprovalTag: legacyExtraObjects.capture_approval_tag,
+          speciesId: legacyExtraObjects.species_id_int,
+          id: capture2.reference_id,
+          legacyAPIAuthorizationHeader: 'jwt_token',
+          organizationId: legacyExtraObjects.organization_id,
+        }),
+      ).eql(true);
 
       expect(res.body).to.include({
         image_url: capture2.image_url,
@@ -103,9 +154,26 @@ describe('/captures', () => {
     it('should resend capture created event if it wasnt successful last time and capture already exists', async () => {
       await request(app)
         .post(`/captures`)
-        .send({ ...capture2, reference_id: capture1.reference_id })
+        .send({
+          ...capture2,
+          ...legacyExtraObjects,
+          id: capture1.id,
+        })
         .set('Accept', 'application/json')
+        .set('Authorization', 'jwt_token')
         .expect(200);
+
+      expect(
+        legacyAPIApproveTreeStub.calledOnceWithExactly({
+          morphology: capture2.morphology,
+          age: `${capture2.age}`,
+          captureApprovalTag: legacyExtraObjects.capture_approval_tag,
+          speciesId: legacyExtraObjects.species_id_int,
+          id: capture2.reference_id,
+          legacyAPIAuthorizationHeader: 'jwt_token',
+          organizationId: legacyExtraObjects.organization_id,
+        }),
+      ).eql(true);
 
       // added a timer to confirm this because the function call in the API is a callback function not 'awaited'
       await new Promise((resolve) => setTimeout(resolve, 2000));
