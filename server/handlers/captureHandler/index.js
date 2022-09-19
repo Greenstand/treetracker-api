@@ -48,10 +48,16 @@ const captureHandlerPost = async function (req, res) {
     abortEarly: false,
   });
 
+  const legacyAPIAuthorizationHeader = req.headers.authorization;
+
+  if (!legacyAPIAuthorizationHeader) {
+    throw new HttpError(422, 'legacy authorization header needed');
+  }
+
   const captureService = new CaptureService();
   const { capture, status } = await captureService.createCapture({
     ...captureObject,
-    legacyAPIAuthorizationHeader: req.headers.authorization,
+    legacyAPIAuthorizationHeader,
   });
 
   res.status(status).send(capture);
