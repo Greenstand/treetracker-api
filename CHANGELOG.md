@@ -1,3 +1,10 @@
+## [1.23.1](https://github.com/Greenstand/treetracker-api/compare/v1.23.0...v1.23.1) (2022-09-19)
+
+
+### Bug Fixes
+
+* add authorization header check ([ccd2389](https://github.com/Greenstand/treetracker-api/commit/ccd2389b46d052620555744bf3126adae288d421))
+
 # [1.23.0](https://github.com/Greenstand/treetracker-api/compare/v1.22.1...v1.23.0) (2022-09-13)
 
 
