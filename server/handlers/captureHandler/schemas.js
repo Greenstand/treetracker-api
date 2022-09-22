@@ -17,7 +17,7 @@ const capturePostSchema = Joi.object({
   species_id_int: Joi.number().integer().default(null), // to support legacy API call, until we can consolidate the species systems
   organization_id: Joi.number().integer().default(null), // to support legacy API call
   morphology: Joi.string().default(null),
-  age: Joi.string().allow('over_two_years', 'new_tree', null),
+  age: Joi.string().valid('over_two_years', 'new_tree', null),
   capture_approval_tag: Joi.string().default(null),
   captured_at: Joi.date().iso().required(),
   attributes: Joi.array()
