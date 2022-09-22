@@ -1,7 +1,7 @@
 const axios = require('axios').default;
 
 const TREETRACKER_LEGACY_API_URL =
-  `${process.env.TREETRACKER_LEGACY_API_URL}` ||
+  process.env.TREETRACKER_LEGACY_API_URL ||
   'http://treetracker-admin-api.admin-api/';
 
 const organizationRoute = (id) => (id ? `organization/${id}/` : ``);
