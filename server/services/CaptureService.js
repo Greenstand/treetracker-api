@@ -29,7 +29,7 @@ class CaptureService {
         id: captureObject.reference_id,
         speciesId: captureObject.species_id_int,
         morphology: captureObject.morphology,
-        age: `${captureObject.age}`,
+        age: captureObject.age,
         captureApprovalTag: captureObject.capture_approval_tag,
         legacyAPIAuthorizationHeader:
           captureObject.legacyAPIAuthorizationHeader,
@@ -40,10 +40,11 @@ class CaptureService {
       delete captureObject.capture_approval_tag;
       delete captureObject.legacyAPIAuthorizationHeader;
       delete captureObject.organization_id;
+      const age = captureObject.age === 'over_two_years' ? 2 : 0;
 
       await this._session.beginTransaction();
       const { capture, domainEvent, eventRepo, status } =
-        await this._capture.createCapture(captureObject);
+        await this._capture.createCapture({ ...captureObject, age });
 
       await this._session.commitTransaction();
 

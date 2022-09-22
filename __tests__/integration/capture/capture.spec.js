@@ -101,7 +101,7 @@ describe('/captures', () => {
           id: capture2.reference_id,
           speciesId: legacyExtraObjects.species_id_int,
           morphology: capture2.morphology,
-          age: `${capture2.age}`,
+          age: capture2.age,
           captureApprovalTag: legacyExtraObjects.capture_approval_tag,
           legacyAPIAuthorizationHeader: 'jwt_token',
           organizationId: legacyExtraObjects.organization_id,
@@ -132,7 +132,7 @@ describe('/captures', () => {
       expect(
         legacyAPIApproveTreeStub.calledOnceWithExactly({
           morphology: capture2.morphology,
-          age: `${capture2.age}`,
+          age: capture2.age,
           captureApprovalTag: legacyExtraObjects.capture_approval_tag,
           speciesId: legacyExtraObjects.species_id_int,
           id: capture2.reference_id,
@@ -166,7 +166,7 @@ describe('/captures', () => {
       expect(
         legacyAPIApproveTreeStub.calledOnceWithExactly({
           morphology: capture2.morphology,
-          age: `${capture2.age}`,
+          age: capture2.age,
           captureApprovalTag: legacyExtraObjects.capture_approval_tag,
           speciesId: legacyExtraObjects.species_id_int,
           id: capture2.reference_id,
@@ -189,6 +189,7 @@ describe('/captures', () => {
     before(async () => {
       await addCapture({
         ...capture2,
+        age: 0,
         id: captureId,
         estimated_geometric_location: 'POINT(50 50)',
         updated_at: '2022-01-01T11:11:11.000Z',
@@ -233,6 +234,7 @@ describe('/captures', () => {
       });
       await addCapture({
         ...capture2,
+        age: 0,
         id: captureId,
         estimated_geometric_location: 'POINT(50 50)',
         updated_at: '2022-02-01 11:11:11',
@@ -294,6 +296,7 @@ describe('/captures', () => {
       });
       await addCapture({
         ...capture2,
+        age: 0,
         id: captureId,
         estimated_geometric_location: 'POINT(50 50)',
         updated_at: '2022-02-01 11:11:11',
