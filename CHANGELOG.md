@@ -1,3 +1,10 @@
+## [1.23.4](https://github.com/Greenstand/treetracker-api/compare/v1.23.3...v1.23.4) (2022-09-22)
+
+
+### Bug Fixes
+
+* legacy capture age ([fd6f167](https://github.com/Greenstand/treetracker-api/commit/fd6f167eec62108ac3468425c8f02b39ee5502cc))
+
 ## [1.23.3](https://github.com/Greenstand/treetracker-api/compare/v1.23.2...v1.23.3) (2022-09-22)
 
 
