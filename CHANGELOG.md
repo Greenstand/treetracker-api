@@ -1,3 +1,10 @@
+## [1.23.2](https://github.com/Greenstand/treetracker-api/compare/v1.23.1...v1.23.2) (2022-09-22)
+
+
+### Bug Fixes
+
+* legacy api url ([5689c5d](https://github.com/Greenstand/treetracker-api/commit/5689c5dda7dbc5487820a3d1a6ab86eca1a8623c))
+
 ## [1.23.1](https://github.com/Greenstand/treetracker-api/compare/v1.23.0...v1.23.1) (2022-09-19)
 
 
