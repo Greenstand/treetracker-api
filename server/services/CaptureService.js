@@ -1,6 +1,6 @@
 const Capture = require('../models/Capture');
 const Session = require('../infra/database/Session');
-const { publishCaptureCreatedMessage } = require('./QueueService');
+const QueueService = require('./QueueService');
 const LegacyAPI = require('./LegacyAPIService');
 
 class CaptureService {
@@ -43,13 +43,16 @@ class CaptureService {
       const age = captureObject.age === 'over_two_years' ? 2 : 0;
 
       await this._session.beginTransaction();
-      const { capture, domainEvent, eventRepo, status } =
+      const { capture, domainEvent, status } =
         await this._capture.createCapture({ ...captureObject, age });
 
       await this._session.commitTransaction();
 
       if (domainEvent) {
-        publishCaptureCreatedMessage(eventRepo, domainEvent);
+        const queueService = new QueueService(this._session);
+        await queueService.init();
+        queueService.publishCaptureCreatedMessage(domainEvent);
+        queueService.tearDown();
       }
 
       return { capture, status };

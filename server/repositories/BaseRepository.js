@@ -1,5 +1,4 @@
 const expect = require('expect-runtime');
-const HttpError = require('../utils/HttpError');
 
 class BaseRepository {
   constructor(tableName, session) {
@@ -15,9 +14,6 @@ class BaseRepository {
       .table(this._tableName)
       .where('id', id)
       .first();
-    if (!object) {
-      throw new HttpError(404, `Can not found ${this._tableName} by id:${id}`);
-    }
     return object;
   }
 

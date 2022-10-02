@@ -1,8 +1,8 @@
-const { raiseEvent, DomainEvent } = require('./DomainEvent');
+const DomainEvent = require('./DomainEvent');
 const TreeRepository = require('../repositories/TreeRepository');
-const EventRepository = require('../repositories/EventRepository');
 const Capture = require('./Capture');
 const knex = require('../infra/database/knex');
+const { DomainEventTypes } = require('../utils/enums');
 
 class Tree {
   constructor(session) {
@@ -64,7 +64,7 @@ class Tree {
   }
 
   async createTree(treeObject) {
-    const eventRepo = new EventRepository(this._session);
+    const domainEventModel = new DomainEvent(this._session);
 
     const location = knex.raw(
       `ST_PointFromText('POINT(${treeObject.lon} ${treeObject.lat})', 4326)`,
@@ -85,9 +85,12 @@ class Tree {
     });
     const [existingTree] = existingTrees;
     if (existingTree) {
-      const domainEvent = await eventRepo.getDomainEvent(newTree.id);
+      const domainEvent = await domainEventModel.getDomainEvent(
+        newTree.id,
+        DomainEventTypes.TreeCreated,
+      );
       if (domainEvent.status !== 'sent') {
-        return { domainEvent, tree: existingTree, eventRepo, status: 200 };
+        return { domainEvent, tree: existingTree, status: 200 };
       }
       return { tree: this._response(existingTree), status: 200 };
     }
@@ -96,13 +99,14 @@ class Tree {
       ...newTree,
     });
 
-    const raiseTreeEvent = raiseEvent(eventRepo);
-    const domainEvent = await raiseTreeEvent(DomainEvent(createdTree));
+    const domainEvent = await domainEventModel.raiseEvent({
+      ...createdTree,
+      type: DomainEventTypes.TreeCreated,
+    });
 
     return {
       domainEvent,
       tree: this._response(createdTree),
-      eventRepo,
       status: 201,
     };
   }

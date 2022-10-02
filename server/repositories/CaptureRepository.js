@@ -117,16 +117,6 @@ class CaptureRepository extends BaseRepository {
 
     return Number(count);
   }
-
-  async getById(id) {
-    const object = await this._session
-      .getDB()
-      .select()
-      .table(this._tableName)
-      .where({ id, status: 'active' })
-      .first();
-    return object;
-  }
 }
 
 module.exports = CaptureRepository;
