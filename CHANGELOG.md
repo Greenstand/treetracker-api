@@ -1,3 +1,10 @@
+## [1.23.6](https://github.com/Greenstand/treetracker-api/compare/v1.23.5...v1.23.6) (2022-10-06)
+
+
+### Bug Fixes
+
+* update rabbitmq implementation/add event listener for raw capture rejection ([ee8c8d6](https://github.com/Greenstand/treetracker-api/commit/ee8c8d6559e3c23b7c3348cc6e3c519e7bbb2e11))
+
 ## [1.23.5](https://github.com/Greenstand/treetracker-api/compare/v1.23.4...v1.23.5) (2022-09-22)
 
 
