@@ -1,6 +1,8 @@
 const request = require('supertest');
 const { expect } = require('chai');
+const sinon = require('sinon');
 const uuid = require('uuid');
+const Broker = require('rascal').BrokerAsPromised;
 const app = require('../../../server/app');
 const tree2 = require('../../mock/tree2.json');
 const tree1 = require('../../mock/tree1.json');
@@ -20,7 +22,23 @@ describe('/trees', () => {
   const modTree = { ...tree2, attributes: { entries: tree2.attributes } };
 
   const updatedModTree = { ...modTree, ...treeUpdates };
+  let brokerStub;
+
+  before(async () => {
+    brokerStub = sinon.stub(Broker, 'create').resolves({
+      publish: () => {
+        return {
+          on: (state, callback) => {
+            if (state === 'success') callback();
+            return { on: () => {} };
+          },
+        };
+      },
+    });
+  });
+
   after(async () => {
+    brokerStub.restore();
     await knex('tree').del();
   });
 
