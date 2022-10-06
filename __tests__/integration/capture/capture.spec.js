@@ -1,9 +1,9 @@
 require('dotenv').config();
-require('../../setup');
 const request = require('supertest');
 const sinon = require('sinon');
 const { expect } = require('chai');
 const uuid = require('uuid');
+const Broker = require('rascal').BrokerAsPromised;
 const LegacyAPI = require('../../../server/services/LegacyAPIService');
 const app = require('../../../server/app');
 const capture2 = require('../../mock/capture2.json');
@@ -17,7 +17,19 @@ const tree1 = require('../../mock/tree1.json');
 const { knex, addCapture, addTree } = require('../../utils');
 
 describe('/captures', () => {
+  let brokerStub;
+
   before(async () => {
+    brokerStub = sinon.stub(Broker, 'create').resolves({
+      publish: () => {
+        return {
+          on: (state, callback) => {
+            if (state === 'success') callback();
+            return { on: () => {} };
+          },
+        };
+      },
+    });
     const growerAccount1 = await knex('grower_account')
       .insert({
         ...grower_account1,
@@ -46,6 +58,7 @@ describe('/captures', () => {
   });
 
   after(async () => {
+    brokerStub.restore();
     await knex('capture_tag').del();
     await knex('tag').del();
     await knex('capture').del();
@@ -181,6 +194,65 @@ describe('/captures', () => {
         .count()
         .where({ status: 'sent' });
       expect(+numOfEmittedEvents[0].count).to.eql(2);
+    });
+
+    it(`Should handle capture without existing domain event`, async () => {
+      const id = uuid.v4();
+      await addCapture({
+        ...capture1,
+        reference_id: 2012,
+        id,
+        estimated_geometric_location: 'POINT(50 50)',
+        updated_at: '2022-02-01 11:11:11',
+      });
+
+      await request(app)
+        .post(`/captures`)
+        .send({
+          ...capture2,
+          ...legacyExtraObjects,
+          id,
+        })
+        .set('Accept', 'application/json')
+        .set('Authorization', 'jwt_token')
+        .expect(200);
+
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      const numOfEmittedEvents = await knex('domain_event')
+        .count()
+        .where({ status: 'sent' });
+      expect(+numOfEmittedEvents[0].count).to.eql(3);
+    });
+
+    it(`Should handle capture that is currently rejected`, async () => {
+      const id = uuid.v4();
+      await addCapture({
+        ...capture1,
+        reference_id: 20122,
+        status: 'deleted',
+        id,
+        estimated_geometric_location: 'POINT(50 50)',
+        updated_at: '2022-02-01 11:11:11',
+      });
+
+      const result = await request(app)
+        .post(`/captures`)
+        .send({
+          ...capture2,
+          ...legacyExtraObjects,
+          id,
+        })
+        .set('Accept', 'application/json')
+        .set('Authorization', 'jwt_token')
+        .expect(200);
+
+      expect(result.body.status).eql('active');
+
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      const numOfEmittedEvents = await knex('domain_event')
+        .count()
+        .where({ status: 'sent' });
+      expect(+numOfEmittedEvents[0].count).to.eql(4);
     });
   });
 

@@ -1,7 +1,7 @@
 const knex = require('../infra/database/knex');
 const CaptureRepository = require('../repositories/CaptureRepository');
-const EventRepository = require('../repositories/EventRepository');
-const { raiseEvent, DomainEvent } = require('./DomainEvent');
+const { DomainEventTypes } = require('../utils/enums');
+const DomainEvent = require('./DomainEvent');
 
 class Capture {
   constructor(session) {
@@ -158,18 +158,8 @@ class Capture {
     return this._response(capture);
   }
 
-  async getCaptureByReferenceId(referenceId) {
-    const captures = await this._captureRepository.getByFilter({
-      parameters: { reference_id: referenceId },
-    });
-
-    const [capture = {}] = captures;
-
-    return this._response(capture);
-  }
-
   async createCapture(captureObject) {
-    const eventRepo = new EventRepository(this._session);
+    const domainEventModel = new DomainEvent(this._session);
 
     const location = knex.raw(
       `ST_PointFromText('POINT(${captureObject.lon} ${captureObject.lat})', 4326)`,
@@ -184,33 +174,70 @@ class Capture {
       updated_at: new Date().toISOString(),
       created_at: new Date().toISOString(),
     };
-    const existingCapture = await this.getCaptureById(newCapture.id);
+
+    const existingCapture = await this._captureRepository.getById(
+      newCapture.id,
+    );
     if (existingCapture?.id) {
-      const domainEvent = await eventRepo.getDomainEvent(existingCapture.id);
-      if (domainEvent.status !== 'sent') {
+      if (existingCapture.status === 'deleted') {
+        // capture was approved and then rejected
+        const updatedCapture = await this.updateCapture({
+          id: existingCapture.id,
+          status: 'active',
+        });
+
+        const captureToRaise = this.constructor.CaptureCreated({
+          ...updatedCapture,
+        });
+
+        const newDomainEvent = await domainEventModel.raiseEvent(
+          captureToRaise,
+        );
         return {
-          domainEvent,
-          capture: existingCapture,
-          eventRepo,
+          domainEvent: newDomainEvent,
+          capture: this._response(updatedCapture),
           status: 200,
         };
       }
-      return { capture: existingCapture, status: 200 };
+      // get capture populated with join details
+      const captureWithFullDetails = await this.getCaptureById(newCapture.id);
+      const domainEvent = await domainEventModel.getDomainEvent(
+        captureWithFullDetails.id,
+        DomainEventTypes.CaptureCreated,
+      );
+      if (!domainEvent) {
+        const captureToRaise = this.constructor.CaptureCreated({
+          ...captureWithFullDetails,
+        });
+        const newDomainEvent = await domainEventModel.raiseEvent(
+          captureToRaise,
+        );
+        return {
+          domainEvent: newDomainEvent,
+          capture: this._response(captureWithFullDetails),
+          status: 200,
+        };
+      } if (domainEvent.status !== 'sent') {
+        return {
+          domainEvent,
+          capture: captureWithFullDetails,
+          status: 200,
+        };
+      }
+      return { capture: this._response(existingCapture), status: 200 };
     }
     const createdCapture = await this._captureRepository.create(newCapture);
     const captureCreatedToRaise = this.constructor.CaptureCreated({
       ...createdCapture,
     });
 
-    const raiseCaptureEvent = raiseEvent(eventRepo);
-    const domainEvent = await raiseCaptureEvent(
-      DomainEvent(captureCreatedToRaise),
+    const domainEvent = await domainEventModel.raiseEvent(
+      captureCreatedToRaise,
     );
 
     return {
       domainEvent,
       capture: this._response(createdCapture),
-      eventRepo,
       status: 201,
     };
   }

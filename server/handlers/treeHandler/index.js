@@ -51,7 +51,7 @@ const treeHandlerPost = async function (req, res) {
 
   const treeService = new TreeService();
 
-  const { tree, status } = await treeService.createTag(treeObject);
+  const { tree, status } = await treeService.createTree(treeObject);
 
   res.status(status).send(tree);
 };
@@ -76,7 +76,7 @@ const treeHandlerSingleGet = async (req, res) => {
 
   const tree = await treeService.getTreeById(req.params.tree_id);
 
-  if (!tree.id)
+  if (!tree?.id)
     throw new HttpError(404, `tree with id ${req.params.tree_id} not found`);
 
   res.send(tree);

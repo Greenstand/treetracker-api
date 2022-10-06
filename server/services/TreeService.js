@@ -1,6 +1,6 @@
 const Session = require('../infra/database/Session');
 const Tree = require('../models/tree');
-const { publishTreeCreatedMessage } = require('./QueueService');
+const QueueService = require('./QueueService');
 
 class TreeService {
   constructor() {
@@ -20,16 +20,20 @@ class TreeService {
     return this._tree.getTreeById(treeId);
   }
 
-  async createTag(treeObject) {
+  async createTree(treeObject) {
     try {
       await this._session.beginTransaction();
-      const { tree, domainEvent, eventRepo, status } =
-        await this._tree.createTree(treeObject);
+      const { tree, domainEvent, status } = await this._tree.createTree(
+        treeObject,
+      );
 
       await this._session.commitTransaction();
 
       if (domainEvent) {
-        publishTreeCreatedMessage(eventRepo, domainEvent);
+        const queueService = new QueueService(this._session);
+        await queueService.init();
+        queueService.publishTreeCreatedMessage(domainEvent);
+        queueService.tearDown();
       }
 
       return { tree, status };

@@ -33,6 +33,12 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
+      rabbitmq:
+        image: rabbitmq
+        env:
+          RABBITMQ_DEFAULT_USER: rabbitmq
+          RABBITMQ_DEFAULT_PASS: rabbitmq
+
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js 16.x
@@ -58,3 +64,4 @@ jobs:
         working-directory: ${{ env.project-directory }}
         env:
           DATABASE_URL: postgresql://postgres:postgres@postgres/postgres
+          RABBIT_MQ_URL: amqp://rabbitmq:rabbitmq@rabbitmq

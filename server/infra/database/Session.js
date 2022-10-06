@@ -6,7 +6,6 @@ class Session {
   }
 
   getDB() {
-    // console.log('SESSION getDB');
     if (this.thx) {
       return this.thx;
     }

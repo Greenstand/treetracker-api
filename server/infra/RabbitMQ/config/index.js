@@ -1,6 +1,7 @@
 const SubscriptionNames = {
   CAPTURE_CREATED: 'capture-created',
   TREE_CREATED: 'tree-created',
+  RAW_CAPTURE_REJECTED: 'raw-capture-rejected',
 };
 
 module.exports = {
@@ -17,6 +18,7 @@ module.exports = {
         queues: [
           SubscriptionNames.CAPTURE_CREATED,
           SubscriptionNames.TREE_CREATED,
+          SubscriptionNames.RAW_CAPTURE_REJECTED,
         ],
         publications: {
           [SubscriptionNames.CAPTURE_CREATED]: {
@@ -24,6 +26,12 @@ module.exports = {
           },
           [SubscriptionNames.TREE_CREATED]: {
             queue: SubscriptionNames.TREE_CREATED,
+          },
+        },
+        subscriptions: {
+          [SubscriptionNames.RAW_CAPTURE_REJECTED]: {
+            queue: SubscriptionNames.RAW_CAPTURE_REJECTED,
+            contentType: 'application/json',
           },
         },
       },

@@ -2,6 +2,7 @@ const express = require('express');
 // const Sentry = require('@sentry/node');
 const cors = require('cors');
 const log = require('loglevel');
+const { EventHandlerService } = require('./services/EventHandlerService');
 const HttpError = require('./utils/HttpError');
 const { errorHandler } = require('./utils/utils');
 const helper = require('./utils/utils');
@@ -49,5 +50,10 @@ const { version } = require('../package.json');
 app.get('*', function (req, res) {
   res.status(200).send(version);
 });
+
+const eventHandlerService = new EventHandlerService();
+(async () => {
+  await eventHandlerService.registerEventHandlers();
+})();
 
 module.exports = app;

@@ -3,6 +3,7 @@ const {
   generatePrevAndNext,
   getFilterAndLimitOptions,
 } = require('../../utils/helper');
+const HttpError = require('../../utils/HttpError');
 const {
   tagGetQuerySchema,
   tagPostQuerySchema,
@@ -77,6 +78,10 @@ const tagHandlerSingleGet = async function (req, res) {
   const tagService = new TagService();
 
   const tag = await tagService.getTagById(req.params.tag_id);
+
+  if (!tag?.id) {
+    throw new HttpError(404, `tag with id ${req.params.tag_id} not found`);
+  }
 
   res.send(tag);
 };
