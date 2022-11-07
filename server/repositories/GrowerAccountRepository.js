@@ -37,6 +37,7 @@ class GrowerAccountRepository extends BaseRepository {
       .getDB()
       .select(
         'grower_account.id',
+        'grower_account.reference_id',
         'grower_account.wallet',
         'grower_account.person_id',
         'grower_account.organization_id',

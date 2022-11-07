@@ -1,0 +1,1 @@
+ALTER TABLE grower_account DROP reference_id;
