@@ -1,3 +1,11 @@
+## [1.23.7](https://github.com/Greenstand/treetracker-api/compare/v1.23.6...v1.23.7) (2022-11-07)
+
+
+### Bug Fixes
+
+* add reference_id/planter creation for grower_account ([7a77e9b](https://github.com/Greenstand/treetracker-api/commit/7a77e9bfd4f9a71d7726e85a1b8d28eb152544b7))
+* remove unused code ([3b2fb73](https://github.com/Greenstand/treetracker-api/commit/3b2fb730dd18707abe6db64b50743d7d25e22e25))
+
 ## [1.23.6](https://github.com/Greenstand/treetracker-api/compare/v1.23.5...v1.23.6) (2022-10-06)
 
 
