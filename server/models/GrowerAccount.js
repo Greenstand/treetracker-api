@@ -1,13 +1,16 @@
 const knex = require('../infra/database/knex');
 const GrowerAccountRepository = require('../repositories/GrowerAccountRepository');
+const LegacyPlanterRepository = require('../repositories/Legacy/PlanterRepository');
 
 class GrowerAccount {
   constructor(session) {
+    this._session = session;
     this._growerAccountRepository = new GrowerAccountRepository(session);
   }
 
   static GrowerAccount({
     id,
+    reference_id,
     wallet,
     person_id,
     organization_id,
@@ -31,6 +34,7 @@ class GrowerAccount {
   }) {
     return Object.freeze({
       id,
+      reference_id,
       wallet,
       person_id,
       organization_id,
@@ -99,12 +103,24 @@ class GrowerAccount {
     let [growerAccount] = existingGrowerAccount;
 
     if (!growerAccount) {
+      const planterRepository = new LegacyPlanterRepository(this._session);
       status = 201;
-      growerAccount = await this._growerAccountRepository.create({
+      const createdGrowerAccount = await this._growerAccountRepository.create({
         location: knex.raw(
           `ST_PointFromText('POINT( ${growerAccountToCreate.lon} ${growerAccountToCreate.lat}) ', 4326)`,
         ),
         ...growerAccountToCreate,
+      });
+      const planter = await planterRepository.create({
+        first_name: createdGrowerAccount.first_name,
+        last_name: createdGrowerAccount.last_name,
+        phone: createdGrowerAccount.phone,
+        email: createdGrowerAccount.email,
+        grower_account_uuid: createdGrowerAccount.id,
+      });
+      growerAccount = await this._growerAccountRepository.update({
+        id: createdGrowerAccount.id,
+        reference_id: planter.id,
       });
     }
 

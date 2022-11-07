@@ -18,7 +18,7 @@ describe('/grower_account', () => {
     gender: 'female',
     email: 'name@email.com',
     phone: '1234567',
-    about: "about",
+    about: 'about',
     image_url: 'https://www.himage.com',
     image_rotation: 44,
   };
@@ -26,6 +26,7 @@ describe('/grower_account', () => {
   after(async () => {
     await knex('grower_account_org').del();
     await knex('grower_account').del();
+    await knex('planter').del();
   });
 
   describe('POST', () => {
@@ -39,6 +40,7 @@ describe('/grower_account', () => {
       expect(res.body).include({
         ...grower_account1,
       });
+      expect(typeof res.body.reference_id).eql('number');
       expect(res.body.organizations.length).to.eql(0);
 
       const res2 = await request(app)
@@ -50,6 +52,7 @@ describe('/grower_account', () => {
       expect(res2.body).include({
         ...grower_account2,
       });
+      expect(typeof res2.body.reference_id).eql('number');
       expect(res2.body.organizations.length).to.eql(0);
     });
 
