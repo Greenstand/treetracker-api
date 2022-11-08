@@ -1,3 +1,10 @@
+## [1.23.8](https://github.com/Greenstand/treetracker-api/compare/v1.23.7...v1.23.8) (2022-11-08)
+
+
+### Bug Fixes
+
+* add species check ([3819148](https://github.com/Greenstand/treetracker-api/commit/3819148c779e5093dd5b1ec9b1fc5d9bb5c91f4a))
+
 ## [1.23.7](https://github.com/Greenstand/treetracker-api/compare/v1.23.6...v1.23.7) (2022-11-07)
 
 
