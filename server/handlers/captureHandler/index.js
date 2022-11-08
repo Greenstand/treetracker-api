@@ -54,6 +54,10 @@ const captureHandlerPost = async function (req, res) {
     throw new HttpError(422, 'legacy authorization header needed');
   }
 
+  if (captureObject.species_id_int && !captureObject.species_id) {
+    throw new HttpError(422, 'The uuid of the species is needed');
+  }
+
   const captureService = new CaptureService();
   const { capture, status } = await captureService.createCapture({
     ...captureObject,
