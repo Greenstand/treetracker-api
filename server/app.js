@@ -1,4 +1,6 @@
 const express = require('express');
+const fileUpload = require('express-fileupload');
+
 // const Sentry = require('@sentry/node');
 const cors = require('cors');
 const log = require('loglevel');
@@ -21,6 +23,15 @@ if (process.env.NODE_ENV === 'development') {
  */
 app.use(
   helper.handlerWrapper(async (req, _res, next) => {
+    if (req.path === '/image_upload' && req.method === 'POST') {
+      if (!req.headers['content-type'].includes('multipart/form-data')) {
+        throw new HttpError(
+          415,
+          'Invalid content type. endpoint only supports multipart/form-data',
+        );
+      }
+      return next();
+    }
     if (
       req.method === 'POST' ||
       req.method === 'PATCH' ||
@@ -33,12 +44,13 @@ app.use(
         );
       }
     }
-    next();
+    return next();
   }),
 );
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(fileUpload());
 
 app.use('/', router);
 

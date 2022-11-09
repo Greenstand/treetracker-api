@@ -3,4 +3,5 @@ module.exports = [
   require('./growerAccountRoutes'),
   require('./tagRoutes'),
   require('./treeRoutes'),
+  require('./imageRoutes'),
 ];
