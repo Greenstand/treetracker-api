@@ -45,6 +45,8 @@ const captureGetQuerySchema = Joi.object({
   order: Joi.string().valid('asc', 'desc'),
   offset: Joi.number().integer().greater(-1),
   limit: Joi.number().integer().greater(0),
+  matchting_tree_distance: Joi.number().integer().greater(0),
+  matchting_tree_time_range: Joi.number().integer().greater(0),
 });
 
 const capturePatchSchema = Joi.object({

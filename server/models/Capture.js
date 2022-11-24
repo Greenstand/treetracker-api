@@ -86,6 +86,8 @@ class Capture {
     species_id = undefined,
     organization_ids = [],
     order_by = undefined,
+    matchting_tree_distance = undefined,
+    matchting_tree_time_range = undefined,
     order = 'desc', //
   }) {
     const parameters = Object.entries({
@@ -95,6 +97,8 @@ class Capture {
       captured_at_end_date,
       grower_account_id,
       species_id,
+      matchting_tree_distance,
+      matchting_tree_time_range,
     })
       .filter((entry) => entry[1] !== undefined)
       .reduce((result, item) => {
@@ -107,6 +111,13 @@ class Capture {
     const whereNulls = [];
     const whereNotNulls = [];
     const whereIns = [];
+
+    if (organization_ids.length) {
+      whereIns.push({
+        field: 'planting_organization_id',
+        values: [...organization_ids],
+      });
+    }
 
     if (organization_ids.length) {
       whereIns.push({

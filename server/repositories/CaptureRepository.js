@@ -48,6 +48,23 @@ class CaptureRepository extends BaseRepository {
       );
       delete filterObject.captured_at_end_date;
     }
+    if (filterObject.matchting_tree_distance || filterObject.matchting_tree_time_range) {
+      const knex = this._session.getDB();
+      result.where(`id`, 'in', knex.raw(`
+        select 
+          distinct(tc.id)
+        from capture tc 
+        JOIN tree tt ON
+          ST_DWithin(
+            tc.estimated_geographic_location,
+            tt.estimated_geographic_location,
+          ${filterObject.matchting_tree_distance})
+          ${filterObject.matchting_tree_time_range ? `AND tc.captured_at > tt.created_at + INTERVAL '${filterObject.matchting_tree_time_range} DAYS' ` : ''}
+      `));
+      delete filterObject.matchting_tree_distance;
+      delete filterObject.matchting_tree_time_range;
+    }
+
     result.where(filterObject);
   }
 
