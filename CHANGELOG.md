@@ -1,3 +1,10 @@
+# [1.24.0](https://github.com/Greenstand/treetracker-api/compare/v1.23.8...v1.24.0) (2022-11-29)
+
+
+### Features
+
+* add matching filter for capture ([41762c8](https://github.com/Greenstand/treetracker-api/commit/41762c822a78cac749944c16a0b252ed706f2d4f))
+
 ## [1.23.8](https://github.com/Greenstand/treetracker-api/compare/v1.23.7...v1.23.8) (2022-11-08)
 
 
