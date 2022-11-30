@@ -32,6 +32,25 @@ class CaptureRepository extends BaseRepository {
 
     const filterObject = { ...parameters };
 
+    if (filterObject.matchting_tree_distance || filterObject.matchting_tree_time_range) {
+      const knex = this._session.getDB();
+      result.where(`id`, 'in', knex.raw(`
+        select 
+          distinct(tc.id)
+        from capture tc 
+        JOIN tree tt ON
+          ST_DWithin(
+            tc.estimated_geographic_location,
+            tt.estimated_geographic_location,
+          ${filterObject.matchting_tree_distance})
+          ${filterObject.matchting_tree_time_range ? `AND tc.captured_at > tt.created_at + INTERVAL '${filterObject.matchting_tree_time_range} DAYS' ` : ''}
+          ${filterObject.captured_at_start_date ? `AND tc.captured_at > '${filterObject.captured_at_start_date}' ` : ''}
+          ${filterObject.captured_at_end_date ? `AND tc.captured_at < '${filterObject.captured_at_end_date}' ` : ''}
+      `));
+      delete filterObject.matchting_tree_distance;
+      delete filterObject.matchting_tree_time_range;
+    }
+
     if (filterObject.captured_at_start_date) {
       result.where(
         `${this._tableName}.captured_at`,
@@ -47,22 +66,6 @@ class CaptureRepository extends BaseRepository {
         filterObject.captured_at_end_date,
       );
       delete filterObject.captured_at_end_date;
-    }
-    if (filterObject.matchting_tree_distance || filterObject.matchting_tree_time_range) {
-      const knex = this._session.getDB();
-      result.where(`id`, 'in', knex.raw(`
-        select 
-          distinct(tc.id)
-        from capture tc 
-        JOIN tree tt ON
-          ST_DWithin(
-            tc.estimated_geographic_location,
-            tt.estimated_geographic_location,
-          ${filterObject.matchting_tree_distance})
-          ${filterObject.matchting_tree_time_range ? `AND tc.captured_at > tt.created_at + INTERVAL '${filterObject.matchting_tree_time_range} DAYS' ` : ''}
-      `));
-      delete filterObject.matchting_tree_distance;
-      delete filterObject.matchting_tree_time_range;
     }
 
     result.where(filterObject);
