@@ -1,3 +1,10 @@
+# [1.25.0](https://github.com/Greenstand/treetracker-api/compare/v1.24.0...v1.25.0) (2022-11-30)
+
+
+### Features
+
+* improve performance ([b1db56b](https://github.com/Greenstand/treetracker-api/commit/b1db56bc69cc580223b7ba5c980eb894f81cd385))
+
 # [1.24.0](https://github.com/Greenstand/treetracker-api/compare/v1.23.8...v1.24.0) (2022-11-29)
 
 
