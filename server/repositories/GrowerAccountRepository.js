@@ -26,10 +26,6 @@ class GrowerAccountRepository extends BaseRepository {
 
       if (!getAll) {
         result.andWhere('grower_account.status', 'active');
-        result.orWhere({
-          'grower_account_org.status': 'active',
-          'grower_account.status': 'active',
-        });
       }
     };
 
