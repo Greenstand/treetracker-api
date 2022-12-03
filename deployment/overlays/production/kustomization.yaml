@@ -4,7 +4,7 @@ patchesStrategicMerge:
 - rabbitmq-connection-sealed-secret.yaml
 images:
 - name: greenstand/treetracker-api
-  newTag: 1.25.0
+  newTag: 1.25.1
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
