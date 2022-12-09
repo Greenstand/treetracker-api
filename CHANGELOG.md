@@ -1,3 +1,10 @@
+# [1.26.0](https://github.com/Greenstand/treetracker-api/compare/v1.25.1...v1.26.0) (2022-12-09)
+
+
+### Features
+
+* db planting org id allow null ([533504f](https://github.com/Greenstand/treetracker-api/commit/533504fb33f6a08bc1dbb28ee666f045f2327a29))
+
 ## [1.25.1](https://github.com/Greenstand/treetracker-api/compare/v1.25.0...v1.25.1) (2022-12-02)
 
 
