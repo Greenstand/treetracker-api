@@ -99,6 +99,7 @@ class Capture {
       species_id,
       matchting_tree_distance,
       matchting_tree_time_range,
+      organization_ids,
     })
       .filter((entry) => entry[1] !== undefined)
       .reduce((result, item) => {
@@ -111,20 +112,6 @@ class Capture {
     const whereNulls = [];
     const whereNotNulls = [];
     const whereIns = [];
-
-    if (organization_ids.length) {
-      whereIns.push({
-        field: 'planting_organization_id',
-        values: [...organization_ids],
-      });
-    }
-
-    if (organization_ids.length) {
-      whereIns.push({
-        field: 'planting_organization_id',
-        values: [...organization_ids],
-      });
-    }
 
     if (tree_associated === 'true') {
       whereNotNulls.push('tree_id');

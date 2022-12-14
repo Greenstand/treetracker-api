@@ -32,6 +32,18 @@ class CaptureRepository extends BaseRepository {
 
     const filterObject = { ...parameters };
 
+    if (filterObject.organization_ids?.length) {
+      const knex = this._session.getDB();
+      result.where(`id`, 'in', knex.raw(`
+        select tc.id from treetracker.capture tc
+        join treetracker.grower_account tg on tc.grower_account_id = tg.id
+        join planter p on p.id = tg.reference_id
+        join stakeholder.stakeholder ss on ss.entity_id = p.organization_id
+        where ss.id in (${filterObject.organization_ids.map(e => `'${e}'`).join(',')})
+      `));
+    }
+    delete filterObject.organization_ids;
+
     if (filterObject.matchting_tree_distance || filterObject.matchting_tree_time_range) {
       const knex = this._session.getDB();
       result.where(`id`, 'in', knex.raw(`
