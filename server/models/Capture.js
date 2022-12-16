@@ -215,7 +215,8 @@ class Capture {
           capture: this._response(captureWithFullDetails),
           status: 200,
         };
-      } if (domainEvent.status !== 'sent') {
+      }
+      if (domainEvent.status !== 'sent') {
         return {
           domainEvent,
           capture: captureWithFullDetails,

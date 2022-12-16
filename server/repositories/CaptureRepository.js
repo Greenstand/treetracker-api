@@ -34,19 +34,37 @@ class CaptureRepository extends BaseRepository {
 
     if (filterObject.organization_ids?.length) {
       const knex = this._session.getDB();
-      result.where(`id`, 'in', knex.raw(`
-        select tc.id from treetracker.capture tc
-        join treetracker.grower_account tg on tc.grower_account_id = tg.id
-        join planter p on p.id = tg.reference_id
-        join stakeholder.stakeholder ss on ss.entity_id = p.organization_id
-        where ss.id in (${filterObject.organization_ids.map(e => `'${e}'`).join(',')})
-      `));
+      result.where((r) =>
+        r
+          .where(
+            `id`,
+            'in',
+            knex.raw(`
+              select tc.id from treetracker.capture tc
+              join treetracker.grower_account tg on tc.grower_account_id = tg.id
+              join planter p on p.id = tg.reference_id
+              join stakeholder.stakeholder ss on ss.entity_id = p.organization_id
+              where ss.id in (${filterObject.organization_ids
+                .map((e) => `'${e}'`)
+                .join(',')})
+            `),
+          )
+          .orWhereIn('planting_organization_id', [
+            ...filterObject.organization_ids,
+          ]),
+      );
     }
     delete filterObject.organization_ids;
 
-    if (filterObject.matchting_tree_distance || filterObject.matchting_tree_time_range) {
+    if (
+      filterObject.matchting_tree_distance ||
+      filterObject.matchting_tree_time_range
+    ) {
       const knex = this._session.getDB();
-      result.where(`id`, 'in', knex.raw(`
+      result.where(
+        `id`,
+        'in',
+        knex.raw(`
         select 
           distinct(tc.id)
         from capture tc 
@@ -55,10 +73,23 @@ class CaptureRepository extends BaseRepository {
             tc.estimated_geographic_location,
             tt.estimated_geographic_location,
           ${filterObject.matchting_tree_distance})
-          ${filterObject.matchting_tree_time_range ? `AND tc.captured_at > tt.created_at + INTERVAL '${filterObject.matchting_tree_time_range} DAYS' ` : ''}
-          ${filterObject.captured_at_start_date ? `AND tc.captured_at > '${filterObject.captured_at_start_date}' ` : ''}
-          ${filterObject.captured_at_end_date ? `AND tc.captured_at < '${filterObject.captured_at_end_date}' ` : ''}
-      `));
+          ${
+            filterObject.matchting_tree_time_range
+              ? `AND tc.captured_at > tt.created_at + INTERVAL '${filterObject.matchting_tree_time_range} DAYS' `
+              : ''
+          }
+          ${
+            filterObject.captured_at_start_date
+              ? `AND tc.captured_at > '${filterObject.captured_at_start_date}' `
+              : ''
+          }
+          ${
+            filterObject.captured_at_end_date
+              ? `AND tc.captured_at < '${filterObject.captured_at_end_date}' `
+              : ''
+          }
+      `),
+      );
       delete filterObject.matchting_tree_distance;
       delete filterObject.matchting_tree_time_range;
     }
