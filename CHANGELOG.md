@@ -1,3 +1,16 @@
+# [1.27.0](https://github.com/Greenstand/treetracker-api/compare/v1.26.0...v1.27.0) (2022-12-20)
+
+
+### Bug Fixes
+
+* 'or where' organization_id statements ([297eded](https://github.com/Greenstand/treetracker-api/commit/297ededc7fc0e7de7be6fab1b4aeff5caf5de52f))
+* iterable problem ([20fb659](https://github.com/Greenstand/treetracker-api/commit/20fb6592b5a05ba6be43768c2758d9814d213d4a))
+
+
+### Features
+
+* filter by org ([ab72f2d](https://github.com/Greenstand/treetracker-api/commit/ab72f2d2313f35e4cae8fc86c6081978da50bdf1))
+
 # [1.26.0](https://github.com/Greenstand/treetracker-api/compare/v1.25.1...v1.26.0) (2022-12-09)
 
 
