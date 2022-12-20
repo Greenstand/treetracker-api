@@ -32,7 +32,8 @@ class CaptureRepository extends BaseRepository {
 
     const filterObject = { ...parameters };
 
-    if (filterObject.organization_ids?.length) {
+    if (filterObject.organization_ids && filterObject.organization_ids.length) {
+      const ids = [...filterObject.organization_ids];
       const knex = this._session.getDB();
       result.where((r) =>
         r
@@ -44,14 +45,10 @@ class CaptureRepository extends BaseRepository {
               join treetracker.grower_account tg on tc.grower_account_id = tg.id
               join planter p on p.id = tg.reference_id
               join stakeholder.stakeholder ss on ss.entity_id = p.organization_id
-              where ss.id in (${filterObject.organization_ids
-                .map((e) => `'${e}'`)
-                .join(',')})
+              where ss.id in (${ids.map((e) => `'${e}'`).join(',')})
             `),
           )
-          .orWhereIn('planting_organization_id', [
-            ...filterObject.organization_ids,
-          ]),
+          .orWhereIn('planting_organization_id',ids),
       );
     }
     delete filterObject.organization_ids;
