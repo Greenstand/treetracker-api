@@ -1,3 +1,10 @@
+# [1.28.0](https://github.com/Greenstand/treetracker-api/compare/v1.27.0...v1.28.0) (2022-12-28)
+
+
+### Features
+
+* include today ([1789e3b](https://github.com/Greenstand/treetracker-api/commit/1789e3bcdbc5dd35bc72ba8296cda3dca9f78a4b))
+
 # [1.27.0](https://github.com/Greenstand/treetracker-api/compare/v1.26.0...v1.27.0) (2022-12-20)
 
 
