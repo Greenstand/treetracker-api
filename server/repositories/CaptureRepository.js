@@ -77,12 +77,12 @@ class CaptureRepository extends BaseRepository {
           }
           ${
             filterObject.captured_at_start_date
-              ? `AND tc.captured_at > '${filterObject.captured_at_start_date}' `
+              ? `AND tc.captured_at >= '${filterObject.captured_at_start_date} 00:00:00'`
               : ''
           }
           ${
             filterObject.captured_at_end_date
-              ? `AND tc.captured_at < '${filterObject.captured_at_end_date}' `
+              ? `AND tc.captured_at <= '${filterObject.captured_at_end_date} 23:59:59'`
               : ''
           }
       `),
@@ -95,7 +95,7 @@ class CaptureRepository extends BaseRepository {
       result.where(
         `${this._tableName}.captured_at`,
         '>=',
-        filterObject.captured_at_start_date,
+        `${filterObject.captured_at_start_date} 00:00`,
       );
       delete filterObject.captured_at_start_date;
     }
@@ -103,7 +103,7 @@ class CaptureRepository extends BaseRepository {
       result.where(
         `${this._tableName}.captured_at`,
         '<=',
-        filterObject.captured_at_end_date,
+        `${filterObject.captured_at_end_date} 23:59:59`,
       );
       delete filterObject.captured_at_end_date;
     }
