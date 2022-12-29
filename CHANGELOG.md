@@ -1,3 +1,15 @@
+# [1.29.0](https://github.com/Greenstand/treetracker-api/compare/v1.28.0...v1.29.0) (2022-12-29)
+
+
+### Bug Fixes
+
+* wrong sql ([a71037b](https://github.com/Greenstand/treetracker-api/commit/a71037b388d8ac856d79cd95f6b62c8f1cdda9aa))
+
+
+### Features
+
+* add index for captured at ([0d6a4fb](https://github.com/Greenstand/treetracker-api/commit/0d6a4fb2dedebb8463ac2391bd2cea93e4e8c603))
+
 # [1.28.0](https://github.com/Greenstand/treetracker-api/compare/v1.27.0...v1.28.0) (2022-12-28)
 
 
