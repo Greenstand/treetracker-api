@@ -1,3 +1,10 @@
+## [1.30.1](https://github.com/Greenstand/treetracker-api/compare/v1.30.0...v1.30.1) (2023-01-06)
+
+
+### Bug Fixes
+
+* trigger ci ([24afb4f](https://github.com/Greenstand/treetracker-api/commit/24afb4f4fe20af306b4498a20def73983e165192))
+
 # [1.30.0](https://github.com/Greenstand/treetracker-api/compare/v1.29.0...v1.30.0) (2023-01-06)
 
 
