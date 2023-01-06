@@ -1,3 +1,10 @@
+# [1.30.0](https://github.com/Greenstand/treetracker-api/compare/v1.29.0...v1.30.0) (2023-01-06)
+
+
+### Features
+
+* use materialeized view ([2cce017](https://github.com/Greenstand/treetracker-api/commit/2cce0178ad1ead1109e2368aeafa50423dba3c31))
+
 # [1.29.0](https://github.com/Greenstand/treetracker-api/compare/v1.28.0...v1.29.0) (2022-12-29)
 
 
