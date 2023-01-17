@@ -1,3 +1,12 @@
+## [1.30.2](https://github.com/Greenstand/treetracker-api/compare/v1.30.1...v1.30.2) (2023-01-17)
+
+
+### Bug Fixes
+
+* move to node 18 for semantic-release ([a6e5731](https://github.com/Greenstand/treetracker-api/commit/a6e5731155b1617496b69447ee6217166a6d2485))
+* typo in readme and update link ([3c5dbed](https://github.com/Greenstand/treetracker-api/commit/3c5dbed357a5b7d1cee1e466eac9cd9969061abd))
+* update node engine ([1909f48](https://github.com/Greenstand/treetracker-api/commit/1909f484e78de8ffde57cbe500e9a3f326ff3a50))
+
 ## [1.30.1](https://github.com/Greenstand/treetracker-api/compare/v1.30.0...v1.30.1) (2023-01-06)
 
 
