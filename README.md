@@ -49,7 +49,7 @@ DATABASE_URL="postgresql://username:pwd@db_host:port/treetracker_db?false"
 To create the necessary tables for your application, run db-migrate below.
 
 ```bash
-cd datbaase/
+cd database/
 db-migrate up --env dev --sql-file --migrations-dir=database/migrations --config=database/database.json
 ```
 
@@ -152,7 +152,7 @@ NOTE: There is another command: `test-watch-debug`, it is the same with `test-wa
 
 ## Postman
 
-Can also use Postman to test the API in a more real environment. Import the API spec from [here](https://github.com/Greenstand/treetracker-wallet-api/blob/master/docs/api/spec/treetracker-token-api.yaml).
+Can also use Postman to test the API in a more real environment. Import the API spec from [here](https://github.com/Greenstand/treetracker-wallet-api/blob/master/docs/api/spec/treetracker-token-api-v1-10-3.yaml).
 
 To run a local server with some seed data, run command:
 
@@ -168,4 +168,4 @@ This command would run a API server locally, and seed some basic data into DB (t
 
 Create your local git branch and rebase it from the shared master branch. Please make sure to rebuild your local database schemas using the migrations (as illustrated in the Database Setup section above) to capture any latest updates/changes.
 
-When you are ready to submit a pull request from your local branch, please rebase your branch off of the shared master branch again to integrate any new updates in the codebase before submitting. Any developers joining the project should feel free to review any outstanding pull requests and assign themselves to any open tickets on the Issues list.
+When you are ready to submit a pull request from your local branch, please rebase your branch off of the shared master branch again to integrate any new updates in the codebase before submitting. Any developers joining the project should feel free to review any outstanding pull requests and assign themselves to any open tickets on the Issues list..

@@ -32,11 +32,48 @@ class CaptureRepository extends BaseRepository {
 
     const filterObject = { ...parameters };
 
+    if (filterObject.organization_ids && filterObject.organization_ids.length) {
+      const ids = [...filterObject.organization_ids];
+      const knex = this._session.getDB();
+      result.where((r) =>
+        r
+          .where(
+            `id`,
+            'in',
+            knex.raw(`
+              select tc.id from treetracker.capture tc
+              join treetracker.grower_account tg on tc.grower_account_id = tg.id
+              join planter p on p.id = tg.reference_id
+              join stakeholder.stakeholder ss on ss.entity_id = p.organization_id
+              where ss.id in (${ids.map((e) => `'${e}'`).join(',')})
+            `),
+          )
+          .orWhereIn('planting_organization_id',ids),
+      );
+    }
+    delete filterObject.organization_ids;
+
+    if (
+      filterObject.matchting_tree_distance ||
+      filterObject.matchting_tree_time_range
+    ) {
+      const knex = this._session.getDB();
+      result.where(
+        `id`,
+        'in',
+        knex.raw(`
+	  SELECT id FROM capture_tree_match
+      	`),
+      );
+      delete filterObject.matchting_tree_distance;
+      delete filterObject.matchting_tree_time_range;
+    }
+
     if (filterObject.captured_at_start_date) {
       result.where(
         `${this._tableName}.captured_at`,
         '>=',
-        filterObject.captured_at_start_date,
+        `${filterObject.captured_at_start_date} 00:00`,
       );
       delete filterObject.captured_at_start_date;
     }
@@ -44,10 +81,11 @@ class CaptureRepository extends BaseRepository {
       result.where(
         `${this._tableName}.captured_at`,
         '<=',
-        filterObject.captured_at_end_date,
+        `${filterObject.captured_at_end_date} 23:59:59`,
       );
       delete filterObject.captured_at_end_date;
     }
+
     result.where(filterObject);
   }
 

@@ -1,7 +1,8 @@
-const knex = require('../infra/database/knex');
-const CaptureRepository = require('../repositories/CaptureRepository');
-const { DomainEventTypes } = require('../utils/enums');
 const DomainEvent = require('./DomainEvent');
+const knex = require('../infra/database/knex');
+const { DomainEventTypes } = require('../utils/enums');
+const TreeRepository = require('../repositories/TreeRepository');
+const CaptureRepository = require('../repositories/CaptureRepository');
 
 class Capture {
   constructor(session) {
@@ -86,6 +87,8 @@ class Capture {
     species_id = undefined,
     organization_ids = [],
     order_by = undefined,
+    matchting_tree_distance = undefined,
+    matchting_tree_time_range = undefined,
     order = 'desc', //
   }) {
     const parameters = Object.entries({
@@ -95,6 +98,9 @@ class Capture {
       captured_at_end_date,
       grower_account_id,
       species_id,
+      matchting_tree_distance,
+      matchting_tree_time_range,
+      organization_ids,
     })
       .filter((entry) => entry[1] !== undefined)
       .reduce((result, item) => {
@@ -107,13 +113,6 @@ class Capture {
     const whereNulls = [];
     const whereNotNulls = [];
     const whereIns = [];
-
-    if (organization_ids.length) {
-      whereIns.push({
-        field: 'planting_organization_id',
-        values: [...organization_ids],
-      });
-    }
 
     if (tree_associated === 'true') {
       whereNotNulls.push('tree_id');
@@ -217,7 +216,8 @@ class Capture {
           capture: this._response(captureWithFullDetails),
           status: 200,
         };
-      } if (domainEvent.status !== 'sent') {
+      }
+      if (domainEvent.status !== 'sent') {
         return {
           domainEvent,
           capture: captureWithFullDetails,
@@ -243,6 +243,15 @@ class Capture {
   }
 
   async updateCapture(captureObject) {
+    if (captureObject.tree_id) {
+      const treeRepository = new TreeRepository(this._session);
+      await treeRepository.update({
+        id: captureObject.tree_id,
+        latest_capture_id: captureObject.id,
+        updated_at: new Date().toISOString(),
+      });
+    }
+
     const updatedCapture = await this._captureRepository.update({
       ...captureObject,
       updated_at: new Date().toISOString(),

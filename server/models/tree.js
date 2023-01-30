@@ -3,6 +3,7 @@ const TreeRepository = require('../repositories/TreeRepository');
 const Capture = require('./Capture');
 const knex = require('../infra/database/knex');
 const { DomainEventTypes } = require('../utils/enums');
+const CaptureRepository = require('../repositories/CaptureRepository');
 
 class Tree {
   constructor(session) {
@@ -99,6 +100,14 @@ class Tree {
       ...newTree,
     });
 
+    const captureRepository = new CaptureRepository(this._session);
+
+    await captureRepository.update({
+      id: newTree.latest_capture_id,
+      tree_id: newTree.id,
+      updated_at: new Date().toISOString(),
+    });
+
     const domainEvent = await domainEventModel.raiseEvent({
       ...createdTree,
       type: DomainEventTypes.TreeCreated,
@@ -112,6 +121,16 @@ class Tree {
   }
 
   async updateTree(treeObject) {
+    if (treeObject.latest_capture_id) {
+      const captureRepository = new CaptureRepository(this._session);
+
+      await captureRepository.update({
+        id: treeObject.latest_capture_id,
+        tree_id: treeObject.id,
+        updated_at: new Date().toISOString(),
+      });
+    }
+
     const updatedTree = await this._treeRepository.update({
       ...treeObject,
       updated_at: new Date().toISOString(),

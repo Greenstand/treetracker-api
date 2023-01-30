@@ -1,9 +1,9 @@
 {
   "name": "treetracker",
-  "version": "1.23.8",
+  "version": "1.30.3",
   "private": true,
   "engines": {
-    "node": ">=16.0.0 <17",
+    "node": ">=16.0.0",
     "npm": ">=6.0.0"
   },
   "main": "server/server.js",
