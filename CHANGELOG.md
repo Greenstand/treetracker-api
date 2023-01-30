@@ -1,3 +1,10 @@
+## [1.30.3](https://github.com/Greenstand/treetracker-api/compare/v1.30.2...v1.30.3) (2023-01-30)
+
+
+### Bug Fixes
+
+* update both capture and tree attaching endpoints ([23dec65](https://github.com/Greenstand/treetracker-api/commit/23dec65083d5da4d3f521b525a21e7de409381e0))
+
 ## [1.30.2](https://github.com/Greenstand/treetracker-api/compare/v1.30.1...v1.30.2) (2023-01-17)
 
 
