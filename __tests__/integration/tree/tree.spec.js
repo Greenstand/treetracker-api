@@ -1,14 +1,16 @@
 const request = require('supertest');
 const { expect } = require('chai');
-const sinon = require('sinon');
 const uuid = require('uuid');
+const sinon = require('sinon');
 const Broker = require('rascal').BrokerAsPromised;
 const app = require('../../../server/app');
+const tag2 = require('../../mock/tag2.json');
 const tree2 = require('../../mock/tree2.json');
 const tree1 = require('../../mock/tree1.json');
+const capture1 = require('../../mock/capture1.json');
 const domain_event1 = require('../../mock/domain_event1.json');
-const tag2 = require('../../mock/tag2.json');
-const { knex, addTree, delTree } = require('../../utils');
+const grower_account1 = require('../../mock/grower_account1.json');
+const { knex, addTree, delTree, addCapture } = require('../../utils');
 
 describe('/trees', () => {
   const treeUpdates = {
@@ -35,11 +37,31 @@ describe('/trees', () => {
         };
       },
     });
+
+    const growerAccount1 = await knex('grower_account')
+      .insert({
+        ...grower_account1,
+      })
+      .returning('id');
+
+    const [captureGrowerAccountId] = growerAccount1;
+    capture1.grower_account_id = captureGrowerAccountId;
+    delete capture1.tree_id;
+
+    await addCapture({
+      ...capture1,
+      id: tree2.latest_capture_id,
+      estimated_geometric_location: 'POINT(50 50)',
+      estimated_geographic_location: 'POINT(50 50)',
+      updated_at: '2021-05-04 11:24:43',
+    });
   });
 
   after(async () => {
     brokerStub.restore();
+    await knex('capture').del();
     await knex('tree').del();
+    await knex('grower_account').del();
   });
 
   describe('POST', () => {
@@ -61,6 +83,11 @@ describe('/trees', () => {
         .send(tree2)
         .set('Accept', 'application/json')
         .expect(201);
+
+      const capture = await knex('capture')
+        .select()
+        .where({ id: tree2.latest_capture_id });
+      expect(capture[0].tree_id).eql(tree2.id);
 
       const treeCopy = { ...tree2 };
       expect(res.body.attributes.entries).to.eql(treeCopy.attributes);
@@ -98,6 +125,17 @@ describe('/trees', () => {
   });
 
   describe('PATCH', () => {
+    before(async () => {
+      await addCapture({
+        ...capture1,
+        reference_id: capture1.reference_id + 1,
+        id: treeUpdates.latest_capture_id,
+        estimated_geometric_location: 'POINT(50 50)',
+        estimated_geographic_location: 'POINT(50 50)',
+        updated_at: '2021-05-04 11:24:43',
+      });
+    });
+
     it('should uodate a tree', async () => {
       await request(app)
         .patch(`/trees/${tree2.id}`)
@@ -110,6 +148,10 @@ describe('/trees', () => {
       expect(result.body.attributes.entries).to.eql(copy.attributes.entries);
       delete copy.attributes;
       expect(result.body).to.include({ ...copy });
+      const capture = await knex('capture')
+        .select()
+        .where({ id: treeUpdates.latest_capture_id });
+      expect(capture[0].tree_id).eql(tree2.id);
     });
   });
 
