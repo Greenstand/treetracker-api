@@ -284,6 +284,9 @@ describe('/captures', () => {
         .set('Accept', 'application/json')
         .expect(200);
 
+      const tree = await knex('tree').select().where({ id: tree1.id });
+      expect(tree[0].latest_capture_id).eql(captureId);
+
       expect(res.body).to.include({
         image_url: capture2.image_url,
         planting_organization_id: capture2.planting_organization_id,
