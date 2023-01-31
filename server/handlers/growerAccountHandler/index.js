@@ -6,9 +6,9 @@ const {
 } = require('../../utils/helper');
 const {
   growerAccountIdQuerySchema,
-  growerAccountPatchQuerySchema,
-  growerAccountPostQuerySchema,
   growerAccountGetQuerySchema,
+  growerAccountPostQuerySchema,
+  growerAccountPatchQuerySchema,
 } = require('./schemas');
 
 const growerAccountHandlerGet = async function (req, res) {

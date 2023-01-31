@@ -1,7 +1,7 @@
 module.exports = [
-  require('./captureRoutes'),
-  require('./growerAccountRoutes'),
   require('./tagRoutes'),
   require('./treeRoutes'),
-  require('./imageRoutes'),
+  require('./captureRoutes'),
+  require('./growerAccountRoutes'),
+  require('./growerAccoutImageRoutes'),
 ];

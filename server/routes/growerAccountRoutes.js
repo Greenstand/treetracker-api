@@ -5,10 +5,10 @@ const { handlerWrapper } = require('../utils/utils');
 
 const {
   growerAccountHandlerGet,
+  growerAccountHandlerPut,
   growerAccountHandlerPost,
   growerAccountHandlerPatch,
   growerAccountHandlerSingleGet,
-  growerAccountHandlerPut,
 } = require('../handlers/growerAccountHandler');
 
 router

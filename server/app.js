@@ -1,5 +1,4 @@
 const express = require('express');
-const fileUpload = require('express-fileupload');
 
 // const Sentry = require('@sentry/node');
 const cors = require('cors');
@@ -24,7 +23,7 @@ if (process.env.NODE_ENV === 'development') {
  */
 app.use(
   helper.handlerWrapper(async (req, _res, next) => {
-    if (req.path === '/image_upload' && req.method === 'POST') {
+    if (req.path === '/grower_accounts/image' && req.method === 'POST') {
       if (!req.headers['content-type'].includes('multipart/form-data')) {
         throw new HttpError(
           415,
@@ -51,7 +50,6 @@ app.use(
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-app.use(fileUpload());
 
 app.use('/', router);
 
