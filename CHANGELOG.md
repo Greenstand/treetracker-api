@@ -1,3 +1,17 @@
+# [1.31.0](https://github.com/Greenstand/treetracker-api/compare/v1.30.3...v1.31.0) (2023-01-31)
+
+
+### Bug Fixes
+
+* fixed merge conflict ([2b0e19c](https://github.com/Greenstand/treetracker-api/commit/2b0e19c8be34d17285260238a622bdbe67fb925b))
+* knex version ([2f6f1d0](https://github.com/Greenstand/treetracker-api/commit/2f6f1d0ac0dc59cb38b4778e5a1838b7f5289faf))
+
+
+### Features
+
+* **api:** implemented the image upload endpoint ([a503d0d](https://github.com/Greenstand/treetracker-api/commit/a503d0d8df92323b621f0e90271a8c7ce236e6c9))
+* grower images ([c84ef7b](https://github.com/Greenstand/treetracker-api/commit/c84ef7b3e9c818babb126f728e386d696016b822))
+
 ## [1.30.3](https://github.com/Greenstand/treetracker-api/compare/v1.30.2...v1.30.3) (2023-01-30)
 
 
