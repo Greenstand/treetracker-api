@@ -4,3 +4,5 @@ database.json
 
 # nyc test coverage
 .nyc_output
+
+tmp

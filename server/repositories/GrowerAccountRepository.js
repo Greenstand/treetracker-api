@@ -29,8 +29,9 @@ class GrowerAccountRepository extends BaseRepository {
       }
     };
 
-    let promise = this._session
-      .getDB()
+    const knex = this._session.getDB();
+
+    let promise = knex
       .select(
         'grower_account.id',
         'grower_account.reference_id',
@@ -53,9 +54,16 @@ class GrowerAccountRepository extends BaseRepository {
         'grower_account.bulk_pack_file_name',
         'grower_account.created_at',
         'grower_account.updated_at',
-        this._session
-          .getDB()
-          .raw(`json_agg(grower_account_org.organization_id) as organizations`),
+        knex.raw(
+          `json_agg(grower_account_org.organization_id) as organizations`,
+        ),
+        knex.raw(
+          `COALESCE(
+            json_agg(
+              json_build_object('id', grower_account_image.id, 'image_url', grower_account_image.image_url)
+            ) FILTER ( WHERE grower_account_image.image_url IS NOT NULL ), '[]'
+          ) as images`,
+        ),
       )
       .table(this._tableName)
       .leftJoin(
@@ -64,6 +72,13 @@ class GrowerAccountRepository extends BaseRepository {
         '=',
         'grower_account_org.grower_account_id',
       )
+      .leftJoin('grower_account_image', function () {
+        this.on(
+          `grower_account.id`,
+          '=',
+          'grower_account_image.grower_account_id',
+        ).on('grower_account_image.active', '=', knex.raw('?', [true]));
+      })
       .groupBy('grower_account.id')
       .where((builder) => whereBuilder(filter, builder));
 

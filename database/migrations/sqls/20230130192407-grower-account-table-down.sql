@@ -1,0 +1,1 @@
+DROP TABLE grower_account_image;
