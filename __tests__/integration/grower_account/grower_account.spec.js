@@ -12,7 +12,7 @@ const grower_account2 = require('../../mock/grower_account2.json');
 const { knex } = require('../../utils');
 const s3 = require('../../../server/infra/S3/s3');
 
-describe.only('/grower_account', () => {
+describe('/grower_account', () => {
   const growerAccountUpdates = {
     person_id: 'df9541b7-4bf4-4c8b-8711-f42f66bc50cc',
     first_name: 'name',
