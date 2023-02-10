@@ -12,18 +12,18 @@ const tagPostQuerySchema = Joi.object({
   owner_id: Joi.string().allow(null),
 }).unknown(false);
 
-const TagPatchQuerySchema = Joi.object({
+const tagPatchQuerySchema = Joi.object({
   isPublic: Joi.boolean(),
   status: Joi.string().valid('active', 'deleted'),
 }).unknown(false);
 
-const TagIdQuerySchema = Joi.object({
+const tagIdQuerySchema = Joi.object({
   tag_id: Joi.string().uuid().required(),
 });
 
 module.exports = {
   tagGetQuerySchema,
   tagPostQuerySchema,
-  TagPatchQuerySchema,
-  TagIdQuerySchema,
+  tagPatchQuerySchema,
+  tagIdQuerySchema,
 };

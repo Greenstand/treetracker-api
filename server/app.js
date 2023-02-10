@@ -1,12 +1,14 @@
 const express = require('express');
+const swaggerUi = require('swagger-ui-express');
+const log = require('loglevel');
+const cors = require('cors');
+const { join } = require('path');
 
 // const Sentry = require('@sentry/node');
-const cors = require('cors');
-const log = require('loglevel');
 const { EventHandlerService } = require('./services/EventHandlerService');
+const { errorHandler, handlerWrapper } = require('./utils/utils');
+const swaggerDocument = require('./handlers/swaggerDoc');
 const HttpError = require('./utils/HttpError');
-const { errorHandler } = require('./utils/utils');
-const helper = require('./utils/utils');
 const router = require('./routes');
 
 const app = express();
@@ -22,7 +24,7 @@ if (process.env.NODE_ENV === 'development') {
  * Check request
  */
 app.use(
-  helper.handlerWrapper(async (req, _res, next) => {
+  handlerWrapper(async (req, _res, next) => {
     if (req.path === '/grower_accounts/image' && req.method === 'POST') {
       if (!req.headers['content-type'].includes('multipart/form-data')) {
         throw new HttpError(
@@ -48,6 +50,20 @@ app.use(
   }),
 );
 
+const options = {
+  customCss: `
+    .topbar-wrapper img { 
+      content:url('../assets/greenstand.webp');
+      width:80px; 
+      height:auto;
+    }
+    `,
+  explorer: true,
+};
+
+app.use('/assets', express.static(join(__dirname, '..', '/assets')));
+
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
