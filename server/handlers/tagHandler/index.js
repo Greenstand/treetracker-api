@@ -7,8 +7,8 @@ const HttpError = require('../../utils/HttpError');
 const {
   tagGetQuerySchema,
   tagPostQuerySchema,
-  TagPatchQuerySchema,
-  TagIdQuerySchema,
+  tagPatchQuerySchema,
+  tagIdQuerySchema,
 } = require('./schemas');
 
 const tagHandlerGet = async function (req, res) {
@@ -52,11 +52,11 @@ const tagHandlerPost = async function (req, res) {
 };
 
 const tagHandlerPatch = async function (req, res) {
-  await TagIdQuerySchema.validateAsync(req.params, {
+  await tagIdQuerySchema.validateAsync(req.params, {
     abortEarly: false,
   });
 
-  await TagPatchQuerySchema.validateAsync(req.body, {
+  await tagPatchQuerySchema.validateAsync(req.body, {
     abortEarly: false,
   });
 
@@ -71,7 +71,7 @@ const tagHandlerPatch = async function (req, res) {
 };
 
 const tagHandlerSingleGet = async function (req, res) {
-  await TagIdQuerySchema.validateAsync(req.params, {
+  await tagIdQuerySchema.validateAsync(req.params, {
     abortEarly: false,
   });
 
