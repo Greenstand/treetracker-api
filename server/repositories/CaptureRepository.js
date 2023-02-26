@@ -48,7 +48,7 @@ class CaptureRepository extends BaseRepository {
               where ss.id in (${ids.map((e) => `'${e}'`).join(',')})
             `),
           )
-          .orWhereIn('planting_organization_id',ids),
+          .orWhereIn('planting_organization_id', ids),
       );
     }
     delete filterObject.organization_ids;
@@ -62,7 +62,29 @@ class CaptureRepository extends BaseRepository {
         `id`,
         'in',
         knex.raw(`
-	  SELECT id FROM capture_tree_match
+        select distinct(tc.id)
+        from capture tc 
+        JOIN tree tt ON
+        ST_DWithin(
+          tc.estimated_geographic_location,
+          tt.estimated_geographic_location,
+          ${filterObject.matchting_tree_distance}
+        )
+        ${
+          filterObject.matchting_tree_time_range
+            ? `AND tc.captured_at > tt.created_at + INTERVAL '${filterObject.matchting_tree_time_range} DAYS' `
+            : ''
+        }
+        ${
+          filterObject.captured_at_start_date
+            ? `AND tc.captured_at >= '${filterObject.captured_at_start_date} 00:00:00'`
+            : ''
+        }
+        ${
+          filterObject.captured_at_end_date
+            ? `AND tc.captured_at <= '${filterObject.captured_at_end_date} 23:59:59'`
+            : ''
+        }
       	`),
       );
       delete filterObject.matchting_tree_distance;
