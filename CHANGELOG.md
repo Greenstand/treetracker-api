@@ -1,3 +1,10 @@
+## [1.32.1](https://github.com/Greenstand/treetracker-api/compare/v1.32.0...v1.32.1) (2023-02-26)
+
+
+### Bug Fixes
+
+* temp reversal of capture match query ([bf2c918](https://github.com/Greenstand/treetracker-api/commit/bf2c9185a755ee6e7191e41b1356ed27aa402e81))
+
 # [1.32.0](https://github.com/Greenstand/treetracker-api/compare/v1.31.0...v1.32.0) (2023-02-10)
 
 
