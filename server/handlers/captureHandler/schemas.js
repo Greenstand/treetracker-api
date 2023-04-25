@@ -12,7 +12,7 @@ const capturePostSchema = Joi.object({
   device_configuration_id: Joi.string().uuid().required(),
   reference_id: Joi.number().integer().required(),
   tree_id: Joi.string().uuid().default(null),
-  note: Joi.string().default(null),
+  note: Joi.string().allow('').allow(null).default(null),
   species_id: Joi.string().uuid().default(null),
   species_id_int: Joi.number().integer().default(null), // to support legacy API call, until we can consolidate the species systems
   organization_id: Joi.number().integer().default(null), // to support legacy API call
