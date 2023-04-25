@@ -1,3 +1,10 @@
+# [1.33.0](https://github.com/Greenstand/treetracker-api/compare/v1.32.1...v1.33.0) (2023-04-25)
+
+
+### Features
+
+* update verification to allow null notes when post to /captures ([da22ae0](https://github.com/Greenstand/treetracker-api/commit/da22ae0b61f4fde3f9495284d2d9d700f828a8c1))
+
 ## [1.32.1](https://github.com/Greenstand/treetracker-api/compare/v1.32.0...v1.32.1) (2023-02-26)
 
 
