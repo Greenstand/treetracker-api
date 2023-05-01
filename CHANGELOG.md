@@ -1,3 +1,11 @@
+## [1.33.2](https://github.com/Greenstand/treetracker-api/compare/v1.33.1...v1.33.2) (2023-05-01)
+
+
+### Bug Fixes
+
+* add capture match materialized view ([7bc7943](https://github.com/Greenstand/treetracker-api/commit/7bc794313ba7124f2f0b1400109006100cad2c4e))
+* minor fixes ([396b785](https://github.com/Greenstand/treetracker-api/commit/396b785abd6f971aeb40e160e5264444b33be6ea))
+
 ## [1.33.1](https://github.com/Greenstand/treetracker-api/compare/v1.33.0...v1.33.1) (2023-05-01)
 
 
