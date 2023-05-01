@@ -137,6 +137,7 @@ const growerAccountComponent = {
     phone: { type: 'string' },
     about: { type: 'string' },
     lat: { type: 'number' },
+    show_in_map: { type: 'boolean' },
     lon: { type: 'number' },
     location: { type: 'string' },
     image_url: { type: 'string' },

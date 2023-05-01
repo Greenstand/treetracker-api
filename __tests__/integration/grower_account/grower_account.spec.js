@@ -23,6 +23,7 @@ describe('/grower_account', () => {
     about: 'about',
     image_url: 'https://www.himage.com',
     image_rotation: 44,
+    show_in_map: true,
   };
 
   after(async () => {
@@ -46,6 +47,7 @@ describe('/grower_account', () => {
       expect(typeof res.body.reference_id).eql('number');
       expect(res.body.organizations.length).to.eql(0);
       expect(res.body.images.length).to.eql(0);
+      expect(res.body.show_in_map).to.eql(false);
 
       const res2 = await request(app)
         .post(`/grower_accounts`)
@@ -59,6 +61,7 @@ describe('/grower_account', () => {
       expect(typeof res2.body.reference_id).eql('number');
       expect(res2.body.organizations.length).to.eql(0);
       expect(res2.body.images.length).to.eql(0);
+      expect(res.body.show_in_map).to.eql(false);
     });
 
     it('should not error out if duplicate wallet is sent', async () => {

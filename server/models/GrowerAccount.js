@@ -32,6 +32,7 @@ class GrowerAccount {
     bulk_pack_file_name,
     created_at,
     updated_at,
+    show_in_map,
   }) {
     return Object.freeze({
       id,
@@ -57,6 +58,7 @@ class GrowerAccount {
       bulk_pack_file_name,
       created_at,
       updated_at,
+      show_in_map,
     });
   }
 

@@ -7,6 +7,7 @@ const growerAccountGetQuerySchema = Joi.object({
   id: Joi.string().uuid(),
   wallet: Joi.string(),
   bulk_pack_file_name: Joi.string(),
+  show_in_map: Joi.boolean(),
 }).unknown(false);
 
 const growerAccountPostQuerySchema = Joi.object({
@@ -25,6 +26,7 @@ const growerAccountPostQuerySchema = Joi.object({
   image_rotation: Joi.number().integer(),
   first_registration_at: Joi.date().iso().required(),
   bulk_pack_file_name: Joi.string(),
+  show_in_map: Joi.boolean(),
 }).unknown(false);
 
 const growerAccountPatchQuerySchema = Joi.object({
@@ -39,6 +41,7 @@ const growerAccountPatchQuerySchema = Joi.object({
   image_rotation: Joi.number().integer(),
   status: Joi.string().valid('active', 'deleted'),
   gender: Joi.string().valid('male', 'female', 'neutral'),
+  show_in_map: Joi.boolean(),
 }).unknown(false);
 
 const growerAccountIdQuerySchema = Joi.object({
