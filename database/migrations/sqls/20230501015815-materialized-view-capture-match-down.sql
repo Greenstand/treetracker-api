@@ -1,0 +1,1 @@
+DROP MATERIALIZED VIEW capture_tree_match;

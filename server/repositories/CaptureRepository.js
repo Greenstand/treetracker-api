@@ -58,35 +58,7 @@ class CaptureRepository extends BaseRepository {
       filterObject.matchting_tree_time_range
     ) {
       const knex = this._session.getDB();
-      result.where(
-        `id`,
-        'in',
-        knex.raw(`
-        select distinct(tc.id)
-        from capture tc 
-        JOIN tree tt ON
-        ST_DWithin(
-          tc.estimated_geographic_location,
-          tt.estimated_geographic_location,
-          ${filterObject.matchting_tree_distance}
-        )
-        ${
-          filterObject.matchting_tree_time_range
-            ? `AND tc.captured_at > tt.created_at + INTERVAL '${filterObject.matchting_tree_time_range} DAYS' `
-            : ''
-        }
-        ${
-          filterObject.captured_at_start_date
-            ? `AND tc.captured_at >= '${filterObject.captured_at_start_date} 00:00:00'`
-            : ''
-        }
-        ${
-          filterObject.captured_at_end_date
-            ? `AND tc.captured_at <= '${filterObject.captured_at_end_date} 23:59:59'`
-            : ''
-        }
-      	`),
-      );
+      result.where(`id`, 'in', knex.raw(`capture_tree_match`));
       delete filterObject.matchting_tree_distance;
       delete filterObject.matchting_tree_time_range;
     }
