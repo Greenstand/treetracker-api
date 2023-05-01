@@ -1,0 +1,1 @@
+ALTER TABLE grower_account ADD COLUMN show_in_map boolean DEFAULT false;

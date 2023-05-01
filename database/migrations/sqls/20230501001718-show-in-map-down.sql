@@ -1,0 +1,1 @@
+ALTER TABLE grower_account DROP COLUMN show_in_map;
