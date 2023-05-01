@@ -1,3 +1,11 @@
+## [1.33.1](https://github.com/Greenstand/treetracker-api/compare/v1.33.0...v1.33.1) (2023-05-01)
+
+
+### Bug Fixes
+
+* add token migrations ([6b1eeb1](https://github.com/Greenstand/treetracker-api/commit/6b1eeb1e4316ce5f36991a5a4a4d64fe68dd9d15))
+* show in map ([29c2eef](https://github.com/Greenstand/treetracker-api/commit/29c2eefc0353d16f361db271f4d174460c50457a))
+
 # [1.33.0](https://github.com/Greenstand/treetracker-api/compare/v1.32.1...v1.33.0) (2023-04-25)
 
 
