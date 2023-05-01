@@ -5,8 +5,8 @@ AS
         count(tc.id) AS count 
     FROM 
     (
-        treetracker.capture tc 
-        JOIN treetracker.tree tt 
+        capture tc 
+        JOIN tree tt 
         ON (
             (
                 st_dwithin(

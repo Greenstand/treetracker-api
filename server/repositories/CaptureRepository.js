@@ -58,7 +58,7 @@ class CaptureRepository extends BaseRepository {
       filterObject.matchting_tree_time_range
     ) {
       const knex = this._session.getDB();
-      result.where(`id`, 'in', knex.raw(`capture_tree_match`));
+      result.where(`id`, 'in', knex.raw(`SELECT id FROM capture_tree_match`));
       delete filterObject.matchting_tree_distance;
       delete filterObject.matchting_tree_time_range;
     }
