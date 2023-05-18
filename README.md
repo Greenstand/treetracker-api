@@ -50,7 +50,7 @@ To create the necessary tables for your application, run db-migrate below.
 
 ```bash
 cd database/
-db-migrate up --env dev --sql-file --migrations-dir=database/migrations --config=database/database.json
+db-migrate up --env dev --sql-file --migrations-dir=migrations --config=database.json
 ```
 
 If you have not installed db-migrate globally, you can run:
