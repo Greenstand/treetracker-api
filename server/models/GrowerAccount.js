@@ -115,13 +115,20 @@ class GrowerAccount {
         ),
         ...growerAccountToCreate,
       });
-      const planter = await planterRepository.create({
-        first_name: createdGrowerAccount.first_name,
-        last_name: createdGrowerAccount.last_name,
-        phone: createdGrowerAccount.phone,
-        email: createdGrowerAccount.email,
-        grower_account_uuid: createdGrowerAccount.id,
-      });
+      let planter;
+
+      planter = await planterRepository.findUser(growerAccountToCreate.wallet);
+
+      if (!planter) {
+        planter = await planterRepository.create({
+          first_name: createdGrowerAccount.first_name,
+          last_name: createdGrowerAccount.last_name,
+          phone: createdGrowerAccount.phone,
+          email: createdGrowerAccount.email,
+          grower_account_uuid: createdGrowerAccount.id,
+        });
+      }
+
       growerAccount = await this._growerAccountRepository.update({
         id: createdGrowerAccount.id,
         reference_id: planter.id,
