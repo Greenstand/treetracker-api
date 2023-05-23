@@ -1,3 +1,10 @@
+## [1.33.4](https://github.com/Greenstand/treetracker-api/compare/v1.33.3...v1.33.4) (2023-05-23)
+
+
+### Bug Fixes
+
+* planter duplicate email bug ([b09649e](https://github.com/Greenstand/treetracker-api/commit/b09649efbf074ed10937992da74c8608d3aaff10))
+
 ## [1.33.3](https://github.com/Greenstand/treetracker-api/compare/v1.33.2...v1.33.3) (2023-05-22)
 
 
