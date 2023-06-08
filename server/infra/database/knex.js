@@ -1,5 +1,5 @@
 const log = require('loglevel');
-require('dotenv').config()
+require('dotenv').config();
 
 const connection = process.env.DATABASE_URL;
 const postgresPattern = /^postgresql:\//;
@@ -7,6 +7,7 @@ const postgresPattern = /^postgresql:\//;
 if (!postgresPattern.test(connection)) {
   throw new Error('invalid databases connection url received');
 }
+
 const knexConfig = {
   client: 'pg',
   debug: process.env.NODE_LOG_LEVEL === 'debug',
@@ -20,5 +21,7 @@ if (process.env.DATABASE_SCHEMA) {
   knexConfig.searchPath = [process.env.DATABASE_SCHEMA, 'public'];
 }
 log.debug(knexConfig.searchPath);
+
 const knex = require('knex')(knexConfig);
+
 module.exports = knex;
