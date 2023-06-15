@@ -41,7 +41,7 @@ CREATE DATABASE treetracker_db WITH OWNER = treetracker ENCODING = 'UTF8';
 
 CREATE SCHEMA treetracker;
 ```
-Create a `.env` file under the project folder and assign the value for
+Create a `.env.deployment` file under the project folder and assign the value for
 ```
 DATABASE_URL="postgresql://username:pwd@db_host:port/treetracker_db?false"
 ```
