@@ -950,6 +950,68 @@ paths:
                   type: string
                 status:
                   type: string
+  '/grower_accounts/image':
+      post:
+        summary: upload an image for a grower account
+        tags:
+          - grower accounts
+        operationId: post-grower_accounts_image
+        responses:
+          '201':
+            description: Created
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/grower_accounts_image'
+        requestBody:
+          content:
+            multipart/form-data:
+              schema:
+                type: object
+                properties:
+                  image:
+                    type: string
+                    format: binary
+                  grower_account_id:
+                    type: string
+                    format: uuid
+                required:
+                  - image
+                  - grower_account_id
+
+  '/grower_accounts/image/{image_id}':
+      parameters:
+        - schema:
+            type: string
+          name: image_id
+          in: path
+          required: true
+      patch:
+        summary: update a grower account image
+        description:
+        tags:
+          - grower accounts
+        operationId: patch-grower_accounts_image-image_id
+        responses:
+          '200':
+            description: OK
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/grower_accounts_image'
+        requestBody:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  active:
+                    type: boolean
+                required:
+                  - active
+
+
+
 components:
   schemas:
     capture:
@@ -1209,3 +1271,31 @@ components:
           type: string
         updated_at:
           type: string
+    grower_accounts_image:
+      description: ''
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        grower_account_id:
+          type: string
+          format: uuid
+        image_url:
+          type: string
+        active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - grower_account_id
+        - image_url
+        - active
+        - created_at
+        - updated_at
+
