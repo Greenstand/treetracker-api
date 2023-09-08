@@ -1,3 +1,10 @@
+# [1.34.0](https://github.com/Greenstand/treetracker-api/compare/v1.33.4...v1.34.0) (2023-09-08)
+
+
+### Features
+
+* updated openapi spec, grower_accounts/image ([b3b2f2c](https://github.com/Greenstand/treetracker-api/commit/b3b2f2c15e85e74765a187b2148507d431aba6b3))
+
 ## [1.33.4](https://github.com/Greenstand/treetracker-api/compare/v1.33.3...v1.33.4) (2023-05-23)
 
 
