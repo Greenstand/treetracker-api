@@ -2,6 +2,7 @@ const express = require('express');
 const multer = require('multer');
 
 const router = express.Router();
+const routerWrapper = express.Router();
 const upload = multer({
   dest: 'tmp/img/',
   limits: {
@@ -24,13 +25,15 @@ const {
   growerAccountImageHandlerPost,
   growerAccountImageHandlerPatch,
 } = require('../handlers/growerAccountImageHandler');
+const { apiKeyHandler } = require('../middlewares/apikeyHandler');
 
 router
-  .route('/grower_accounts/image')
+  .route('/')
   .post(upload.single('image'), handlerWrapper(growerAccountImageHandlerPost));
 
 router
-  .route('/grower_accounts/image/:image_id')
+  .route('/:image_id')
   .patch(handlerWrapper(growerAccountImageHandlerPatch));
 
-module.exports = router;
+routerWrapper.use('/grower_accounts/image', apiKeyHandler, router);
+module.exports = routerWrapper;

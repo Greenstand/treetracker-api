@@ -9,7 +9,7 @@ chai.use(require('chai-things'));
 const app = require('../../../server/app');
 const grower_account1 = require('../../mock/grower_account1.json');
 const grower_account2 = require('../../mock/grower_account2.json');
-const { knex } = require('../../utils');
+const { knex, addApiKey, apiKey } = require('../../utils');
 const s3 = require('../../../server/infra/S3/s3');
 
 describe('/grower_account', () => {
@@ -26,11 +26,30 @@ describe('/grower_account', () => {
     show_in_map: true,
   };
 
+  before(async () => {
+    await addApiKey();
+  });
+
   after(async () => {
     await knex('grower_account_org').del();
     await knex('grower_account_image').del();
     await knex('grower_account').del();
     await knex('planter').del();
+    await knex('api_key').del();
+  });
+
+  it('unauthorized', async () => {
+    await request(app)
+      .post(`/grower_accounts`)
+      .send(grower_account1)
+      .set('Accept', 'application/json')
+      .expect(401);
+
+    await request(app)
+      .patch(`/grower_accounts/image/imageId`)
+      .set('treetracker-api-key', 'apiKey')
+      .send({ active: false })
+      .expect(401);
   });
 
   describe('POST', () => {
@@ -38,6 +57,7 @@ describe('/grower_account', () => {
       const res = await request(app)
         .post(`/grower_accounts`)
         .send(grower_account1)
+        .set('treetracker-api-key', apiKey)
         .set('Accept', 'application/json')
         .expect(201);
 
@@ -52,6 +72,7 @@ describe('/grower_account', () => {
       const res2 = await request(app)
         .post(`/grower_accounts`)
         .send(grower_account2)
+        .set('treetracker-api-key', apiKey)
         .set('Accept', 'application/json')
         .expect(201);
 
@@ -68,6 +89,7 @@ describe('/grower_account', () => {
       const res = await request(app)
         .post(`/grower_accounts`)
         .send(grower_account1)
+        .set('treetracker-api-key', apiKey)
         .set('Accept', 'application/json')
         .expect(200);
 
@@ -89,6 +111,7 @@ describe('/grower_account', () => {
       const res = await request(app)
         .patch(`/grower_accounts/${grower_account1.id}`)
         .send(growerAccountUpdates)
+        .set('treetracker-api-key', apiKey)
         .set('Accept', 'application/json')
         .expect(200);
 
@@ -110,7 +133,10 @@ describe('/grower_account', () => {
     });
 
     it('should get grower account', async () => {
-      const result = await request(app).get(`/grower_accounts`).expect(200);
+      const result = await request(app)
+        .get(`/grower_accounts`)
+        .set('treetracker-api-key', apiKey)
+        .expect(200);
       expect(result.body.grower_accounts.length).to.eql(2);
       expect(result.body.links).to.have.keys(['prev', 'next']);
       expect(result.body.grower_accounts)
@@ -124,6 +150,7 @@ describe('/grower_account', () => {
     it('should get grower account -- by id', async () => {
       const result = await request(app)
         .get(`/grower_accounts/${grower_account1.id}`)
+        .set('treetracker-api-key', apiKey)
         .expect(200);
       expect(result.body).to.include({
         ...grower_account1,
@@ -136,11 +163,15 @@ describe('/grower_account', () => {
     it('should delete a grower account', async () => {
       await request(app)
         .patch(`/grower_accounts/${grower_account1.id}`)
+        .set('treetracker-api-key', apiKey)
         .send({ status: 'deleted' })
         .set('Accept', 'application/json')
         .expect(200);
 
-      const result = await request(app).get(`/grower_accounts`).expect(200);
+      const result = await request(app)
+        .get(`/grower_accounts`)
+        .set('treetracker-api-key', apiKey)
+        .expect(200);
       expect(result.body.grower_accounts.length).to.eql(1);
       expect(result.body.links).to.have.keys(['prev', 'next']);
     });
@@ -152,6 +183,7 @@ describe('/grower_account', () => {
       const result = await request(app)
         .put(`/grower_accounts`)
         .send({ ...grower_account1, wallet: grower_account2.wallet })
+        .set('treetracker-api-key', apiKey)
         .set('Accept', 'application/json')
         .expect(200);
 
@@ -184,6 +216,7 @@ describe('/grower_account', () => {
       const res = await request(app)
         .post(`/grower_accounts/image`)
         .set('Accept', 'multipart/form-data')
+        .set('treetracker-api-key', apiKey)
         .field('grower_account_id', growerAccountId)
         .attach('image', `${__dirname}/../../mock/test.jpeg`)
         .expect(201);
@@ -197,6 +230,7 @@ describe('/grower_account', () => {
 
       const result = await request(app)
         .get(`/grower_accounts/${growerAccountId}`)
+        .set('treetracker-api-key', apiKey)
         .expect(200);
       expect(result.body.images.length).eql(1);
       expect(result.body.images[0].id).eql(imageId);
@@ -208,6 +242,7 @@ describe('/grower_account', () => {
     it('PATCH /grower_accounts/image/:image_id', async () => {
       const res = await request(app)
         .patch(`/grower_accounts/image/${imageId}`)
+        .set('treetracker-api-key', apiKey)
         .send({ active: false })
         .expect(200);
 
@@ -215,6 +250,7 @@ describe('/grower_account', () => {
 
       const result = await request(app)
         .get(`/grower_accounts/${growerAccountId}`)
+        .set('treetracker-api-key', apiKey)
         .expect(200);
       expect(result.body.images.length).eql(0);
 

@@ -22,6 +22,10 @@ describe('GET /trees/potential_matches', () => {
     capture1.tree_id = tree1.id;
   });
 
+  before(async () => {
+    await utils.addApiKey();
+  });
+
   afterEach(async () => {
     await utils.delCapture(capture1.id);
     await utils.delTree(tree1.id);
@@ -32,6 +36,7 @@ describe('GET /trees/potential_matches', () => {
     await knex('grower_account').del();
     await knex('tree').del();
     await knex('capture').del();
+    await knex('api_key').del();
   });
 
   const extraInfo = {
@@ -59,9 +64,9 @@ describe('GET /trees/potential_matches', () => {
       estimated_geographic_location: 'POINT(50 50)',
       updated_at: '2021-05-04 11:24:43',
     });
-    const response = await request(app).get(
-      `/trees/potential_matches?capture_id=${capture1.id}`,
-    );
+    const response = await request(app)
+      .get(`/trees/potential_matches?capture_id=${capture1.id}`)
+      .set('treetracker-api-key', utils.apiKey);
     expect(response.body).to.have.property('matches');
     //    expect(response.body.matches[0].id).eq(1);
     expect(response.body.matches.map((m) => m.id)).to.have.members([tree2.id]);
@@ -79,9 +84,9 @@ describe('GET /trees/potential_matches', () => {
       estimated_geometric_location: 'POINT(50 50)',
       updated_at: '2021-05-04 11:24:43',
     });
-    const response = await request(app).get(
-      `/trees/potential_matches?capture_id=${capture1.id}`,
-    );
+    const response = await request(app)
+      .get(`/trees/potential_matches?capture_id=${capture1.id}`)
+      .set('treetracker-api-key', utils.apiKey);
     expect(response.body).to.have.property('matches');
     expect(response.body.matches.map((m) => m.id)).to.not.have.members([
       tree1.id,
@@ -100,9 +105,9 @@ describe('GET /trees/potential_matches', () => {
       estimated_geometric_location: 'POINT(50 50)',
       updated_at: '2021-05-04 11:24:43',
     });
-    const response = await request(app).get(
-      `/trees/potential_matches?capture_id=${capture1.id}`,
-    );
+    const response = await request(app)
+      .get(`/trees/potential_matches?capture_id=${capture1.id}`)
+      .set('treetracker-api-key', utils.apiKey);
     expect(response.body).to.have.property('matches');
     expect(response.body.matches.map((m) => m.id)).to.not.have.members([
       tree1.id,

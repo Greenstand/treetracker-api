@@ -1,6 +1,7 @@
 const express = require('express');
 
 const router = express.Router();
+const routerWrapper = express.Router();
 const { handlerWrapper } = require('../utils/utils');
 
 const {
@@ -14,29 +15,31 @@ const {
   treeHandlerSingleTagGet,
   treeHandlerSingleTagPatch,
 } = require('../handlers/treeHandler');
+const { apiKeyHandler } = require('../middlewares/apikeyHandler');
 
 router
-  .route('/trees')
+  .route('/')
   .get(handlerWrapper(treeHandlerGet))
   .post(handlerWrapper(treeHandlerPost));
 
 router
-  .route('/trees/potential_matches')
+  .route('/potential_matches')
   .get(handlerWrapper(treeHandlerGetPotentialMatches));
 
 router
-  .route('/trees/:tree_id')
+  .route('/:tree_id')
   .get(handlerWrapper(treeHandlerSingleGet))
   .patch(handlerWrapper(treeHandlerPatch));
 
 router
-  .route('/trees/:tree_id/tags')
+  .route('/:tree_id/tags')
   .get(handlerWrapper(treeHandlerTagGet))
   .post(handlerWrapper(treeHandlerTagPost));
 
 router
-  .route('/trees/:tree_id/tags/:tag_id')
+  .route('/:tree_id/tags/:tag_id')
   .get(handlerWrapper(treeHandlerSingleTagGet))
   .patch(handlerWrapper(treeHandlerSingleTagPatch));
 
-module.exports = router;
+routerWrapper.use('/trees', apiKeyHandler, router);
+module.exports = routerWrapper;

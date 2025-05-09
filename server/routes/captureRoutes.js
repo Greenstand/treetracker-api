@@ -1,6 +1,7 @@
 const express = require('express');
 
 const router = express.Router();
+const routerWrapper = express.Router();
 const { handlerWrapper } = require('../utils/utils');
 
 const {
@@ -13,25 +14,27 @@ const {
   captureHandlerSingleTagGet,
   captureHandlerSingleTagPatch,
 } = require('../handlers/captureHandler');
+const { apiKeyHandler } = require('../middlewares/apikeyHandler');
 
 router
-  .route('/captures')
+  .route('/')
   .get(handlerWrapper(captureHandlerGet))
   .post(handlerWrapper(captureHandlerPost));
 
 router
-  .route('/captures/:capture_id')
+  .route('/:capture_id')
   .get(handlerWrapper(captureHandlerSingleGet))
   .patch(handlerWrapper(captureHandlerPatch));
 
 router
-  .route('/captures/:capture_id/tags')
+  .route('/:capture_id/tags')
   .get(handlerWrapper(captureHandlerTagGet))
   .post(handlerWrapper(captureHandlerTagPost));
 
 router
-  .route('/captures/:capture_id/tags/:tag_id')
+  .route('/:capture_id/tags/:tag_id')
   .get(handlerWrapper(captureHandlerSingleTagGet))
   .patch(handlerWrapper(captureHandlerSingleTagPatch));
 
-module.exports = router;
+routerWrapper.use('/captures', apiKeyHandler, router);
+module.exports = routerWrapper;

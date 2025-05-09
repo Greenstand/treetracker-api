@@ -10,7 +10,14 @@ const tree1 = require('../../mock/tree1.json');
 const capture1 = require('../../mock/capture1.json');
 const domain_event1 = require('../../mock/domain_event1.json');
 const grower_account1 = require('../../mock/grower_account1.json');
-const { knex, addTree, delTree, addCapture } = require('../../utils');
+const {
+  knex,
+  addTree,
+  delTree,
+  addCapture,
+  addApiKey,
+  apiKey,
+} = require('../../utils');
 
 describe('/trees', () => {
   const treeUpdates = {
@@ -27,6 +34,7 @@ describe('/trees', () => {
   let brokerStub;
 
   before(async () => {
+    await addApiKey();
     brokerStub = sinon.stub(Broker, 'create').resolves({
       publish: () => {
         return {
@@ -62,6 +70,15 @@ describe('/trees', () => {
     await knex('capture').del();
     await knex('tree').del();
     await knex('grower_account').del();
+    await knex('api_key').del();
+  });
+
+  it('unauthorized', async () => {
+    await request(app)
+      .post(`/trees`)
+      .send(tree2)
+      .set('Accept', 'application/json')
+      .expect(401);
   });
 
   describe('POST', () => {
@@ -82,6 +99,7 @@ describe('/trees', () => {
         .post(`/trees`)
         .send(tree2)
         .set('Accept', 'application/json')
+        .set('treetracker-api-key', apiKey)
         .expect(201);
 
       const capture = await knex('capture')
@@ -100,6 +118,7 @@ describe('/trees', () => {
         .post(`/trees`)
         .send(tree2)
         .set('Accept', 'application/json')
+        .set('treetracker-api-key', apiKey)
         .expect(200);
     });
 
@@ -108,6 +127,7 @@ describe('/trees', () => {
         .post(`/trees`)
         .send({ ...tree2, id: tree1.id })
         .set('Accept', 'application/json')
+        .set('treetracker-api-key', apiKey)
         .expect(200);
 
       // added a timer to confirm this because the function call in the API is not 'awaited'
@@ -141,10 +161,14 @@ describe('/trees', () => {
         .patch(`/trees/${tree2.id}`)
         .send(treeUpdates)
         .set('Accept', 'application/json')
+        .set('treetracker-api-key', apiKey)
         .expect(200);
 
       const copy = { ...updatedModTree };
-      const result = await request(app).get(`/trees/${tree2.id}`).expect(200);
+      const result = await request(app)
+        .get(`/trees/${tree2.id}`)
+        .set('treetracker-api-key', apiKey)
+        .expect(200);
       expect(result.body.attributes.entries).to.eql(copy.attributes.entries);
       delete copy.attributes;
       expect(result.body).to.include({ ...copy });
@@ -157,7 +181,10 @@ describe('/trees', () => {
 
   describe('GET', () => {
     it('should get trees', async () => {
-      const result = await request(app).get(`/trees`).expect(200);
+      const result = await request(app)
+        .get(`/trees`)
+        .set('treetracker-api-key', apiKey)
+        .expect(200);
       const copy = { ...updatedModTree };
       expect(result.body.trees.length).to.eql(1);
       expect(result.body.query.count).to.eql(1);
@@ -172,10 +199,14 @@ describe('/trees', () => {
       await request(app)
         .patch(`/trees/${tree2.id}`)
         .send({ status: 'deleted' })
+        .set('treetracker-api-key', apiKey)
         .set('Accept', 'application/json')
         .expect(200);
 
-      const result = await request(app).get(`/trees`).expect(200);
+      const result = await request(app)
+        .get(`/trees`)
+        .set('treetracker-api-key', apiKey)
+        .expect(200);
       expect(result.body.trees.length).to.eql(0);
       expect(result.body.query.count).to.eql(0);
     });
@@ -199,6 +230,7 @@ describe('/trees', () => {
       await request(app)
         .post(`/trees/${treeId}/tags`)
         .send({ tags: [tag2.id] })
+        .set('treetracker-api-key', apiKey)
         .expect(204);
     });
 
@@ -206,6 +238,7 @@ describe('/trees', () => {
       const result = await request(app)
         .post(`/trees/${treeId}/tags`)
         .send({ tags: [tag2.id] })
+        .set('treetracker-api-key', apiKey)
         .expect(400);
 
       expect(result.body.code).eql(400);
@@ -217,6 +250,7 @@ describe('/trees', () => {
     it('should get tags attached to a tree', async () => {
       const result = await request(app)
         .get(`/trees/${treeId}/tags`)
+        .set('treetracker-api-key', apiKey)
         .expect(200);
       expect(result.body.length).to.eql(1);
       expect(result.body[0]).to.include({
@@ -239,10 +273,14 @@ describe('/trees', () => {
     it('should update a single tag attached to a tree', async () => {
       await request(app)
         .patch(`/trees/${treeId}/tags/${tag2.id}`)
+        .set('treetracker-api-key', apiKey)
         .send({ status: 'deleted' })
         .expect(200);
 
-      await request(app).get(`/trees/${treeId}/tags/${tag2.id}`).expect(404);
+      await request(app)
+        .get(`/trees/${treeId}/tags/${tag2.id}`)
+        .set('treetracker-api-key', apiKey)
+        .expect(404);
     });
   });
 });

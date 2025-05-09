@@ -67,7 +67,7 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-app.use('/', router);
+app.use(router);
 
 app.use(errorHandler);
 

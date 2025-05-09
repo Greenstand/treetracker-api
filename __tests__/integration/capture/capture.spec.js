@@ -14,12 +14,13 @@ const grower_account1 = require('../../mock/grower_account1.json');
 const grower_account2 = require('../../mock/grower_account2.json');
 const domain_event2 = require('../../mock/domain_event2.json');
 const tree1 = require('../../mock/tree1.json');
-const { knex, addCapture, addTree } = require('../../utils');
+const { knex, apiKey, addCapture, addTree, addApiKey } = require('../../utils');
 
 describe('/captures', () => {
   let brokerStub;
 
   before(async () => {
+    await addApiKey();
     brokerStub = sinon.stub(Broker, 'create').resolves({
       publish: () => {
         return {
@@ -64,6 +65,18 @@ describe('/captures', () => {
     await knex('capture').del();
     await knex('grower_account').del();
     await knex('tree').del();
+    await knex('api_key').del();
+  });
+
+  it('unauthorized', async () => {
+    await request(app)
+      .post(`/captures`)
+      .send({
+        ...capture2,
+      })
+      .set('Accept', 'application/json')
+      .set('Authorization', 'jwt_token')
+      .expect(401);
   });
 
   describe('POST', () => {
@@ -105,6 +118,7 @@ describe('/captures', () => {
           ...capture2,
           ...legacyExtraObjects,
         })
+        .set('treetracker-api-key', apiKey)
         .set('Accept', 'application/json')
         .set('Authorization', 'jwt_token')
         .expect(201);
@@ -138,6 +152,7 @@ describe('/captures', () => {
           ...capture2,
           ...legacyExtraObjects,
         })
+        .set('treetracker-api-key', apiKey)
         .set('Accept', 'application/json')
         .set('Authorization', 'jwt_token')
         .expect(200);
@@ -172,6 +187,7 @@ describe('/captures', () => {
           ...legacyExtraObjects,
           id: capture1.id,
         })
+        .set('treetracker-api-key', apiKey)
         .set('Accept', 'application/json')
         .set('Authorization', 'jwt_token')
         .expect(200);
@@ -213,6 +229,7 @@ describe('/captures', () => {
           ...legacyExtraObjects,
           id,
         })
+        .set('treetracker-api-key', apiKey)
         .set('Accept', 'application/json')
         .set('Authorization', 'jwt_token')
         .expect(200);
@@ -242,6 +259,7 @@ describe('/captures', () => {
           ...legacyExtraObjects,
           id,
         })
+        .set('treetracker-api-key', apiKey)
         .set('Accept', 'application/json')
         .set('Authorization', 'jwt_token')
         .expect(200);
@@ -281,6 +299,7 @@ describe('/captures', () => {
       const res = await request(app)
         .patch(`/captures/${captureId}`)
         .send(updates)
+        .set('treetracker-api-key', apiKey)
         .set('Accept', 'application/json')
         .expect(200);
 
@@ -318,7 +337,10 @@ describe('/captures', () => {
     });
 
     it('should get captures', async () => {
-      const result = await request(app).get(`/captures`).expect(200);
+      const result = await request(app)
+        .get(`/captures`)
+        .set('treetracker-api-key', apiKey)
+        .expect(200);
       expect(result.body.captures.length).to.eql(2);
       // console.log(result.body.captures[1]);
       // expect(result.body.captures[1]).to.include({ ...capture1 });
@@ -327,6 +349,7 @@ describe('/captures', () => {
     it('should get only captures with tree associated', async () => {
       const result = await request(app)
         .get(`/captures?tree_associated=true`)
+        .set('treetracker-api-key', apiKey)
         .expect(200);
       expect(result.body.captures.length).to.eql(1);
       expect(result.body.query.count).to.eql(1);
@@ -338,6 +361,7 @@ describe('/captures', () => {
     it('should get only captures without tree associated', async () => {
       const result = await request(app)
         .get(`/captures?tree_associated=false`)
+        .set('treetracker-api-key', apiKey)
         .expect(200);
       expect(result.body.captures.length).to.eql(1);
       expect(result.body.query.count).to.eql(1);
@@ -349,9 +373,13 @@ describe('/captures', () => {
         .patch(`/captures/${captureId}`)
         .send({ status: 'deleted' })
         .set('Accept', 'application/json')
+        .set('treetracker-api-key', apiKey)
         .expect(200);
 
-      const result = await request(app).get(`/captures`).expect(200);
+      const result = await request(app)
+        .get(`/captures`)
+        .set('treetracker-api-key', apiKey)
+        .expect(200);
       expect(result.body.captures.length).to.eql(1);
     });
 
@@ -388,6 +416,7 @@ describe('/captures', () => {
     it('should attach tag(s) to a capture', async () => {
       await request(app)
         .post(`/captures/${captureId}/tags`)
+        .set('treetracker-api-key', apiKey)
         .send({ tags: [tag2.id] })
         .expect(204);
     });
@@ -395,6 +424,7 @@ describe('/captures', () => {
     it('should not allow duplicate attachments', async () => {
       const result = await request(app)
         .post(`/captures/${captureId}/tags`)
+        .set('treetracker-api-key', apiKey)
         .send({ tags: [tag2.id] })
         .expect(400);
 
@@ -407,6 +437,7 @@ describe('/captures', () => {
     it('should get tags attached to a capture', async () => {
       const result = await request(app)
         .get(`/captures/${captureId}/tags`)
+        .set('treetracker-api-key', apiKey)
         .expect(200);
       expect(result.body.length).to.eql(1);
       expect(result.body[0]).to.include({
@@ -429,11 +460,13 @@ describe('/captures', () => {
     it('should update a single tag attached to a capture', async () => {
       await request(app)
         .patch(`/captures/${captureId}/tags/${tag2.id}`)
+        .set('treetracker-api-key', apiKey)
         .send({ status: 'deleted' })
         .expect(200);
 
       await request(app)
         .get(`/captures/${captureId}/tags/${tag2.id}`)
+        .set('treetracker-api-key', apiKey)
         .expect(404);
     });
   });
