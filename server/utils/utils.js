@@ -5,6 +5,8 @@ const log = require('loglevel');
 const { ValidationError } = require('joi');
 const { isAxiosError } = require('axios').default;
 const HttpError = require('./HttpError');
+const JWTService = require('../services/JwtService');
+const { POLICIES } = require('./enums');
 
 /*
  * This is from the library https://github.com/Abazhenov/express-async-handler
@@ -31,8 +33,7 @@ exports.handlerWrapper = (fn) =>
   };
 
 exports.errorHandler = (err, req, res, _next) => {
-  if (!isAxiosError(err)) log.warn('catch error:', err);
-  if (err instanceof HttpError) {
+  if (err instanceof HttpError && err.code !== 500) {
     res.status(err.code).send({
       code: err.code,
       message: err.message,
@@ -61,9 +62,42 @@ exports.errorHandler = (err, req, res, _next) => {
       message: errorObject.message,
     });
   } else {
+    log.error(err);
     res.status(500).send({
       code: 500,
-      message: `Unknown error (${err.message})`,
+      message: `Internal server error`,
     });
   }
 };
+
+exports.verifyJWTHandler = exports.handlerWrapper(async (req, res, next) => {
+  const result = await JWTService.verify(req.headers.authorization);
+  req.user = { ...result };
+  next();
+});
+
+exports.hasPermission = (allowedPolicies, allowedRole) =>
+  exports.handlerWrapper((req, res, next) => {
+    const { policies: userPolicies, organizationId, roles } = req.user;
+
+    if (userPolicies.includes(POLICIES.SUPER_PERMISSION)) {
+      return next();
+    }
+    if (!allowedPolicies?.length) {
+      throw new HttpError(500, 'no access control defined for route');
+    }
+
+    const permittedViaPolicies = allowedPolicies.some((item) =>
+      userPolicies.includes(item),
+    );
+
+    if (!permittedViaPolicies) {
+      throw new HttpError(401, 'not permitted to access resource');
+    }
+
+    if (!organizationId && !roles.includes(allowedRole)) {
+      throw new HttpError(401, 'not attached to an organization');
+    }
+
+    return next();
+  });

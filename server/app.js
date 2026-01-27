@@ -6,7 +6,11 @@ const { join } = require('path');
 
 // const Sentry = require('@sentry/node');
 const { EventHandlerService } = require('./services/EventHandlerService');
-const { errorHandler, handlerWrapper } = require('./utils/utils');
+const {
+  errorHandler,
+  handlerWrapper,
+  verifyJWTHandler,
+} = require('./utils/utils');
 const swaggerDocument = require('./handlers/swaggerDoc');
 const HttpError = require('./utils/HttpError');
 const router = require('./routes');
@@ -63,19 +67,16 @@ const options = {
 
 app.use('/assets', express.static(join(__dirname, '..', '/assets')));
 
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
+app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-app.use('/', router);
+app.get('/swagger.json', (req, res) => {
+  res.json(swaggerDocument);
+});
+app.use('/', verifyJWTHandler, router);
 
 app.use(errorHandler);
-
-const { version } = require('../package.json');
-
-app.get('*', function (req, res) {
-  res.status(200).send(version);
-});
 
 const eventHandlerService = new EventHandlerService();
 (async () => {
