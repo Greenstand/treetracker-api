@@ -14,8 +14,8 @@ const {
 router
   .route('/grower_accounts')
   .get(handlerWrapper(growerAccountHandlerGet))
-  .post(handlerWrapper(growerAccountHandlerPost))
-  .put(handlerWrapper(growerAccountHandlerPut));
+  .post(handlerWrapper(growerAccountHandlerPost)) // feature flag
+  .put(handlerWrapper(growerAccountHandlerPut)); // M2M token for transformer-v2
 
 router
   .route('/grower_accounts/:grower_account_id')
