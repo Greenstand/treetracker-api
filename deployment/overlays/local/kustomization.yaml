@@ -1,0 +1,56 @@
+# Local (k3d) overlay for treetracker-api — reuses the repo's base, but:
+#  - replaces the 3 SealedSecrets with plain local Secrets (secrets.yaml)
+#  - drops the Ambassador Mapping, the db-migration Job + its k8s-wait-for RBAC
+#    (migrations are run separately into the treetracker schema; no CRDs/controllers locally)
+#  - uses the locally-built image, 1 replica, no DigitalOcean node-affinity
+# Serves POST /grower_accounts (needed by transformer-v2's wallet_registration flow) on :3006.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: treetracker-api
+resources:
+  - ../../base
+  - namespace.yaml
+  - secrets.yaml
+images:
+  - name: greenstand/treetracker-api
+    newName: treetracker-api
+    newTag: local
+replicas:
+  - name: treetracker-api
+    count: 1
+patches:
+  - patch: |-
+      $patch: delete
+      apiVersion: bitnami.com/v1alpha1
+      kind: SealedSecret
+      metadata: { name: database-connection, namespace: treetracker-api }
+  - patch: |-
+      $patch: delete
+      apiVersion: bitnami.com/v1alpha1
+      kind: SealedSecret
+      metadata: { name: database-migration-connection, namespace: treetracker-api }
+  - patch: |-
+      $patch: delete
+      apiVersion: bitnami.com/v1alpha1
+      kind: SealedSecret
+      metadata: { name: rabbitmq-connection, namespace: treetracker-api }
+  # Ambassador Mapping KEPT (Emissary routes /treetracker/ → this service, rewrite /).
+  - patch: |-
+      $patch: delete
+      apiVersion: batch/v1
+      kind: Job
+      metadata: { name: database-migration-job }
+  - patch: |-
+      $patch: delete
+      apiVersion: rbac.authorization.k8s.io/v1
+      kind: ClusterRole
+      metadata: { name: k8s-wait-for }
+  - patch: |-
+      $patch: delete
+      apiVersion: rbac.authorization.k8s.io/v1
+      kind: ClusterRoleBinding
+      metadata: { name: k8s-wait-for }
+  - target: { kind: Deployment, name: treetracker-api }
+    patch: |-
+      - op: remove
+        path: /spec/template/spec/affinity
