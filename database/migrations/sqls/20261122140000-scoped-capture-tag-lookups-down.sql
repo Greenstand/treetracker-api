@@ -1,0 +1,2 @@
+DROP INDEX treetracker.capture_tag_active_tag_capture_idx;
+DROP INDEX treetracker.tag_owner_active_name_idx;
