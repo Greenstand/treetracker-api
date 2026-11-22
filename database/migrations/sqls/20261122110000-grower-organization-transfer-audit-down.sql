@@ -1,0 +1,1 @@
+DROP TABLE treetracker.grower_organization_transfer;
