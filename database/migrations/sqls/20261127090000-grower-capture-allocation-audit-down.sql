@@ -1,0 +1,1 @@
+ALTER TABLE treetracker.grower_organization_transfer DROP COLUMN capture_allocation;
